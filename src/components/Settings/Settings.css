@@ -1,0 +1,424 @@
+/* ─── Layout ──────────────────────────────────────────────────────────────── */
+
+.Settings__content {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.Settings__body {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 8px 20px 40px;
+}
+
+.Settings__spinner-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.Settings__loading-Spinner {
+  margin-top: 2em;
+}
+
+/* ─── Section wrapper ─────────────────────────────────────────────────────── */
+
+.Settings__section {
+  margin-bottom: 8px;
+}
+
+.Settings__section--secondaryAction {
+  padding-right: 1.5rem;
+}
+
+.Settings__section-wrapper {
+  margin-bottom: 28px;
+}
+
+.Settings__section-header {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #90a4ae;
+  margin: 0 0 10px 4px;
+  padding: 0;
+}
+
+/* ─── Card grid (Language, System) ───────────────────────────────────────── */
+
+.Settings__card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.Settings__card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 18px;
+  outline: none;
+}
+
+.Settings__card-link:focus-visible .Settings__card {
+  box-shadow: 0 0 0 3px #1976d2;
+}
+
+.Settings__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 12px 18px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  min-height: 110px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.Settings__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.Settings__card-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.Settings__card-icon svg {
+  font-size: 26px;
+}
+
+.Settings__card-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: #455a64;
+  line-height: 1.35;
+  max-width: 100%;
+}
+
+/* ─── Row layout (People) ─────────────────────────────────────────────────── */
+
+.Settings__row-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.Settings__item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 16px;
+  outline: none;
+}
+
+.Settings__item-link:focus-visible .Settings__row-card {
+  box-shadow: 0 0 0 3px #1976d2;
+}
+
+.Settings__row-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.Settings__row-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.Settings__row-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.Settings__row-icon svg {
+  font-size: 24px;
+}
+
+.Settings__row-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.Settings__row-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #263238;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Settings__row-secondary {
+  font-size: 13px;
+  color: #78909c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Settings__row-action {
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .Settings__body {
+    padding: 8px 12px 32px;
+  }
+
+  .Settings__card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .Settings__card {
+    padding: 16px 8px 14px;
+    min-height: 96px;
+  }
+
+  .Settings__card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .Settings__card-icon svg {
+    font-size: 22px;
+  }
+
+  .Settings__card-label {
+    font-size: 11px;
+  }
+}
+
+.Settings__UserIcon__Container button {
+  padding: 0;
+}
+
+.Settings__UserIcon__Container button img {
+  width: 100%;
+  height: 100%;
+}
+
+.Settings--secondaryAction {
+  padding-right: 1.5rem;
+  width: 50%;
+}
+
+.Settings--secondaryAction--textField {
+  width: 100%;
+}
+
+.Settings__Language__download_Typography {
+  padding: 1rem 1rem 0.6rem 0;
+}
+
+.Settings__Language__MoreLang button {
+  margin-left: 0.75rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.Settings__Language__MoreLang__Dialog {
+  padding: 1rem;
+}
+
+.Settings__Language__MoreLang__Dialog img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 75%;
+  height: auto;
+}
+
+.Settings__Language__MoreLang__Dialog iframe {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%;
+  padding: 1rem;
+}
+
+.Settings__Language__TTSEnginesContainer {
+  padding: 0 1rem 1rem 1.5rem;
+  position: relative;
+}
+
+.Settings__Language__TTSEnginesContainer__Select {
+  width: 60%;
+}
+
+.Settings__Language__Spinner {
+  color: rgb(121, 22, 254);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: none;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 97%;
+  object-fit: contain;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.swiperSlideContentContainer {
+  width: 100%;
+  padding-top: 36%;
+  position: relative;
+  background-color: none;
+}
+.swiper-pagination-bullets {
+  bottom: 5px !important;
+}
+
+.Settings_EnableTour_Button {
+  margin: 0 20px 0 auto;
+  display: flex;
+}
+
+.Settings_Tour_Description_Scanning {
+  margin-top: 4px;
+}
+.Settings__Tour__Scanning__Img {
+  margin: 7px 0 7px 0;
+}
+
+.Settings_Tour_Tooltip_Swiper_Title {
+  margin: 0px 2px;
+}
+
+@media screen and (max-width: 576px) {
+  :root {
+    --swiper-navigation-size: 25px !important;
+  }
+  .swiper-button-next {
+    right: 1px !important;
+  }
+  .swiper-button-prev {
+    left: 1px !important;
+  }
+  .Settings__Tour__Step__Swiper__Container {
+    height: 270px !important;
+  }
+
+  .mySwiper {
+    height: 50% !important;
+  }
+  .swiper-pagination-bullets {
+    bottom: -3px !important;
+  }
+}
+
+.Language__LangMenuItemText {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-transform: capitalize;
+}
+
+.Language__LangMenuItemText .MuiChip-root {
+  margin-left: 8px;
+  margin-right: 0.5rem;
+}
+
+.Language__LangMenuItemCheck {
+  margin-left: 8px;
+}
+
+.Language__RightContent {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+}
+
+.Settings__Item__Container {
+  display: flex;
+  align-items: center;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.Settings__Tour__Step__Swiper__Container {
+  height: 345px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.mySwiper {
+  height: 70%;
+}
+
+.MuiTypography-h3 {
+  padding-bottom: 0.5em;
+  font-weight: bold;
+}
+
+.MuiCardContent-root {
+  text-align: center;
+}
+
+.MuiTypography-gutterBottom {
+  padding-bottom: 1em;
+}

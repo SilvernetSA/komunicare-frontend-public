@@ -1,0 +1,68 @@
+.CommunicatorToolbar {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  height: 44px;
+  color: #424242;
+  background-color: #fff;
+  white-space: nowrap;
+  align-items: center;
+  border-bottom: 1px solid #ebebeb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.CommunicatorToolbar button {
+  color: #424242;
+}
+
+.CommunicatorToolbar button icon {
+  margin-left: 0;
+}
+
+.CommunicatorToolbar__menu {
+  text-transform: capitalize;
+}
+
+.CommunicatorToolbar__group {
+  display: flex;
+  flex: 1 1;
+  align-items: center;
+}
+
+.CommunicatorToolbar .Communicator__title {
+  display: flex;
+  order: 2;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  right: 0;
+  height: 100%;
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424242;
+}
+
+.Communicator__title.logged-in {
+  cursor: pointer;
+}
+
+.CommunicatorToolbar__group--start {
+  justify-content: flex-start;
+}
+
+.CommunicatorToolbar__group--start--button {
+  justify-content: flex-start;
+  margin-right: 5px;
+}
+
+.CommunicatorToolbar__group--end {
+  order: 2;
+  justify-content: flex-end;
+}
+
+.CommunicatorToolbar__menuitem {
+  max-width: 360px;
+}

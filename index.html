@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self'
+        'unsafe-inline'
+        'unsafe-eval'
+        https://*
+        http://localhost:3001/
+        https://api.komuni.care/
+        http://localhost:10010/
+        http://www.googletagmanager.com/gtag/js
+        ws://localhost:3001/
+        wss://localhost:3001/
+        ws://192.168.0.109:3001/
+        wss://192.168.0.109:3001/
+        wss://*.microsoft.com/
+        blob:
+        gap:
+        data:;
+    connect-src 'self'
+        https://*
+        http://localhost:3001/
+        https://api.komuni.care/
+        http://localhost:10010/
+        ws://localhost:3001/
+        wss://localhost:3001/
+        ws://192.168.0.109:3001/
+        wss://192.168.0.109:3001/
+        wss://*.microsoft.com/
+        https://*.microsoft.com/
+        blob:
+        data:;
+    img-src * data:  filesystem:  blob:  ;
+    ">
+
+  <meta property="og:title" content="Komunicare - AAC Communication Board" />
+  <meta property="og:description" content="Komunicare is an augmentative and alternative communication (AAC) application, allowing users with speech and language impairments (Autism, Cerebral Palsy) to communicate with symbols and text-to-speech." />
+  <meta property="og:image" content="/logo_150_150.png" />
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" href="/logo.svg">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Komunicare">
+  <link rel="icon" sizes="192x192" href="/images/touch/chrome-touch-icon-192x192.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Komunicare">
+  <link rel="apple-touch-icon" href="/images/touch/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/touch/touch-icon-iphone-retina.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/images/touch/touch-icon-ipad-retina.png">
+
+  <!-- Color the status bar on mobile devices -->
+  <meta name="theme-color" content="#000000">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-108091601-1');
+  </script>
+
+  <title>Komunicare - AAC Communication Board</title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+
+</html>

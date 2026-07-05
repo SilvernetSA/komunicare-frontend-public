@@ -1,0 +1,95 @@
+.Display__body {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Setting row card ────────────────────────────────────────────────────── */
+
+.Display__row-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 72px;
+}
+
+.Display__row-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 22px !important;
+}
+
+.Display__row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.Display__row-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #263238;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.Display__row-desc {
+  font-size: 12px;
+  color: #78909c;
+  line-height: 1.4;
+}
+
+.Display__row-action {
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* MUI Select styling inside Display cards */
+.Display__row-action .MuiSelect-select {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 32px 8px 12px;
+  border-radius: 10px;
+  background: #f8f9fa;
+}
+
+.Display__row-action .MuiOutlinedInput-root {
+  border-radius: 10px;
+}
+
+/* MUI Switch accent */
+.Display__row-action .MuiSwitch-colorSecondary.Mui-checked {
+  color: #0288d1;
+}
+
+.Display__row-action .MuiSwitch-colorSecondary.Mui-checked + .MuiSwitch-track {
+  background-color: #0288d1;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .Display__body {
+    padding: 12px 12px 40px;
+  }
+
+  .Display__row-card {
+    padding: 14px 14px;
+  }
+
+  .Display__row-desc {
+    display: none;
+  }
+}

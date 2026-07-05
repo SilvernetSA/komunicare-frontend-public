@@ -1,0 +1,199 @@
+.Speech__body {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Voice selector card ─────────────────────────────────────────────────── */
+
+.Speech__voice-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.Speech__voice-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.Speech__voice-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #0288d1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 26px;
+}
+
+.Speech__voice-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.Speech__voice-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #90a4ae;
+  margin-bottom: 3px;
+}
+
+.Speech__voice-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #263238;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Speech__voice-chevron {
+  color: #90a4ae;
+  flex-shrink: 0;
+  font-size: 24px !important;
+}
+
+/* ─── Slider card ─────────────────────────────────────────────────────────── */
+
+.Speech__slider-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px 24px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: opacity 0.2s;
+}
+
+.Speech__slider-card--disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.Speech__slider-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.Speech__slider-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+  font-size: 22px !important;
+}
+
+.Speech__slider-text {
+  flex: 1;
+}
+
+.Speech__slider-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #263238;
+  line-height: 1.2;
+  margin-bottom: 3px;
+}
+
+.Speech__slider-desc {
+  font-size: 12px;
+  color: #78909c;
+  line-height: 1.4;
+}
+
+.Speech__slider-track {
+  padding: 0 4px;
+}
+
+.Speech__slider-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.Speech__slider-end {
+  font-size: 11px;
+  font-weight: 600;
+  color: #b0bec5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* MUI Slider override inside Speech cards */
+.Speech__slider-track .MuiSlider-root {
+  color: #0288d1;
+  height: 6px;
+}
+
+.Speech__slider-track .MuiSlider-thumb {
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 2px 8px rgba(2, 136, 209, 0.4);
+}
+
+.Speech__slider-track .MuiSlider-rail {
+  opacity: 0.25;
+}
+
+/* ─── Voice menu item ─────────────────────────────────────────────────────── */
+
+.Speech__VoiceMenuItemText {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 100%;
+}
+
+.Speech__VoiceLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 20px;
+  white-space: nowrap;
+  max-width: 80%;
+}
+
+.Speech__VoiceLabel:hover {
+  overflow: visible;
+  white-space: normal;
+  height: auto;
+}
+
+.MuiChip-root {
+  margin-left: auto;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .Speech__body {
+    padding: 12px 12px 40px;
+  }
+
+  .Speech__voice-card,
+  .Speech__slider-card {
+    padding: 16px;
+  }
+}

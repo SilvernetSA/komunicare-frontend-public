@@ -1,0 +1,151 @@
+/* ── Share dialog — Tobii AAC style ──────────────────────────────── */
+
+.ShareDialog__container .MuiDialog-paper {
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.16);
+  min-width: 360px;
+  max-width: 480px;
+  overflow: hidden;
+}
+
+/* Title bar */
+.ShareDialog__container .ShareDialog__title {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 20px 24px 16px;
+  position: relative;
+  text-align: center;
+  font-weight: 600;
+  color: #424242;
+}
+
+.ShareDialog__container .ShareDialog__title .MuiTypography-root {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #424242;
+}
+
+.ShareDialog__container .ShareDialog__title button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #757575;
+}
+
+/* Content area */
+.ShareDialog__container .MuiDialogContent-root {
+  padding: 24px;
+}
+
+/* Publish section */
+.ShareDialog__container .ShareDialog__content__publish {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 20px;
+  margin-bottom: 0;
+}
+
+/* PUBLICAR / DESPUBLICAR button */
+.ShareDialog__container
+  .ShareDialog__content__publish
+  .MuiButton-containedPrimary {
+  background-color: #7b1fa2;
+  border-radius: 10px;
+  padding: 10px 32px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  box-shadow: 0 3px 10px rgba(123, 31, 162, 0.3);
+  text-transform: uppercase;
+}
+
+.ShareDialog__container
+  .ShareDialog__content__publish
+  .MuiButton-containedPrimary:hover {
+  background-color: #6a1b9a;
+  box-shadow: 0 5px 14px rgba(123, 31, 162, 0.38);
+}
+
+.ShareDialog__container
+  .ShareDialog__content__publish
+  .MuiButton-outlinedPrimary {
+  border-color: #7b1fa2;
+  color: #7b1fa2;
+  border-radius: 10px;
+  padding: 10px 32px;
+  font-weight: 600;
+}
+
+.ShareDialog__container
+  .ShareDialog__content__publish
+  .MuiButton-outlinedPrimary:hover {
+  background-color: rgba(123, 31, 162, 0.06);
+}
+
+/* Info/warning alerts */
+.ShareDialog__container .ShareDialog__content__publish .MuiAlert-root {
+  border-radius: 10px;
+  font-size: 0.88rem;
+  text-align: left;
+}
+
+.ShareDialog__container .ShareDialog__content__publish .MuiAlert-colorInfo {
+  background-color: #f3e5f5;
+  color: #5b0f83;
+}
+
+.ShareDialog__container
+  .ShareDialog__content__publish
+  .MuiAlert-colorInfo
+  .MuiAlert-icon {
+  color: #7b1fa2;
+}
+
+/* Social icons row */
+.ShareDialog__socialIcons {
+  text-align: center;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+}
+
+.ShareDialog__socialIcons > div {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ShareDialog__socialIcons button:disabled {
+  filter: grayscale(100%);
+  opacity: 0.45;
+}
+
+.ShareDialog__socialIcons button:not(:disabled) {
+  color: #7b1fa2;
+}
+
+.ShareDialog__socialIcons__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  gap: 4px;
+}
+
+.ShareDialog__socialIcons__action div:first-child {
+  padding: 8px 0 2px;
+}
+
+.ShareDialog__socialIcons__action span {
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #616161;
+}
+
+.ShareDialog__socialIcons__action svg {
+  font-size: 2.8rem;
+}

@@ -1,0 +1,10 @@
+{
+  "short_name": "Komunicare",
+  "name": "Komunicare - AAC Communication Board",
+  "description": "Komunicare is an augmentative and alternative communication (AAC) application, allowing users with speech and language impairments (Autism, Cerebral Palsy) to communicate with symbols and text-to-speech.",
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

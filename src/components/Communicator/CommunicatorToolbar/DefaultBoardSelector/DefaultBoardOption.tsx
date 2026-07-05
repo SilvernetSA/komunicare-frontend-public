@@ -1,0 +1,87 @@
+import { CardContent } from '@mui/material';
+import { Card, CardMedia, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { IntlShape } from 'react-intl';
+
+import styles from './DefaultBoardSelector.module.css';
+import { Board } from '../../../../types/board';
+import { getBoardDisplayTitle } from '../../../../utils/getBoardDisplayTitle';
+import messages from '../CommunicatorToolbar.messages';
+
+interface RootBoard {
+  caption?: string;
+  name: string;
+  nameKey?: string;
+  id?: string;
+  description?: string;
+  [key: string]: unknown;
+}
+
+interface DefaultBoardOptionProps {
+  rootBoard: RootBoard;
+  onClick: () => void;
+  intl: IntlShape;
+  descriptionText?: string;
+  titleText?: string;
+}
+
+const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
+  rootBoard,
+  onClick,
+  intl,
+  descriptionText,
+  titleText,
+}) => {
+  const [shadow, setShadow] = useState(false);
+  const title =
+    titleText || getBoardDisplayTitle(rootBoard as Board, intl as any);
+
+  const description = descriptionText
+    ? descriptionText
+    : rootBoard.description && messages[rootBoard.description]
+      ? intl.formatMessage(messages[rootBoard.description])
+      : '';
+
+  return (
+    <Card
+      className={styles.card}
+      onClick={onClick}
+      onMouseOver={() => setShadow(true)}
+      onMouseOut={() => setShadow(false)}
+      raised={shadow}
+    >
+      {rootBoard.caption ? (
+        <CardMedia
+          component="img"
+          alt={intl.formatMessage(messages.defaultBoardImageAlt)}
+          height="160"
+          image={rootBoard.caption}
+          sx={{ objectFit: 'contain', background: '#f5f5f5', p: 1 }}
+        />
+      ) : (
+        <div
+          style={{
+            height: 160,
+            background: '#e8eaf6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 48,
+            color: '#3949ab',
+            fontWeight: 700,
+          }}
+        >
+          {(rootBoard.name || '?')[0].toUpperCase()}
+        </div>
+      )}
+      <CardContent className={styles.cardContent}>
+        <Typography gutterBottom variant="h6">
+          {title}
+        </Typography>
+        <Typography variant="body2">{description}</Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default DefaultBoardOption;

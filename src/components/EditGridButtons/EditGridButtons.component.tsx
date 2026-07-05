@@ -1,0 +1,83 @@
+import React from 'react';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
+import './EditGridButtons.css';
+
+interface EditGridButtonsProps {
+  active: boolean;
+  rows: number;
+  columns: number;
+  onAddRemoveColumn?: (action: string) => void;
+  onAddRemoveRow?: (action: string) => void;
+  moveColsButtonToLeft?: boolean;
+}
+
+const EditGridButtons: React.FC<EditGridButtonsProps> = ({
+  active,
+  rows,
+  columns,
+  onAddRemoveColumn,
+  onAddRemoveRow,
+  moveColsButtonToLeft = false,
+}) => {
+  const handleAddRemoveColumn = (isAdd: boolean) => {
+    onAddRemoveColumn?.(isAdd ? 'add' : 'remove');
+  };
+
+  const handleAddRemoveRow = (isAdd: boolean) => {
+    onAddRemoveRow?.(isAdd ? 'add' : 'remove');
+  };
+
+  const renderButtons = (isVertical: boolean) => (
+    <ButtonGroup
+      orientation={isVertical ? 'vertical' : 'horizontal'}
+      color="primary"
+      aria-label="edit_grid_button_group"
+      fullWidth={true}
+      size="large"
+      variant="contained"
+    >
+      <Button
+        onClick={() =>
+          isVertical ? handleAddRemoveColumn(true) : handleAddRemoveRow(true)
+        }
+        aria-label="edit_grid_button"
+      >
+        {isVertical ? <KeyboardArrowRightIcon /> : <KeyboardArrowDownIcon />}
+      </Button>
+      <Button aria-label="edit_grid_value">
+        {isVertical ? columns.toString() : rows.toString()}
+      </Button>
+      <Button
+        onClick={() =>
+          isVertical ? handleAddRemoveColumn(false) : handleAddRemoveRow(false)
+        }
+        aria-label="edit_grid_button"
+      >
+        {isVertical ? <KeyboardArrowLeftIcon /> : <KeyboardArrowUpIcon />}
+      </Button>
+    </ButtonGroup>
+  );
+
+  if (!active) {
+    return null;
+  }
+
+  return (
+    <>
+      <div
+        className={`EditGridButtons ${moveColsButtonToLeft ? 'left' : 'right'}`}
+      >
+        {renderButtons(true)}
+      </div>
+      <div className="EditGridButtons bottom">{renderButtons(false)}</div>
+    </>
+  );
+};
+
+export default EditGridButtons;

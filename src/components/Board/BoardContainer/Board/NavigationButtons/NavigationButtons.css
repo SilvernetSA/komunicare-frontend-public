@@ -1,0 +1,131 @@
+.NavigationButton {
+  position: fixed;
+  z-index: 1000;
+  height: 8rem;
+  width: 6rem;
+  background: rgba(123, 31, 162, 0.7);
+  text-align: center;
+  font-size: 2rem;
+  overflow: hidden;
+}
+
+.NavigationButton:hover,
+.SideNavigationButton:hover {
+  background: rgba(123, 31, 162, 0.9);
+}
+
+.NavigationButton.left {
+  left: 0;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  top: 40%;
+}
+
+.NavigationButton.right {
+  right: 0;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  top: 40%;
+}
+
+.NavigationButton.top {
+  position: absolute;
+  right: 50%;
+  left: 50%;
+  height: 6rem;
+  width: 8rem;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  margin-left: -4rem;
+}
+
+.NavigationButton.bottom {
+  bottom: 0;
+  right: 50%;
+  left: 50%;
+  height: 6rem;
+  width: 8rem;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  margin-left: -4rem;
+}
+
+.NavigationButton button,
+.SideNavigationButton button {
+  background: transparent;
+  border: 0;
+  width: 100%;
+  height: 100%;
+  padding: 10% 0 0 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.NavigationButton button svg,
+.SideNavigationButton button svg {
+  width: 5rem;
+  height: 5rem;
+}
+
+.SideNavigationButton.disable {
+  pointer-events: none;
+  background-color: #d5d5d5;
+}
+
+.SideNavigationButton {
+  background-color: #7b1fa2;
+  flex-grow: 1;
+  border-radius: 6px;
+  transition: background-color 0.15s;
+}
+
+.SideButtonScrollUp,
+.SideButtonToRootBoard {
+  margin-bottom: 2px;
+}
+
+.SideButtonScrollDown,
+.SideButtonPreviousBoard {
+  margin-top: 2px;
+}
+
+.SideNavigationButtonsContainer {
+  position: relative;
+  z-index: 1000;
+  width: 4.5rem;
+  text-align: center;
+  font-size: 2rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.SideNavigationButtonsContainer.ScrollButtons {
+  right: 0;
+}
+
+@media (max-width: 480px) {
+  .NavigationButton {
+    height: 6rem;
+    width: 4rem;
+  }
+
+  .NavigationButton.top {
+    height: 4rem;
+    width: 6rem;
+    margin-left: -3rem;
+  }
+
+  .NavigationButton.bottom {
+    height: 4rem;
+    width: 6rem;
+    margin-left: -3rem;
+  }
+
+  .NavigationButton button svg {
+    width: 100%;
+    height: 100%;
+  }
+}
