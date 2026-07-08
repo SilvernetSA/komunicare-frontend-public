@@ -1,5 +1,5 @@
-import React, { useRef, useCallback } from 'react';
 import debounce from 'lodash/debounce';
+import React, { useRef, useCallback } from 'react';
 
 interface ChildProofProps {
   clicksToUnlock?: number;

@@ -1,5 +1,6 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import LayersIcon from '@mui/icons-material/Layers';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -30,6 +31,7 @@ import { switchCommunicatorNavigation } from '../../../utils/switchCommunicatorN
 import boardMessages from '../../Board/Board.messages';
 import FormDialog from '../../UI/FormDialog/FormDialog';
 import CommunicatorDialog from '../CommunicatorDialog/CommunicatorDialog';
+import CreateCommunicatorModal from '../CommunicatorDialog/CreateCommunicatorModal';
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 
@@ -63,6 +65,7 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
   const [openDialog, setOpenDialog] = useState(false);
   const [boardsMenu, setBoardsMenu] = useState<HTMLElement | null>(null);
   const [openTitleDialog, setOpenTitleDialog] = useState(false);
+  const [openCreateCommunicator, setOpenCreateCommunicator] = useState(false);
 
   // ── routing / i18n ───────────────────────────────────────────────────────────
   const navigate = useNavigate();
@@ -251,6 +254,14 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
             <LayersIcon className="CommunicatorToolbar__group CommunicatorToolbar__group--start--button" />
             {intl.formatMessage(messages.editCommunicator)}
           </Button>
+          <Button
+            className="edit__communicator"
+            disabled={isSelecting || !userEmail}
+            onClick={() => setOpenCreateCommunicator(true)}
+            aria-label={intl.formatMessage(messages.createCommunicator)}
+          >
+            <LibraryAddIcon className="CommunicatorToolbar__group CommunicatorToolbar__group--start--button" />
+          </Button>
         </div>
 
         {/* Default board picker */}
@@ -269,6 +280,24 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
           onClose={() => setOpenDialog(false)}
         />
       )}
+
+      {/* Create communicator modal */}
+      <CreateCommunicatorModal
+        open={openCreateCommunicator}
+        onClose={() => setOpenCreateCommunicator(false)}
+        onCreated={(communicatorId) => {
+          setOpenCreateCommunicator(false);
+          useCommunicatorsStore.getState().changeCommunicator(communicatorId);
+        }}
+        createRemoteCommunicator={async (payload) => {
+          return useCommunicatorsStore
+            .getState()
+            .createRemoteCommunicator(payload);
+        }}
+        createRemoteBoard={async (payload) => {
+          return useBoardsStore.getState().createRemoteBoard(payload);
+        }}
+      />
     </React.Fragment>
   );
 };

@@ -1,16 +1,16 @@
-import React from 'react';
-/* -------------   FORZAMOS LOS TIPOS ------------- */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore  – las defs actuales no sirven con React 19
+import { OrderResponseBody } from '@paypal/paypal-js/types/apis/orders';
 import {
   PayPalScriptProvider,
   PayPalButtons,
   PayPalButtonsComponentProps,
 } from '@paypal/react-paypal-js';
+import React from 'react';
 /* -------------   FORZAMOS LOS TIPOS ------------- */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+ 
 // @ts-ignore  – las defs actuales no sirven con React 19
-import { OrderResponseBody } from '@paypal/paypal-js/types/apis/orders';
+/* -------------   FORZAMOS LOS TIPOS ------------- */
+ 
+// @ts-ignore  – las defs actuales no sirven con React 19
 
 import { PAYPAL_CLIENT_ID } from '../../constants';
 
@@ -61,7 +61,7 @@ export const PayPalComponent = ({ children }) => {
 
   return (
     /* -------------   FORZAMOS LOS TIPOS ------------- */
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+     
     // @ts-ignore  – las defs actuales no sirven con React 19
     <PayPalScriptProvider options={paypalOptions}>
       {children}

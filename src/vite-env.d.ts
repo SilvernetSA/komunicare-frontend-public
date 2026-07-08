@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly PROD: boolean;
   // Vite-first variables
   readonly VITE_API_URL?: string;
+  readonly VITE_NATIVE_API_URL?: string;
   readonly VITE_DEV_API_URL?: string;
   readonly VITE_AZURE_INST_KEY?: string;
   readonly VITE_AZURE_SPEECH_KEY?: string;

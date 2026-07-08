@@ -1,5 +1,11 @@
 import classNames from 'classnames';
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 
@@ -135,7 +141,10 @@ export const GridContainer: React.FC<GridContainerProps> = (props) => {
         // Guard against sub-pixel jitter that could trigger unnecessary re-renders
         // and feed back into a layout oscillation loop.
         setSize((prev) => {
-          if (Math.abs(prev.width - width) < 1 && Math.abs(prev.height - height) < 1) {
+          if (
+            Math.abs(prev.width - width) < 1 &&
+            Math.abs(prev.height - height) < 1
+          ) {
             return prev;
           }
           return { width, height };

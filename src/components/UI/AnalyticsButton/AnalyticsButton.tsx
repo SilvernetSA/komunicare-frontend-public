@@ -1,9 +1,9 @@
+import AnalyticsIcon from '@mui/icons-material/BarChart';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import AnalyticsIcon from '@mui/icons-material/BarChart';
 
-import IconButton from '../IconButton/IconButton';
 import messages from '../../Analytics/Analytics.messages';
+import IconButton from '../IconButton/IconButton';
 
 function AnalyticsButton(props: Record<string, unknown>) {
   const intl = useIntl();

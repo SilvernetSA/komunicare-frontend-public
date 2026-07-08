@@ -1,12 +1,13 @@
-import React from 'react';
 import { Grid } from '@mui/material';
-import { IntlShape } from 'react-intl';
 import { Theme } from '@mui/material/styles';
+import React from 'react';
+import { IntlShape } from 'react-intl';
+
+import Barchart from '../../UI/Barchart/Barchart.component';
+import DoughnutChart from '../../UI/Doughnut/Doughnut.component';
 import StatCards from '../../UI/StatCards/StatCards.component';
 import StatCards2 from '../../UI/StatCards2/StatCards2.component';
 import TableCard from '../../UI/TableCard/TableCard.component';
-import DoughnutChart from '../../UI/Doughnut/Doughnut.component';
-import Barchart from '../../UI/Barchart/Barchart.component';
 import messages from '../Analytics.messages';
 
 interface RawTotals {

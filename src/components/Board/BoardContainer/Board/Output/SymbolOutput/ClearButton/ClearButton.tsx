@@ -1,6 +1,6 @@
-import React from 'react';
-import IconButton from '@mui/material/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
+import IconButton from '@mui/material/IconButton';
+import React from 'react';
 
 interface ClearButtonProps {
   /**

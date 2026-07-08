@@ -1,6 +1,6 @@
-import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { merge } from 'lodash';
+import React from 'react';
 
 const defaultOption = {
   grid: {

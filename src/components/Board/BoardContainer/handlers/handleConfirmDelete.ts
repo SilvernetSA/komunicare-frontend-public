@@ -68,4 +68,3 @@ export const handleConfirmDelete = async ({
   setIsSelecting(false);
   showNotification(intl.formatMessage(messages.tilesDeleted));
 };
-

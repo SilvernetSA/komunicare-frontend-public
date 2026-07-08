@@ -2,16 +2,16 @@ import React from 'react';
 import Joyride, { STATUS } from 'react-joyride';
 
 import { TAB_INDEXES } from './CommunicatorDialog.constants';
+import messages from './CommunicatorDialog.messages';
+import {
+  joyrideStyles,
+  getJoyrideLocale,
+} from './CommunicatorDialogBoardItem/tourConfig';
 import {
   getCommBoardsHelpSteps,
   getPublicBoardsHelpSteps,
   getAllMyBoardsHelpSteps,
 } from './CommunicatorDialogBoardItem/tourSteps';
-import {
-  joyrideStyles,
-  getJoyrideLocale,
-} from './CommunicatorDialogBoardItem/tourConfig';
-import messages from './CommunicatorDialog.messages';
 import './CommunicatorDialog.css';
 
 interface CommunicatorTour {

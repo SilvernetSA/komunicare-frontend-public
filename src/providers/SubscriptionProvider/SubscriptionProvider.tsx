@@ -53,7 +53,10 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({
             isSubscribed: true,
             tryPeriode: false,
             isOnTrialPeriod: false,
-            premiumRequiredModalState: { open: false, showTryPeriodFinishedMessages: false },
+            premiumRequiredModalState: {
+              open: false,
+              showTryPeriodFinishedMessages: false,
+            },
           } as any);
           return;
         }

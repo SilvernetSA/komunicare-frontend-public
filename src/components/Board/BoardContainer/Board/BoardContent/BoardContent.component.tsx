@@ -5,7 +5,10 @@ import classNames from 'classnames';
 import React from 'react';
 
 import { DisplaySettings, NavigationSettings } from '../../../../../types/app';
-import { Tile as TileData, Board as BoardData } from '../../../../../types/board';
+import {
+  Tile as TileData,
+  Board as BoardData,
+} from '../../../../../types/board';
 import EditGridButtons from '../../../../EditGridButtons/EditGridButtons.component';
 import FixedGrid from '../../../../FixedGrid/Grid';
 import Grid from '../../../../Grid/Grid';
@@ -153,7 +156,12 @@ const BoardContent: React.FC<BoardContentProps> = ({
           navigationSettings.bigScrollButtonsActive &&
           isNavigationButtonsOnTheSide,
       })}
-      style={{ overflowY: 'auto', height: '100%', maxHeight: '100%', scrollbarGutter: 'stable' }}
+      style={{
+        overflowY: 'auto',
+        height: '100%',
+        maxHeight: '100%',
+        scrollbarGutter: 'stable',
+      }}
       onKeyUp={onBoardKeyUp}
       ref={boardContainerRef}
     >

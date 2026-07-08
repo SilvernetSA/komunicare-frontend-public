@@ -1,7 +1,7 @@
-import React from 'react';
-import { useTheme, Theme } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import IconButton from '@mui/material/IconButton';
+import { useTheme, Theme } from '@mui/material/styles';
+import React from 'react';
 
 interface BackspaceButtonProps {
   /** Oculta / deshabilita el botón para escaneo */

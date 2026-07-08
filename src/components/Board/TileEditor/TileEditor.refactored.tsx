@@ -1,6 +1,6 @@
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
 import FormLabel from '@mui/material/FormLabel';
 import MobileStepper from '@mui/material/MobileStepper';
@@ -273,7 +273,7 @@ const TileEditor: React.FC<TileEditorProps> = ({
       onClick={() => handleSearchClick({} as React.MouseEvent, currentLabel)}
       size="large"
     >
-      <SearchIcon />
+      <AutoAwesomeIcon />
     </IconButton>
   );
 

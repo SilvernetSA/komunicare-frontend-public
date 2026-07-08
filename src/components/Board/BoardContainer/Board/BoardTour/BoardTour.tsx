@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import Joyride, { STATUS } from 'react-joyride';
@@ -14,6 +13,7 @@ import {
 } from '../../../../Communicator/CommunicatorToolbar/DefaultBoardSelector/DefaultBoardsGallery';
 import messages from '../../../Board.messages';
 import './../Board.css';
+import './BoardTour.css';
 
 const APP_DEFAULT_BOARD_IDS = new Set(['root', 'jjmlUcQs19', 'komunicare']);
 
@@ -36,14 +36,53 @@ interface CommunicatorLike {
   boards?: string[];
 }
 
-const joyRideStyles = {
+const tobiiJoyrideStyles = {
   options: {
-    arrowColor: '#eee',
-    backgroundColor: '#eee',
-    primaryColor: '#aa00ff',
-    textColor: '#333',
-    width: 500,
-    zIndex: 1000,
+    arrowColor: '#ffffff',
+    backgroundColor: '#ffffff',
+    primaryColor: '#0084c8',
+    textColor: '#1a2640',
+    width: 560,
+    zIndex: 10000,
+  },
+  tooltip: {
+    borderRadius: 12,
+    boxShadow: '0 8px 32px rgba(0, 132, 200, 0.15)',
+    padding: '28px 32px',
+  },
+  tooltipTitle: {
+    fontSize: '1.2rem',
+    fontWeight: 700,
+    color: '#1a2640',
+    marginBottom: 8,
+  },
+  tooltipContent: {
+    fontSize: '1rem',
+    color: '#3d5068',
+    lineHeight: 1.6,
+  },
+  buttonNext: {
+    backgroundColor: '#0084c8',
+    borderRadius: 8,
+    fontSize: '0.95rem',
+    fontWeight: 600,
+    padding: '10px 24px',
+  },
+  buttonBack: {
+    color: '#0084c8',
+    fontSize: '0.95rem',
+    fontWeight: 600,
+  },
+  buttonSkip: {
+    color: '#6b7f96',
+    fontSize: '0.9rem',
+  },
+  beaconInner: {
+    backgroundColor: '#0084c8',
+  },
+  beaconOuter: {
+    borderColor: '#b3d9f0',
+    backgroundColor: 'rgba(0, 132, 200, 0.2)',
   },
 };
 
@@ -146,46 +185,75 @@ function BoardTour({
       placement: 'center' as const,
       hideCloseButton: true,
       content: (
-        <h2>
-          <FormattedMessage {...messages.walkthroughStart} />
-        </h2>
+        <div className="BoardTour__step">
+          <span className="BoardTour__step-icon">🎉</span>
+          <h2 className="BoardTour__step-title">
+            <FormattedMessage {...messages.walkthroughStart} />
+          </h2>
+        </div>
       ),
     },
     {
       hideCloseButton: true,
       target: '.personal__account',
-      content: <FormattedMessage {...messages.walkthroughSignInUp} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughSignInUp} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.edit__board__ride',
-      content: <FormattedMessage {...messages.walkthroughEditBoard} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughEditBoard} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.EditToolbar__BoardTitle',
-      content: <FormattedMessage {...messages.walkthroughBoardName} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughBoardName} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.add__board__tile',
-      content: <FormattedMessage {...messages.walkthroughAddTile} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughAddTile} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.Communicator__title',
-      content: <FormattedMessage {...messages.walkthroughChangeBoard} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughChangeBoard} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.edit__communicator',
-      content: <FormattedMessage {...messages.walkthroughBuildCommunicator} />,
+      content: (
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughBuildCommunicator} />
+        </div>
+      ),
     },
     {
       hideCloseButton: true,
       target: '.default__boards__selector',
       content: (
-        <FormattedMessage {...messages.walkthroughDefaultBoardsSelector} />
+        <div className="BoardTour__step">
+          <FormattedMessage {...messages.walkthroughDefaultBoardsSelector} />
+        </div>
       ),
     },
   ];
@@ -203,40 +271,56 @@ function BoardTour({
       hideCloseButton: true,
       styles: {
         tooltip: {
-          width: '90vw',
-          maxWidth: 700,
-          maxHeight: '95vh',
-          overflowY: 'auto' as const,
+          width: '92vw',
+          maxWidth: 740,
+          maxHeight: '92vh',
+          overflowY: 'auto',
+          borderRadius: 16,
+          padding: '32px 32px 24px',
+          boxShadow: '0 16px 48px rgba(0, 132, 200, 0.2)',
         },
       },
       content: (
-        <>
-          <h2>
-            <FormattedMessage {...messages.walkthroughWelcome} />
-          </h2>
-          <p>
-            <FormattedMessage {...messages.walkthroughChooseABoard} />
-          </p>
+        <div className="BoardTour__onboarding">
+          <div className="BoardTour__onboarding-header">
+            <img
+              className="BoardTour__onboarding-logo"
+              src="/images/logo.svg"
+              alt="Komunicare"
+            />
+            <div>
+              <h1 className="BoardTour__onboarding-title">
+                <FormattedMessage {...messages.walkthroughWelcome} />
+              </h1>
+              <p className="BoardTour__onboarding-subtitle">
+                <FormattedMessage {...messages.walkthroughChooseABoard} />
+              </p>
+            </div>
+          </div>
+
+          <div className="BoardTour__onboarding-divider" />
+
           {selectorStep === 'custom' && (
             <CustomBoardsGallery
               boards={customBoards}
               intl={intl as any}
               onBoardClick={(boardId) =>
-                handleDefaultBoardClick({
-                  type: 'custom',
-                  boardId,
-                })
+                handleDefaultBoardClick({ type: 'custom', boardId })
               }
               showIncludedOption={true}
               onIncludedOptionClick={() => setSelectorStep('defaults')}
             />
           )}
+
           {selectorStep === 'defaults' && (
-            <>
-              <Button onClick={() => setSelectorStep('custom')}>
-                <FormattedMessage {...toolbarMessages.back} />
-              </Button>
-              <p>
+            <div className="BoardTour__onboarding-defaults">
+              <button
+                className="BoardTour__onboarding-back"
+                onClick={() => setSelectorStep('custom')}
+              >
+                ← <FormattedMessage {...toolbarMessages.back} />
+              </button>
+              <p className="BoardTour__onboarding-defaults-label">
                 <FormattedMessage
                   {...toolbarMessages.selectDefaultBoardTitle}
                 />
@@ -245,17 +329,31 @@ function BoardTour({
                 intl={intl as any}
                 onOptionClick={handleDefaultBoardClick}
               />
-            </>
+            </div>
           )}
-        </>
+        </div>
       ),
     },
     {
       hideCloseButton: true,
       target: '.open__lock',
-      content: <FormattedMessage {...messages.walkthroughUnlock} />,
+      content: (
+        <div className="BoardTour__step">
+          <span className="BoardTour__step-icon">🔓</span>
+          <span>
+            <FormattedMessage {...messages.walkthroughUnlock} />
+          </span>
+        </div>
+      ),
     },
   ];
+
+  const joyrideLocale = {
+    last: <FormattedMessage {...messages.walkthroughEndTour} />,
+    skip: <FormattedMessage {...messages.walkthroughCloseTour} />,
+    next: <FormattedMessage {...messages.walkthroughNext} />,
+    back: <FormattedMessage {...messages.walkthroughBack} />,
+  };
 
   return (
     <div>
@@ -276,13 +374,8 @@ function BoardTour({
           showProgress={true}
           disableOverlayClose={true}
           run={isRootBoardTourEnabled}
-          styles={joyRideStyles}
-          locale={{
-            last: <FormattedMessage {...messages.walkthroughEndTour} />,
-            skip: <FormattedMessage {...messages.walkthroughCloseTour} />,
-            next: <FormattedMessage {...messages.walkthroughNext} />,
-            back: <FormattedMessage {...messages.walkthroughBack} />,
-          }}
+          styles={tobiiJoyrideStyles}
+          locale={joyrideLocale}
         />
       )}
       {!isLocked && isUnlockedTourEnabled && (
@@ -302,13 +395,8 @@ function BoardTour({
           showProgress={true}
           disableOverlayClose={true}
           run={isUnlockedTourEnabled}
-          styles={joyRideStyles}
-          locale={{
-            last: <FormattedMessage {...messages.walkthroughEndTour} />,
-            skip: <FormattedMessage {...messages.walkthroughCloseTour} />,
-            next: <FormattedMessage {...messages.walkthroughNext} />,
-            back: <FormattedMessage {...messages.walkthroughBack} />,
-          }}
+          styles={tobiiJoyrideStyles}
+          locale={joyrideLocale}
         />
       )}
     </div>

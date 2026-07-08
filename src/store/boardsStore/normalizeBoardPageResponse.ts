@@ -1,6 +1,7 @@
+import { normalizeApiBoard } from './normalizeApiBoard';
+
 import type { BoardPageParams, BoardPageResponse } from './types';
 import type { Board } from '../../types/board';
-import { normalizeApiBoard } from './normalizeApiBoard';
 
 export const normalizeBoardPageResponse = (
   response: Partial<BoardPageResponse> | undefined,

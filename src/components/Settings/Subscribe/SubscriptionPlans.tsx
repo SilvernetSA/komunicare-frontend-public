@@ -140,112 +140,106 @@ const SubscriptionPlans: React.FC<SubscriptionPlansProps> = ({
         alignItems="center"
         justifyContent="space-around"
       >
-        {products.map(
-          (product: Product) => (
-              <Grid
-                key={product.id}
-                size={{ xs: 12, sm: 6 }}
-                style={{ padding: '5px', maxWidth: 328 }}
-              >
-                <Card style={{ minWidth: 275 }} variant="outlined">
-                  <CardContent>
-                    <Typography
-                      color="secondary"
-                      gutterBottom
-                      sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}
-                    >
-                      {formatTitle(product.name)}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'baseline',
-                        mb: 2,
-                      }}
-                    >
-                      <Typography
-                        component="h2"
-                        variant="h3"
-                        color="text.primary"
-                      >
-                        {product.currency} {product.price}
-                      </Typography>
-                      <Typography variant="h6" color="text.secondary">
-                        {/* {formatDuration(product.billingPeriod)} */}
-                        {/* {product.interval} */}
-                      </Typography>
-                    </Box>
+        {products.map((product: Product) => (
+          <Grid
+            key={product.id}
+            size={{ xs: 12, sm: 6 }}
+            style={{ padding: '5px', maxWidth: 328 }}
+          >
+            <Card style={{ minWidth: 275 }} variant="outlined">
+              <CardContent>
+                <Typography
+                  color="secondary"
+                  gutterBottom
+                  sx={{ fontWeight: 'bold', fontSize: '1.2rem' }}
+                >
+                  {formatTitle(product.name)}
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'baseline',
+                    mb: 2,
+                  }}
+                >
+                  <Typography component="h2" variant="h3" color="text.primary">
+                    {product.currency} {product.price}
+                  </Typography>
+                  <Typography variant="h6" color="text.secondary">
+                    {/* {formatDuration(product.billingPeriod)} */}
+                    {/* {product.interval} */}
+                  </Typography>
+                </Box>
 
-                    {!isLogged && (
+                {!isLogged && (
+                  <Button
+                    variant="contained"
+                    fullWidth={true}
+                    color="primary"
+                    component={Link}
+                    to="/login-signup"
+                    disabled={!canPurchase}
+                  >
+                    <FormattedMessage {...messages.subscribe} />
+                  </Button>
+                )}
+                {isLogged && (
+                  <>
+                    {product.provider === 'paypal' && (
                       <Button
-                        variant="contained"
-                        fullWidth={true}
                         color="primary"
-                        component={Link}
-                        to="/login-signup"
-                        disabled={!canPurchase}
+                        variant="contained"
+                        size="large"
+                        onClick={() => onSubscribe(product)}
                       >
-                        <FormattedMessage {...messages.subscribe} />
+                        Paypal
                       </Button>
                     )}
-                    {isLogged && (
-                      <>
-                        {product.provider === 'paypal' && (
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            size="large"
-                            onClick={() => onSubscribe(product)}
-                          >
-                            Paypal
-                          </Button>
-                        )}
 
-                        {product.provider === 'mercadopago' && (
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            size="large"
-                            component={Link}
-                            to="/settings/mercado-pago"
-                          >
-                            Mercado Pago
-                          </Button>
-                        )}
-                      </>
+                    {product.provider === 'mercadopago' && (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        component={Link}
+                        to="/settings/mercado-pago"
+                      >
+                        Mercado Pago
+                      </Button>
                     )}
-                    <Typography color="secondary">
-                      <br />
-                      <br />
-                      <FormattedMessage {...messages.includedFeatures} />
-                    </Typography>
-                    <List disablePadding style={{ padding: '5px' }}>
-                      {INCLUDED_FEATURES.map((feature: string) => {
-                        return [
-                          <ListItem key={feature}>
-                            <ListItemIcon sx={{ color: 'green' }}>
-                              <CheckCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={
-                                <FormattedMessage
-                                  {...(messages[feature] || {
-                                    ...messages.fallback,
-                                  })}
-                                />
-                              }
-                              secondary={null}
+                  </>
+                )}
+                <Typography color="secondary">
+                  <br />
+                  <br />
+                  <FormattedMessage {...messages.includedFeatures} />
+                </Typography>
+                <List disablePadding style={{ padding: '5px' }}>
+                  {INCLUDED_FEATURES.map((feature: string) => {
+                    return [
+                      <ListItem key={feature}>
+                        <ListItemIcon sx={{ color: 'green' }}>
+                          <CheckCircleIcon />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={
+                            <FormattedMessage
+                              {...(messages[feature] || {
+                                ...messages.fallback,
+                              })}
                             />
-                          </ListItem>,
-                        ];
-                      })}
-                    </List>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ),
-        )}
+                          }
+                          secondary={null}
+                        />
+                      </ListItem>,
+                    ];
+                  })}
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </>
   );

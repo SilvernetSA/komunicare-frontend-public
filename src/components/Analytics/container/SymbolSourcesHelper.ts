@@ -19,7 +19,7 @@ export const getSymbolSources = (boards: Board[]): SymbolSource[] => {
         (accumulator, currentValue) => accumulator.concat(currentValue),
         [],
       );
-    const sources = ['arasaac', 'mulberry', 'komunicare', 'globalsymbols'];
+    const sources = ['mulberry', 'komunicare', 'globalsymbols'];
     const summary = images.reduce(function (
       all: Record<string, number>,
       image: string,

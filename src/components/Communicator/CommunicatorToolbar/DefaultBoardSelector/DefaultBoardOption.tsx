@@ -1,5 +1,6 @@
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { CardContent } from '@mui/material';
-import { Card, CardMedia, Typography } from '@mui/material';
+import { Card, CardMedia, Chip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { IntlShape } from 'react-intl';
 
@@ -23,6 +24,8 @@ interface DefaultBoardOptionProps {
   intl: IntlShape;
   descriptionText?: string;
   titleText?: string;
+  isOfficial?: boolean;
+  isUserCopy?: boolean;
 }
 
 const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
@@ -31,6 +34,8 @@ const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
   intl,
   descriptionText,
   titleText,
+  isOfficial = false,
+  isUserCopy = false,
 }) => {
   const [shadow, setShadow] = useState(false);
   const title =
@@ -49,7 +54,42 @@ const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
       onMouseOver={() => setShadow(true)}
       onMouseOut={() => setShadow(false)}
       raised={shadow}
+      sx={{ position: 'relative' }}
     >
+      {isOfficial && (
+        <Chip
+          icon={<VerifiedIcon sx={{ fontSize: 14 }} />}
+          label="Komunicare"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            zIndex: 1,
+            backgroundColor: 'rgba(57, 73, 171, 0.9)',
+            color: '#fff',
+            fontWeight: 600,
+            fontSize: 11,
+            '& .MuiChip-icon': { color: '#fff' },
+          }}
+        />
+      )}
+      {isUserCopy && (
+        <Chip
+          label="Mi versión"
+          size="small"
+          sx={{
+            position: 'absolute',
+            top: 8,
+            right: 8,
+            zIndex: 1,
+            backgroundColor: 'rgba(0, 132, 200, 0.85)',
+            color: '#fff',
+            fontWeight: 600,
+            fontSize: 11,
+          }}
+        />
+      )}
       {rootBoard.caption ? (
         <CardMedia
           component="img"

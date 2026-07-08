@@ -1,7 +1,8 @@
-import React from 'react';
-import Button from '@mui/material/Button';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import EditIcon from '@mui/icons-material/Edit';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import Button from '@mui/material/Button';
+import React from 'react';
+
 import { TAB_INDEXES } from '../CommunicatorDialog.constants';
 
 interface BoardImageSectionProps {

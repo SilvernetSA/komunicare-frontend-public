@@ -14,8 +14,11 @@ export const enhancePlans = (subscriptions: unknown[]): Product[] => {
     const planRecord = plan as Record<string, unknown>;
 
     const id =
-      typeof planRecord.id === 'string' ? planRecord.id :
-      typeof planRecord._id === 'string' ? planRecord._id : undefined;
+      typeof planRecord.id === 'string'
+        ? planRecord.id
+        : typeof planRecord._id === 'string'
+          ? planRecord._id
+          : undefined;
     const name =
       typeof planRecord.name === 'string' ? planRecord.name : undefined;
     const currency =

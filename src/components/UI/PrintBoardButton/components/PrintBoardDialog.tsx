@@ -8,9 +8,9 @@ import Paper from '@mui/material/Paper';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import messages from '../PrintBoardButton.messages';
 import FullScreenDialog from '../../FullScreenDialog/FullScreenDialog';
 import { FullScreenDialogContent } from '../../FullScreenDialog/FullScreenDialogContent';
+import messages from '../PrintBoardButton.messages';
 
 import '../PrintBoardDialog.css';
 

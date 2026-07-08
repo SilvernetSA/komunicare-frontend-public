@@ -1,11 +1,11 @@
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 import withChildProof from './childProof';
-import IconButton from '../IconButton/IconButton';
 import messages from './LockToggle.messages';
+import IconButton from '../IconButton/IconButton';
 
 interface LockToggleProps {
   locked?: boolean;

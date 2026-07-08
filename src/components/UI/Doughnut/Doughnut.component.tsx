@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactEcharts from 'echarts-for-react';
-import { useTheme, Theme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
+import { useTheme, Theme } from '@mui/material/styles';
+import ReactEcharts from 'echarts-for-react';
+import React from 'react';
 import './Doughnut.css';
 
 interface DoughnutDataItem {

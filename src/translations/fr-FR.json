@@ -4190,5 +4190,15 @@
   "symbol.komunicare.questionsAndConversation.iWantToAskYou": "Je veux te demander",
   "symbol.komunicare.questionsAndConversation.allGood": "Tout va bien",
   "symbol.komunicare.questionsAndConversation.allBad": "Tout va mal",
-  "symbol.komunicare.questionsAndConversation.letsGo": "Allons-y"
+  "symbol.komunicare.questionsAndConversation.letsGo": "Allons-y",
+  "komunicare.components.Board.EditToolbar.addFolderButton": "Nouveau dossier",
+  "komunicare.components.CreateCommunicatorModal.title": "Créer un communicateur",
+  "komunicare.components.CreateCommunicatorModal.nameLabel": "Nom",
+  "komunicare.components.CreateCommunicatorModal.namePlaceholder": "Mon communicateur",
+  "komunicare.components.CreateCommunicatorModal.descriptionLabel": "Description (optionnelle)",
+  "komunicare.components.CreateCommunicatorModal.cancel": "Annuler",
+  "komunicare.components.CreateCommunicatorModal.create": "Créer",
+  "komunicare.components.CreateCommunicatorModal.creating": "Création...",
+  "komunicare.components.CommunicatorToolbar.createCommunicator": "Nouveau communicateur",
+  "komunicare.components.CreateCommunicatorModal.addImage": "Ajouter une image"
 }

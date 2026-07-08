@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useIntl } from 'react-intl';
 import shortid from 'shortid';
 
+import SymbolOutput from './SymbolOutput/SymbolOutput';
 import {
   cancelSpeech,
   speak,
@@ -14,7 +15,6 @@ import { useLanguageStore } from '../../../../../store/languageStore';
 import { useNotificationStore } from '../../../../../store/notificationStore';
 import { Tile } from '../../../../../types/board';
 import messages from '../../../Board.messages';
-import SymbolOutput from './SymbolOutput/SymbolOutput';
 
 interface OutputSymbol {
   id?: string;
@@ -60,9 +60,7 @@ function translateOutput(
   });
 }
 
-const Output: React.FC<OutputContainerProps> = ({
-  improvedPhrase,
-}) => {
+const Output: React.FC<OutputContainerProps> = ({ improvedPhrase }) => {
   const intl = useIntl();
   const output = useBoardsStore((state) => state.output);
   const isLiveMode = useBoardsStore((state) => state.isLiveMode);

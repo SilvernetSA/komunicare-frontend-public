@@ -1,9 +1,10 @@
-import React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import React from 'react';
+
 import { TAB_INDEXES } from '../CommunicatorDialog.constants';
 import CommunicatorBoardsActions from './CommunicatorBoardsActions';
-import PublicBoardsActions from './PublicBoardsActions';
 import MyBoardsActions from './MyBoardsActions';
+import PublicBoardsActions from './PublicBoardsActions';
 
 interface BoardActionsSectionProps {
   loading: boolean;

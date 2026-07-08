@@ -71,12 +71,12 @@ export const updateLangSpeechStatus = async (
       speechLang.substring(0, 2)
     ) {
       const uris = voices.map((v) => v.voiceURI);
-      let voiceURI = '';
-      if (uris.includes(voiceURI)) {
-        voiceURI = useSpeechStore.getState().options.voiceURI || '';
-      } else {
-        voiceURI = getVoiceURI(speechLang, voices);
-      }
+      const currentVoiceURI = useSpeechStore.getState().options.voiceURI || '';
+      // Keep the user's saved voice if it's still available; otherwise fall
+      // back to the default voice for the resolved language.
+      const voiceURI = uris.includes(currentVoiceURI)
+        ? currentVoiceURI
+        : getVoiceURI(speechLang, voices);
       changeVoice({ voiceURI, lang: speechLang });
     }
 

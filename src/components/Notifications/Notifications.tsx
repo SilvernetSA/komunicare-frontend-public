@@ -6,9 +6,9 @@ import React, { useRef, useCallback, useMemo } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link } from 'react-router-dom';
 
-import { useNotificationStore } from '../../store/notificationStore';
 import { NOTIFICATION_DELAY } from './Notifications.constants';
 import messages from './Notifications.messages';
+import { useNotificationStore } from '../../store/notificationStore';
 
 type NotificationKind =
   | 'refresh'

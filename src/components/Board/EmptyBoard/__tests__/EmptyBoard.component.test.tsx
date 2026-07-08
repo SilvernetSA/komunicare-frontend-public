@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import React from 'react';
 import { act } from 'react';
 import { createRoot, Root } from 'react-dom/client';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { IntlProvider } from 'react-intl';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 

@@ -47,4 +47,3 @@ export const handleGoToExistingCopy = ({
   setSelectedTileIds([]);
   setIsSelecting(false);
 };
-

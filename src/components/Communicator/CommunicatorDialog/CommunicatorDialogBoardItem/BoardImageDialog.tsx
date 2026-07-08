@@ -1,14 +1,15 @@
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContentText from '@mui/material/DialogContentText';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import InputImage from '../../../UI/InputImage/InputImage.component';
+import React from 'react';
+
 import { Board } from '../../../../types/board';
+import InputImage from '../../../UI/InputImage/InputImage.component';
 
 const Transition = React.forwardRef<unknown, { children: React.ReactElement }>(
   function Transition(props, ref) {
@@ -61,10 +62,12 @@ const BoardImageDialog: React.FC<BoardImageDialogProps> = ({
         <Button
           variant="contained"
           color="primary"
-          startIcon={<SearchIcon />}
+          startIcon={<AutoAwesomeIcon />}
           onClick={onSymbolSearchClick}
         >
-          {intl ? intl.formatMessage(messages.imageSearch) : 'Search Images'}
+          {intl
+            ? intl.formatMessage(messages.imageSearch)
+            : 'Generate pictogram with AI'}
         </Button>
         <InputImage onChange={onImageChange} intl={intl} />
         {!!imageBoard && <img src={imageBoard} alt={board.name} />}

@@ -1,8 +1,8 @@
-import React from 'react';
-import { Grid, Card, Fab } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-import EditIcon from '@mui/icons-material/Edit';
+import { Grid, Card, Fab } from '@mui/material';
+import React from 'react';
 import './StatCards2.css';
 
 interface CategoryTotal {

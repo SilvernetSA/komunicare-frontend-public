@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import MenuIcon from '@mui/icons-material/MoreVert';
 import SearchIcon from '@mui/icons-material/Search';
 import Menu from '@mui/material/Menu';
@@ -12,6 +13,7 @@ import IconButton from '../../UI/IconButton/IconButton';
 
 interface CommunicatorDialogButtonsProps {
   onSearch: (searchValue: string) => void;
+  onCreateCommunicator?: () => void;
   intl?: IntlShape;
   dark?: boolean;
   searchValue?: string;
@@ -24,6 +26,7 @@ const CommunicatorDialogButtons: React.FC<CommunicatorDialogButtonsProps> = ({
   searchValue = '',
   isSearchOpen = false,
   openSearchBar,
+  onCreateCommunicator,
   dark = false,
   onSearch,
 }) => {
@@ -71,6 +74,17 @@ const CommunicatorDialogButtons: React.FC<CommunicatorDialogButtonsProps> = ({
             size="large"
           >
             <SearchIcon />
+          </IconButton>
+        </div>
+      )}
+      {onCreateCommunicator && (
+        <div className="CommunicatorDialogButtons__createButton">
+          <IconButton
+            label="Create Communicator"
+            onClick={onCreateCommunicator}
+            size="large"
+          >
+            <AddIcon />
           </IconButton>
         </div>
       )}

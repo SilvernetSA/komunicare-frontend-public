@@ -11,14 +11,6 @@ declare module '*.ts' {
   export default content;
 }
 
-// Fix for autosuggest
-declare module 'react-autosuggest' {
-  export interface InputProps<T> {
-    [key: string]: any;
-  }
-  export default function Autosuggest<T, S>(props: any): JSX.Element;
-}
-
 // Fix for file-saver
 declare module 'file-saver' {
   export function saveAs(data: any, filename?: string, options?: any): void;

@@ -1,5 +1,6 @@
-import React from 'react';
 import { ListSubheader, Typography } from '@mui/material';
+import React from 'react';
+
 import messages from '../Language.messages';
 
 interface LanguageHeaderProps {

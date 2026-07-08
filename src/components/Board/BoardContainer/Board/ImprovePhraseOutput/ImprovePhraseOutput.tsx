@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
-import styles from './ImprovePhraseOutput.module.css';
-import { Typography } from '@mui/material';
 import { PlayArrow } from '@mui/icons-material';
+import { Typography } from '@mui/material';
+import React, { useEffect } from 'react';
+
+import styles from './ImprovePhraseOutput.module.css';
 
 interface ImprovePhraseOutputProps {
   improvedPhrase: string;
@@ -15,7 +16,7 @@ const ImprovePhraseOutput: React.FC<ImprovePhraseOutputProps> = ({
   onPhraseImproved,
 }) => {
   const cleanPhrase = (phrase: string): string => {
-    const safePhrase = typeof improvedPhrase === 'string' ? improvedPhrase : '';
+    const safePhrase = typeof phrase === 'string' ? phrase : '';
     return safePhrase.replace(/\\"/g, '"').replace(/^"|"$/g, '');
   };
 
@@ -39,6 +40,11 @@ const ImprovePhraseOutput: React.FC<ImprovePhraseOutputProps> = ({
   return (
     <div
       tabIndex={0}
+      role="button"
+      // Make the suggested-phrase bar reachable by the face-tracking cursor's
+      // dwell engine, which only clicks button/[role=button]/a[href]/[data-dwell=on].
+      // Only dwellable when there's actually a phrase to speak.
+      data-dwell={cleanedPhrase ? 'on' : 'off'}
       className={enabledControllsClassname}
       onClick={handlePlay}
     >

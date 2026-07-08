@@ -1,5 +1,3 @@
-import React from 'react';
-import { FormattedMessage } from 'react-intl';
 import {
   Dialog,
   DialogTitle,
@@ -8,7 +6,10 @@ import {
   Button,
   Slide,
 } from '@mui/material';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import ReactMarkdown from 'react-markdown';
+
 import messages from '../Language.messages';
 
 const Transition = React.forwardRef<any, any>(function Transition(props, ref) {

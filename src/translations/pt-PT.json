@@ -3809,5 +3809,15 @@
   "symbol.descriptiveQuantity.slow": "devagar",
   "symbol.descriptiveQuantity.different": "diferente",
   "symbol.buildingContents.bathroom": "banheiro",
-  "symbol.descriptiveQuantity.categories": "Categorias"
+  "symbol.descriptiveQuantity.categories": "Categorias",
+  "komunicare.components.Board.EditToolbar.addFolderButton": "Nova pasta",
+  "komunicare.components.CreateCommunicatorModal.title": "Criar comunicador",
+  "komunicare.components.CreateCommunicatorModal.nameLabel": "Nome",
+  "komunicare.components.CreateCommunicatorModal.namePlaceholder": "Meu comunicador",
+  "komunicare.components.CreateCommunicatorModal.descriptionLabel": "Descrição (opcional)",
+  "komunicare.components.CreateCommunicatorModal.cancel": "Cancelar",
+  "komunicare.components.CreateCommunicatorModal.create": "Criar",
+  "komunicare.components.CreateCommunicatorModal.creating": "Criando...",
+  "komunicare.components.CommunicatorToolbar.createCommunicator": "Novo comunicador",
+  "komunicare.components.CreateCommunicatorModal.addImage": "Adicionar imagem"
 }

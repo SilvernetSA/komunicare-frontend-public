@@ -1,26 +1,57 @@
+/* ─── Container ───────────────────────────────────────────────────────────── */
+
+/* Override FullScreenDialogContent default padding so we control spacing */
+.TileEditor .FullScreenDialogContent {
+  padding: 0;
+}
+
 .TileEditor__container {
   display: flex;
   flex-direction: column;
+  background: #f0f4f8;
+  min-height: 100%;
+  flex: 1;
+  padding: 16px;
+  gap: 12px;
 }
+
+/* ─── Section rows ────────────────────────────────────────────────────────── */
 
 .TileEditor__row {
   width: 100%;
   flex-shrink: 0;
-  margin-inline-end: 16px;
   text-align: left;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(26, 38, 64, 0.07);
 }
+
+.TileEditor__row + .TileEditor__row {
+  border-top: none;
+}
+
+/* Last row stretches to fill remaining height */
+.TileEditor__row:last-child {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* ─── Main info grid ──────────────────────────────────────────────────────── */
 
 .TileEditor__main-info {
   display: grid;
-  grid-template-columns: clamp(135px, 22vw, 170px) 1fr;
+  grid-template-columns: clamp(160px, 24vw, 190px) 1fr;
   grid-template-areas:
     'preview form'
     'controls form';
-  column-gap: 20px;
+  column-gap: 24px;
   row-gap: 12px;
   width: 100%;
-  justify-items: start;
+  align-items: start;
 }
+
+/* ─── Tile preview ────────────────────────────────────────────────────────── */
 
 .TileEditor__preview {
   grid-area: preview;
@@ -28,37 +59,9 @@
   overflow: hidden;
   margin: 0;
   width: 100%;
-  max-width: 150px;
-}
-
-.TileEditor__picto-fields {
-  grid-area: controls;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 150px;
-  padding-block: 4px;
-  padding-inline: 0;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.TileEditor__picto-fields .MuiButton-root {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 13px;
-  padding-inline: 12px;
-}
-
-.TileEditor__form-fields {
-  grid-area: form;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 10px 12px;
-  gap: 10px;
+  max-width: 180px;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 132, 200, 0.15);
 }
 
 .TileEditor__preview::before {
@@ -75,29 +78,98 @@
   height: 100%;
 }
 
-@media (max-width: 900px) {
-  .TileEditor__main-info {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      'preview'
-      'controls'
-      'form';
-    justify-items: center;
-  }
+/* ─── Picto controls (buttons below preview) ──────────────────────────────── */
 
-  .TileEditor__preview,
-  .TileEditor__picto-fields {
-    max-width: 170px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .TileEditor__picto-fields {
-    padding-inline: 6px;
-    gap: 8px;
-  }
+.TileEditor__picto-fields {
+  grid-area: controls;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 190px;
+  padding-block: 4px;
+  gap: 8px;
+  align-items: stretch;
 }
 
+/* Search / generate pictogram button — blue Tobii style */
+.TileEditor__picto-fields .TileImageControls__search-btn.MuiButton-root {
+  background-color: #0084c8;
+  border-radius: 12px;
+  text-transform: none;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10px 14px;
+  box-shadow: 0 2px 8px rgba(0, 132, 200, 0.3);
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.TileEditor__picto-fields .TileImageControls__search-btn.MuiButton-root:hover {
+  background-color: #006ba6;
+  box-shadow: 0 4px 12px rgba(0, 132, 200, 0.35);
+}
+
+/* Edit image button */
+.TileEditor__picto-fields .MuiButton-containedSecondary {
+  background-color: #455a64;
+  border-radius: 12px;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  padding: 8px 12px;
+  justify-content: flex-start;
+}
+
+.TileEditor__picto-fields .MuiButton-containedSecondary:hover {
+  background-color: #37474f;
+}
+
+/* Generic fallback for any containedPrimary not caught above */
+.TileEditor__picto-fields
+  .MuiButton-containedPrimary:not(.TileImageControls__search-btn) {
+  background-color: #0084c8;
+  border-radius: 12px;
+  text-transform: none;
+  font-weight: 600;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  padding: 8px 12px;
+  justify-content: flex-start;
+}
+
+/* Upload image link */
+.TileEditor__picto-fields .InputImage label {
+  color: #0084c8;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ─── Input image wrapper ─────────────────────────────────────────────────── */
+
+.TileEditor__input-image {
+  display: flex;
+  align-items: center;
+}
+
+/* ─── Form fields (right panel) ───────────────────────────────────────────── */
+
+.TileEditor__form-fields {
+  grid-area: form;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 14px;
+}
+
+/* RTL label overrides */
 .TileEditor__form-fields .MuiOutlinedInput-notchedOutline {
   padding: 0;
 }
@@ -161,120 +233,134 @@
   background-color: var(--tile-editor-label-bg-dark, #424242);
 }
 
-.TileEditor__radiogroup {
-  margin-top: 6px;
+/* Blue focus accent on form inputs */
+.TileEditor__form-fields
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #0084c8;
 }
 
-.TileEditor__colorselect {
-  margin-top: 10px;
+.TileEditor__form-fields .MuiInputLabel-root.Mui-focused {
+  color: #0084c8;
 }
-.TileEditor__voicerecorder {
-  margin-top: 10px;
+
+/* ─── Tipo radio group ────────────────────────────────────────────────────── */
+
+.TileEditor__radiogroup {
+  margin-top: 4px;
+}
+
+.TileEditor__radiogroup__options {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.TileEditor__radiogroup__options .MuiFormControlLabel-root {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.TileEditor__radiogroup__options .MuiRadio-root {
+  padding: 4px;
+  color: #0084c8;
+}
+
+.TileEditor__radiogroup__options .MuiRadio-root.Mui-checked {
+  color: #0084c8;
+}
+
+/* ─── Color section row ───────────────────────────────────────────────────── */
+
+.TileEditor__colorselect {
+  margin: 0;
 }
 
 .TileEditor__colorselect .MuiFormControl-root {
   width: 100%;
 }
 
+/* Color scheme select: blue focus ring */
+.TileEditor__colorselect
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #0084c8;
+}
+
+/* Color circles strip — single horizontal row, scrollable */
 .TileEditor__colorselect .MuiFormGroup-root {
   display: flex;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-@media (max-width: 600px) {
-  .TileEditor__colorselect .MuiFormGroup-root {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
-    gap: 8px;
-    justify-items: center;
-  }
-}
-
-.TileEditor__radiogroup__options {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: 12px;
-  row-gap: 6px;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 12px 0 6px;
   align-items: center;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 
-.TileEditor__radiogroup__options .MuiFormControlLabel-root {
-  margin: 0;
+.TileEditor__colorselect .MuiFormGroup-root::-webkit-scrollbar {
+  display: none;
 }
 
-.TileEditor__radiogroup__options .MuiRadio-root {
+.TileEditor__colorselect .MuiFormGroup-root .MuiButtonBase-root {
+  flex-shrink: 0;
   padding: 4px;
 }
 
-/* ── Tobii AAC redesign ───────────────────────────────────────────── */
+/* ─── Voice recorder ──────────────────────────────────────────────────────── */
 
-/* Card container */
-.TileEditor .MuiPaper-root {
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+.TileEditor__voicerecorder {
+  margin-top: 4px;
 }
 
-/* Form fields: purple focus */
-.TileEditor
-  .MuiOutlinedInput-root.Mui-focused
-  .MuiOutlinedInput-notchedOutline {
-  border-color: #7b1fa2;
-}
-.TileEditor .MuiInputLabel-root.Mui-focused {
-  color: #7b1fa2;
-}
-
-/* SÍMBOLOS + Edit image buttons → purple */
-.TileEditor__picto-fields .MuiButton-containedPrimary,
-.TileEditor__picto-fields .MuiButton-containedSecondary {
-  background-color: #7b1fa2;
-  border-radius: 8px;
-  text-transform: none;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  box-shadow: 0 2px 6px rgba(123, 31, 162, 0.25);
-}
-.TileEditor__picto-fields .MuiButton-containedPrimary:hover,
-.TileEditor__picto-fields .MuiButton-containedSecondary:hover {
-  background-color: #6a1b9a;
-  box-shadow: 0 4px 10px rgba(123, 31, 162, 0.3);
-}
-
-/* Subir imagen link button */
-.TileEditor__picto-fields .InputImage label {
-  color: #7b1fa2;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Radio buttons → purple */
-.TileEditor .MuiRadio-root.Mui-checked {
-  color: #7b1fa2;
-}
-
-/* Color scheme select: subtle purple focus ring */
-.TileEditor
-  .TileEditor__colorselect
-  .MuiOutlinedInput-root.Mui-focused
-  .MuiOutlinedInput-notchedOutline {
-  border-color: #7b1fa2;
-}
-
-/* Voice recorder label */
 .TileEditor__voicerecorder .MuiFormLabel-root {
-  color: #616161;
+  color: #455a64;
   font-size: 0.85rem;
-  font-weight: 500;
-  margin-bottom: 4px;
+  font-weight: 600;
+  margin-bottom: 6px;
   display: block;
 }
 
-/* Divider between sections */
-.TileEditor__row + .TileEditor__row {
-  border-top: 1px solid #f0f0f0;
+/* ─── Paper wrapper — fill full dialog height ─────────────────────────────── */
+
+.TileEditor .MuiPaper-root {
+  background: #f0f4f8;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
+  /* Fill the StyledContainer height so no gray gap appears at the bottom */
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .TileEditor__main-info {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'preview'
+      'controls'
+      'form';
+    justify-items: center;
+  }
+
+  .TileEditor__preview,
+  .TileEditor__picto-fields {
+    max-width: 190px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .TileEditor__row {
+    padding: 16px;
+    border-radius: 12px;
+  }
 }

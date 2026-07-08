@@ -1,4 +1,3 @@
-import CircularProgress from '@mui/material/CircularProgress';
 import React from 'react';
 
 import BuildInfo from '../UI/BuildInfo/BuildInfo';
@@ -7,11 +6,20 @@ import './AppLoading.css';
 
 const AppLoading: React.FC = () => (
   <div className="AppLoading">
-    <p className="AppLoading__main-message">Komunicare is loading...</p>
-    <div className="AppLoading__loading">
-      <CircularProgress size={40} thickness={3} color="inherit" />
+    <div className="AppLoading__logo">
+      <img src="/images/logo.svg" alt="Komunicare" />
     </div>
-    {IS_DEV_ENV && <BuildInfo variant="badge" />}
+    <p className="AppLoading__brand">Komunicare</p>
+    <div className="AppLoading__dots">
+      <span className="AppLoading__dot" />
+      <span className="AppLoading__dot" />
+      <span className="AppLoading__dot" />
+    </div>
+    {IS_DEV_ENV && (
+      <div className="AppLoading__build">
+        <BuildInfo variant="badge" />
+      </div>
+    )}
   </div>
 );
 

@@ -1,12 +1,12 @@
-import React from 'react';
-import { useIntl } from 'react-intl';
-import { useTheme } from '@mui/material/styles';
-
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useTheme } from '@mui/material/styles';
+import React from 'react';
+import { useIntl } from 'react-intl';
 
-import IconButton from '../IconButton/IconButton';
+
 import messages from './BackButton.messages';
+import IconButton from '../IconButton/IconButton';
 
 function BackButton(props: Record<string, unknown>) {
   const intl = useIntl();

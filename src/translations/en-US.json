@@ -4158,5 +4158,15 @@
   "komunicare.components.PremiumFeature.tryPeriodFinishBody": "To continue using Komunicare, contact your institution or subscribe.",
   "komunicare.components.PremiumFeature.featureBlockedTittle": "This feature is blocked",
   "komunicare.components.PremiumFeature.featureBlockedText": "To access this and all other features, please subscribe.",
-  "komunicare.components.PremiumFeature.upgradeNow": "Subscribe now"
+  "komunicare.components.PremiumFeature.upgradeNow": "Subscribe now",
+  "komunicare.components.Board.EditToolbar.addFolderButton": "New Folder",
+  "komunicare.components.CreateCommunicatorModal.title": "Create Communicator",
+  "komunicare.components.CreateCommunicatorModal.nameLabel": "Name",
+  "komunicare.components.CreateCommunicatorModal.namePlaceholder": "My communicator",
+  "komunicare.components.CreateCommunicatorModal.descriptionLabel": "Description (optional)",
+  "komunicare.components.CreateCommunicatorModal.cancel": "Cancel",
+  "komunicare.components.CreateCommunicatorModal.create": "Create",
+  "komunicare.components.CreateCommunicatorModal.creating": "Creating...",
+  "komunicare.components.CommunicatorToolbar.createCommunicator": "New Communicator",
+  "komunicare.components.CreateCommunicatorModal.addImage": "Add image"
 }

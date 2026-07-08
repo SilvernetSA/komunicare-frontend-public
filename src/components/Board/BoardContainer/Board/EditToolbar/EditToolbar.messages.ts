@@ -33,6 +33,10 @@ const messages: Messages = defineMessages({
     id: 'komunicare.components.Board.EditToolbar.addTileButton',
     defaultMessage: 'Add Tile',
   },
+  addFolderButton: {
+    id: 'komunicare.components.Board.EditToolbar.addFolderButton',
+    defaultMessage: 'New Folder',
+  },
   fixedBoard: {
     id: 'komunicare.components.Board.EditToolbar.fixedBoard',
     defaultMessage: 'Fixed',

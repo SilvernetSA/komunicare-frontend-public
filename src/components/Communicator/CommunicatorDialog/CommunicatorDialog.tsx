@@ -19,6 +19,7 @@ import {
   setRootBoard,
 } from './Container/communicatorActions';
 import { findBoards, doSearch } from './Container/searchHandlers';
+import CreateCommunicatorModal from './CreateCommunicatorModal';
 import { useAppStore } from '../../../store/appStore';
 import { useBoardsStore } from '../../../store/boardsStore';
 import { useCommunicatorsStore } from '../../../store/communicatorsStore';
@@ -112,10 +113,12 @@ interface ContainerProps {
   communicatorTour: unknown;
   cboardBoards: Board[];
   intl?: unknown;
+  communicatorRootBoardIds: Set<string>;
   createCommunicator: (communicator: Communicator) => void;
   editCommunicator: (communicator: Communicator) => void;
   deleteCommunicator: (communicatorId: string) => void;
   changeCommunicator: (communicatorId: string) => void;
+  createCommunicatorCopy: (systemCommunicatorId: string) => Promise<string>;
   switchBoard: (boardId: string) => void;
   navigate?: (path: string, options?: { replace?: boolean }) => void;
   addBoards: (boards: Board[]) => void;
@@ -208,6 +211,14 @@ const CommunicatorDialogContainer: React.FC<
     );
   }, [app.userData, communicator.communicators]);
 
+  const communicatorRootBoardIds = useMemo(() => {
+    return new Set(
+      communicator.communicators
+        .map((c) => c.rootBoard)
+        .filter(Boolean) as string[],
+    );
+  }, [communicator.communicators]);
+
   const currentCommunicator =
     findLatestCommunicatorByBoard(visibleCommunicators, board.activeBoardId) ||
     visibleCommunicators.find(
@@ -273,12 +284,45 @@ const CommunicatorDialogContainer: React.FC<
       communicatorTour,
       cboardBoards,
       intl,
+      communicatorRootBoardIds,
       createCommunicator: (comm: any) => createCommunicatorAction(comm),
       editCommunicator: (comm: any) => editCommunicatorAction(comm),
       deleteCommunicator: (communicatorId: string) =>
         deleteCommunicatorAction(communicatorId),
       changeCommunicator: (communicatorId: string) =>
         changeCommunicatorAction(communicatorId),
+      createCommunicatorCopy: async (
+        systemCommunicatorId: string,
+      ): Promise<string> => {
+        const systemComm = communicator.communicators.find(
+          (c) => String(c.id) === systemCommunicatorId,
+        );
+        const tempId = `copy-${systemCommunicatorId}-${Date.now()}`;
+        const isKomunicare =
+          systemCommunicatorId === 'komunicare' ||
+          systemComm?.rootBoard === 'komunicare';
+        const created = await useCommunicatorsStore
+          .getState()
+          .createRemoteCommunicator({
+            communicator: {
+              id: tempId,
+              name: systemComm?.name || '',
+              author: (app.userData as any)?.name || '',
+              email: (app.userData as any)?.email || '',
+              rootBoard: systemComm?.rootBoard || '',
+              boards: systemComm?.boards || [],
+              ...(isKomunicare ? { copySource: 'komunicare' } : {}),
+              copySourceCommunicatorId: systemCommunicatorId,
+            } as Communicator,
+            tempId,
+          });
+        // createApiCommunicatorSuccess only updates the ID of a pre-existing temp
+        // entry; since we never pre-added the temp to the store, the copy would be
+        // invisible until the next full fetch. Upsert it explicitly so the gallery
+        // and changeCommunicator can see it immediately.
+        useCommunicatorsStore.getState().upsertCommunicator(created);
+        return String(created.id);
+      },
       switchBoard: (boardId: string) => boardsStore.switchBoard(boardId),
       navigate,
       addBoards: (boardsToAdd: Board[]) => boardsStore.addBoards(boardsToAdd),
@@ -361,7 +405,24 @@ const CommunicatorDialogContainer: React.FC<
     updateRemoteCommunicatorAction,
     deleteRemoteCommunicatorAction,
     visibleCommunicators,
+    communicatorRootBoardIds,
+    communicator.communicators,
   ]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const handleCreateCommunicator = useCallback(() => {
+    setShowCreateModal(true);
+  }, []);
+
+  const handleCommunicatorCreated = useCallback(
+    (communicatorId: string) => {
+      setShowCreateModal(false);
+      changeCommunicatorAction(communicatorId);
+      if (onClose) onClose();
+    },
+    [changeCommunicatorAction, onClose],
+  );
+
   const [state, setState] = useState({
     loading: false,
     boards: containerProps.communicatorBoards,
@@ -554,7 +615,29 @@ const CommunicatorDialogContainer: React.FC<
     return null;
   }
 
-  return <CommunicatorDialog {...(dialogProps as any)} />;
+  return (
+    <>
+      <CommunicatorDialog
+        {...(dialogProps as any)}
+        onCreateCommunicator={handleCreateCommunicator}
+      />
+      <CreateCommunicatorModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onCreated={handleCommunicatorCreated}
+        createRemoteCommunicator={async (payload) => {
+          const comm = await useCommunicatorsStore
+            .getState()
+            .createRemoteCommunicator(payload);
+          return comm;
+        }}
+        createRemoteBoard={async (payload) => {
+          const board = await boardsStore.createRemoteBoard(payload);
+          return board;
+        }}
+      />
+    </>
+  );
 };
 
 export default CommunicatorDialogContainer;

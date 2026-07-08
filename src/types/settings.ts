@@ -44,6 +44,7 @@ export interface Settings {
   language?: Record<string, unknown>;
   speech?: Record<string, unknown>;
   display?: Record<string, unknown>;
+  faceTracking?: Record<string, unknown>;
   navigation?: NavigationConfig;
   user?: string;
   devices?: Device[];

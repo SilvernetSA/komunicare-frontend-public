@@ -1,11 +1,8 @@
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
 import keycode from 'keycode';
@@ -32,20 +29,6 @@ import CommunicatorToolbar from '../../../Communicator/CommunicatorToolbar/Commu
 import { NAVIGATION_BUTTONS_STYLE_SIDES } from '../../../Settings/Navigation/Navigation.constants';
 import { setCommunicatorCopyDialogHandler } from '../../utils-simple/copyOnWrite';
 import './Board.css';
-
-interface CommunicatorCopyDialogState {
-  open: boolean;
-  promptText: string;
-  suggestedName: string;
-  setAsStartup: boolean;
-}
-
-const initialCommunicatorCopyDialogState: CommunicatorCopyDialogState = {
-  open: false,
-  promptText: '',
-  suggestedName: '',
-  setAsStartup: false,
-};
 
 interface BoardProps {
   board: BoardType;
@@ -159,34 +142,26 @@ const Board: React.FC<BoardProps> = ({
 }) => {
   const [openTitleDialog, setOpenTitleDialog] = useState(false);
   const [titleDialogValue, setTitleDialogValue] = useState(board?.name || '');
-  const [communicatorCopyDialog, setCommunicatorCopyDialog] = useState(
-    initialCommunicatorCopyDialogState,
-  );
 
   const boardContainerRef = useRef<HTMLDivElement>(null);
   const fixedBoardContainerRef = useRef<HTMLDivElement>(null);
-  const communicatorCopyResolverRef = useRef<
-    ((value: { name: string; setAsStartup: boolean } | null) => void) | null
-  >(null);
 
   useEffect(() => {
-    setCommunicatorCopyDialogHandler(
-      (payload) =>
-        new Promise((resolve) => {
-          communicatorCopyResolverRef.current = resolve;
-          setCommunicatorCopyDialog({
-            open: true,
-            promptText: payload.promptText,
-            suggestedName: payload.suggestedName,
-            setAsStartup: false,
-          });
-        }),
+    // Copy-on-write for official communicators is silent: when the user edits a
+    // protected communicator without an existing personal copy, we create the
+    // copy transparently using the auto-suggested name and redirect them to it.
+    // No confirmation modal is shown here. The "you already have a copy" notice
+    // is handled separately (existingCopyFound dialog) so the user still
+    // understands when they are redirected to a pre-existing copy.
+    setCommunicatorCopyDialogHandler((payload) =>
+      Promise.resolve({
+        name: payload.suggestedName,
+        setAsStartup: false,
+      }),
     );
 
     return () => {
       setCommunicatorCopyDialogHandler(null);
-      communicatorCopyResolverRef.current?.(null);
-      communicatorCopyResolverRef.current = null;
     };
   }, []);
 
@@ -255,29 +230,6 @@ const Board: React.FC<BoardProps> = ({
     }
     handleBoardTitleClose();
   }, [titleDialogValue, editBoardTitle, handleBoardTitleClose]);
-
-  const handleCommunicatorCopyCancel = useCallback(() => {
-    communicatorCopyResolverRef.current?.(null);
-    communicatorCopyResolverRef.current = null;
-    setCommunicatorCopyDialog(initialCommunicatorCopyDialogState);
-  }, []);
-
-  const handleCommunicatorCopyAccept = useCallback(() => {
-    const name = communicatorCopyDialog.suggestedName.trim();
-    if (!name) {
-      return;
-    }
-
-    communicatorCopyResolverRef.current?.({
-      name,
-      setAsStartup: communicatorCopyDialog.setAsStartup,
-    });
-    communicatorCopyResolverRef.current = null;
-    setCommunicatorCopyDialog(initialCommunicatorCopyDialogState);
-  }, [
-    communicatorCopyDialog.suggestedName,
-    communicatorCopyDialog.setAsStartup,
-  ]);
 
   const isLoggedIn = !!userData?.email;
   const isNavigationButtonsOnTheSide =
@@ -472,69 +424,6 @@ const Board: React.FC<BoardProps> = ({
               }}
             >
               {intl.formatMessage(messages.boardEditTitleAccept)}
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={communicatorCopyDialog.open}
-          aria-labelledby="communicator-copy-dialog-title"
-          onClose={handleCommunicatorCopyCancel}
-        >
-          <DialogTitle id="communicator-copy-dialog-title">
-            {intl.formatMessage(messages.originalCommunicatorCopyDialogTitle)}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText style={{ marginBottom: 12 }}>
-              {communicatorCopyDialog.promptText ||
-                intl.formatMessage(
-                  messages.originalCommunicatorCopyDialogDescription,
-                )}
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="communicator copy name"
-              label={intl.formatMessage(
-                messages.originalCommunicatorCopyNamePrompt,
-              )}
-              type="text"
-              fullWidth
-              value={communicatorCopyDialog.suggestedName}
-              onChange={(event) =>
-                setCommunicatorCopyDialog((prev) => ({
-                  ...prev,
-                  suggestedName: event.target.value,
-                }))
-              }
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={communicatorCopyDialog.setAsStartup}
-                  onChange={(event) =>
-                    setCommunicatorCopyDialog((prev) => ({
-                      ...prev,
-                      setAsStartup: event.target.checked,
-                    }))
-                  }
-                />
-              }
-              label={intl.formatMessage(
-                messages.originalCommunicatorCopySetAsStartup,
-              )}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCommunicatorCopyCancel} color="primary">
-              {intl.formatMessage(messages.boardCopyCancel)}
-            </Button>
-            <Button
-              onClick={handleCommunicatorCopyAccept}
-              color="primary"
-              variant="contained"
-              disabled={!communicatorCopyDialog.suggestedName.trim()}
-            >
-              {intl.formatMessage(messages.boardCopyAccept)}
             </Button>
           </DialogActions>
         </Dialog>

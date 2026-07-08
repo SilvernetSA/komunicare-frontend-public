@@ -293,8 +293,8 @@ const CommunicatorDialogBoardItem: React.FC<Props> = ({
       />
       <SymbolSearch
         open={state.isSymbolSearchOpen}
-        onChange={({ image }: { image: { image?: string } }) =>
-          handleSymbolSearchChange({ image } as any, setState as any)
+        onChange={({ image }: { image: string }) =>
+          handleSymbolSearchChange({ image }, setState as any)
         }
         onClose={() =>
           setState((prev) => ({ ...prev, isSymbolSearchOpen: false }))

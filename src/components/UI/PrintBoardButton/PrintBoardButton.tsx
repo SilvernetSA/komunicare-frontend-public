@@ -1,6 +1,6 @@
+import PrintBoardIcon from '@mui/icons-material/Print';
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import PrintBoardIcon from '@mui/icons-material/Print';
 
 import IconButton from '../IconButton/IconButton';
 import PrintBoardDialog from './components/PrintBoardDialog';

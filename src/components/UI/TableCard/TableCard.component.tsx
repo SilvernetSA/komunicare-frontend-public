@@ -1,5 +1,6 @@
-import React from 'react';
 import { Card } from '@mui/material';
+import React from 'react';
+
 import StyledTable from '../StyledTable/StyledTable.component';
 import './TableCard.css';
 

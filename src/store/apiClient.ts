@@ -35,10 +35,7 @@ export const createApiClient = (
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (
-        error.response?.status === 401 &&
-        error.config?.baseURL === API_URL
-      ) {
+      if (error.response?.status === 401 && error.config?.baseURL === API_URL) {
         if (unauthorizedHandler) {
           unauthorizedHandler();
         }

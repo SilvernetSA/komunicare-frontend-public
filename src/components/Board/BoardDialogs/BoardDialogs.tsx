@@ -122,7 +122,11 @@ const BoardDialogs: React.FC<BoardDialogsProps> = ({
           <Button onClick={onClose} color="primary">
             {intl.formatMessage(messages.boardCopyCancel)}
           </Button>
-          <Button onClick={onGoToExistingCopy} color="primary" variant="contained">
+          <Button
+            onClick={onGoToExistingCopy}
+            color="primary"
+            variant="contained"
+          >
             {intl.formatMessage(messages.boardCopyAccept)}
           </Button>
         </DialogActions>

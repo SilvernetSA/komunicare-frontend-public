@@ -51,7 +51,7 @@ export default defineMessages({
   },
   symbolSearch: {
     id: 'komunicare.components.Board.TileEditor.symbolSearch',
-    defaultMessage: 'Symbol search',
+    defaultMessage: 'Generate pictogram',
   },
   existingBoards: {
     id: 'komunicare.components.Board.TileEditor.existingBoards',
@@ -63,7 +63,7 @@ export default defineMessages({
   },
   symbols: {
     id: 'komunicare.components.Board.TileEditor.symbols',
-    defaultMessage: 'Symbols',
+    defaultMessage: 'Search pictogram',
   },
   editImage: {
     id: 'komunicare.components.Board.TileEditor.editImage',

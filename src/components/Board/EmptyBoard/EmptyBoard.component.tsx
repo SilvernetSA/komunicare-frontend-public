@@ -1,8 +1,8 @@
-import React from 'react';
-import classNames from 'classnames';
-import { FormattedMessage } from 'react-intl';
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
 import { useTheme } from '@mui/material/styles';
+import classNames from 'classnames';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import messages from './EmptyBoard.messages';
 import './EmptyBoard.css';

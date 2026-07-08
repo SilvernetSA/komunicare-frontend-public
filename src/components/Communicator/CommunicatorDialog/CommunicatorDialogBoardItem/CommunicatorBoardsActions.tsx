@@ -1,10 +1,11 @@
-import React from 'react';
-import IconButton from '../../../UI/IconButton/IconButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import HomeIcon from '@mui/icons-material/Home';
+import React from 'react';
+
+import { UserData } from '../../../../types/app';
 import { Board } from '../../../../types/board';
 import { Communicator } from '../../../../types/communicator';
-import { UserData } from '../../../../types/app';
+import IconButton from '../../../UI/IconButton/IconButton';
 
 interface CommunicatorBoardsActionsProps {
   communicator: Communicator;

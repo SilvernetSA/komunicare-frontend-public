@@ -1,8 +1,8 @@
-import React from 'react';
-import Card from '@mui/material/Card';
 import { Grid } from '@mui/material';
-import LinearProgress from '@mui/material/LinearProgress';
 import { Typography } from '@mui/material';
+import Card from '@mui/material/Card';
+import LinearProgress from '@mui/material/LinearProgress';
+import React from 'react';
 
 import './Barchart.css';
 

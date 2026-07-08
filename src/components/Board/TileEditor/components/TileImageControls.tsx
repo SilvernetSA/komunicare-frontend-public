@@ -1,8 +1,9 @@
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+import Button from '@mui/material/Button';
 import React from 'react';
 import { IntlShape } from 'react-intl';
-import Button from '@mui/material/Button';
-import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
+
 import InputImage from '../../../UI/InputImage/InputImage.component';
 import ImageEditor from '../../ImageEditor/ImageEditor.component';
 import messages from '../TileEditor.messages';
@@ -76,6 +77,7 @@ export const TileImageControls: React.FC<TileImageControlsProps> = ({
         color="primary"
         startIcon={<SearchIcon />}
         onClick={(e) => onSearchClick(e, currentLabel)}
+        className="TileImageControls__search-btn"
       >
         {intl.formatMessage(messages.symbols)}
       </Button>

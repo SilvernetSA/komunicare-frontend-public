@@ -1,10 +1,9 @@
 import { Typography } from '@mui/material';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import { arasaacDB } from '../../../idb/arasaac/arasaacdb';
 import { LABEL_POSITION_BELOW } from '../../Settings/Display/Display.constants';
 import messages from '../Board.messages';
 import './Symbol.css';
@@ -35,7 +34,7 @@ interface SymbolProps {
    */
   intl?: IntlShape;
   /**
-   * Key path for Arasaac image
+   * Key path for legacy symbol images
    */
   keyPath?: string;
   /**
@@ -52,70 +51,18 @@ const Symbol: React.FC<SymbolProps> = ({
   className,
   label,
   labelpos = LABEL_POSITION_BELOW,
-  keyPath,
+  keyPath: _keyPath,
   type,
   onWrite,
   intl,
   image,
   ...other
 }) => {
-  const [src, setSrc] = useState<string>('');
-  const objectUrlRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function getSrc() {
-      if (keyPath) {
-        try {
-          const imageData = await arasaacDB.getImageById(keyPath);
-          if (imageData && !cancelled) {
-            // Revoke the previous ObjectURL to avoid memory leaks.
-            if (objectUrlRef.current) {
-              URL.revokeObjectURL(objectUrlRef.current);
-            }
-            const blob = new Blob([imageData.data], { type: imageData.type });
-            const url = URL.createObjectURL(blob);
-            objectUrlRef.current = url;
-            setSrc(url);
-            return;
-          }
-        } catch (error) {
-          console.warn('Error loading image from Arasaac DB:', error);
-        }
-      }
-
-      if (!cancelled) {
-        if (image) {
-          setSrc(image);
-        } else {
-          setSrc('');
-        }
-      }
-    }
-
-    getSrc();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [keyPath, image]);
-
-  // Revoke the ObjectURL when the component unmounts.
-  useEffect(() => {
-    return () => {
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-        objectUrlRef.current = null;
-      }
-    };
-  }, []);
-
   const symbolClassName = classNames('Symbol', className);
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
-      event.preventDefault(); // prevent new line in next textArea
+      event.preventDefault();
       return;
     }
   };
@@ -145,11 +92,11 @@ const Symbol: React.FC<SymbolProps> = ({
       {type !== 'live' && labelpos === 'Above' && (
         <Typography className="Symbol__label">{label}</Typography>
       )}
-      {(src || image) && (
+      {image && (
         <div className="Symbol__image-container">
           <img
             className="Symbol__image"
-            src={src || image}
+            src={image}
             alt=""
             onError={(e) => {
               e.currentTarget.style.display = 'none';

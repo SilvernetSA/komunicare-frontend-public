@@ -31,6 +31,7 @@ interface SearchHandlersProps {
   userData: UserData | Record<string, unknown>;
   fetchPublicBoards: (params: BoardPageParams) => Promise<BoardPageResponse>;
   fetchMyBoards: (params: BoardPageParams) => Promise<BoardPageResponse>;
+  communicatorRootBoardIds?: Set<string>;
 }
 
 interface DoSearchResult {
@@ -156,7 +157,9 @@ export const doSearch = async (
           limit: fallback.limit,
         };
       }
-      const filteredMyBoards = filterOutAppDefaultBoards(myBoardsResponse.data);
+      const filteredMyBoards = filterOutAppDefaultBoards(
+        myBoardsResponse.data,
+      ).filter((board) => !props.communicatorRootBoardIds?.has(board.id));
       const filteredItemsCount =
         myBoardsResponse.data.length - filteredMyBoards.length;
       boards = boards.concat(filteredMyBoards);

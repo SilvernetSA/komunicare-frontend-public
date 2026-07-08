@@ -1,14 +1,14 @@
+import AccountIcon from '@mui/icons-material/AccountCircle';
+import Avatar from '@mui/material/Avatar';
+import { green } from '@mui/material/colors';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import { styled } from '@mui/material/styles';
-import Avatar from '@mui/material/Avatar';
-import AccountIcon from '@mui/icons-material/AccountCircle';
-import { green } from '@mui/material/colors';
 
-import IconButton from '../IconButton/IconButton';
+import messages from './UserIcon.messages';
 import { useAppStore } from '../../../store/appStore';
 import { UserData } from '../../../types/app';
-import messages from './UserIcon.messages';
+import IconButton from '../IconButton/IconButton';
 
 interface UserIconProps {
   /** Override the logged-in user. When omitted the component reads from the store. */

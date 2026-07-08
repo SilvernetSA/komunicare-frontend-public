@@ -7,8 +7,8 @@ import ListItemText from '@mui/material/ListItemText';
 import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import { useAppStore } from '../../../store/appStore';
 import messages from './ResetToursItem.messages';
+import { useAppStore } from '../../../store/appStore';
 
 const ResetToursItem: React.FC = () => {
   const enableAllTours = useAppStore((state) => state.enableAllTours);

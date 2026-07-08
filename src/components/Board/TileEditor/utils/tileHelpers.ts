@@ -1,4 +1,5 @@
 import shortid from 'shortid';
+
 import { Tile } from '../../../../types/board';
 
 interface TileColors {

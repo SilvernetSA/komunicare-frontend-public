@@ -10,6 +10,11 @@ export const applyLoginSuccessFactory =
     set((state: any) => ({
       options: {
         ...state.options,
+        // Restore the user's saved voice. isCloud stays null so
+        // setCurrentVoiceSource() recomputes it once voices are loaded.
+        voiceURI: speech?.voiceURI ?? current.voiceURI,
+        lang: speech?.lang ?? current.lang,
+        isCloud: speech?.isCloud ?? current.isCloud,
         pitch: speech?.pitch ?? current.pitch,
         rate: speech?.rate ?? current.rate,
       },

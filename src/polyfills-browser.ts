@@ -40,9 +40,10 @@ const getFunctionOrFallback = <T extends Function>(
   return typeof fn === 'function' ? (fn as T) : fallback;
 };
 
-// IMPORTANT: never expose `process.versions.node` in the browser. Some wasm
-// bundles use it to mis-detect Node.js and then call `require('node:fs')`,
-// which crashes in the browser. Keep the rest of `versions` but strip node.
+// IMPORTANT: never expose `process.versions.node` in the browser. MediaPipe's
+// Emscripten wasm glue treats a truthy `process.versions.node` as "running in
+// Node.js" and then calls `require('node:fs')` → "require is not defined",
+// breaking FaceLandmarker init. Keep the rest of `versions` but strip node.
 const safeVersions: Record<string, any> = {
   ...(existingProcess.versions || {}),
 };
@@ -50,8 +51,10 @@ delete safeVersions.node;
 
 globalScope.process = {
   browser: true,
-  // Mark this as an Electron-renderer-like (browser) environment so browser
-  // bundles that branch on `process.type` do not take a Node-only code path.
+  // Mark this as an Electron-renderer-like (browser) environment. MediaPipe's
+  // Emscripten wasm glue detects Node via `process.versions.node && process.type
+  // != 'renderer'`; because the polyfill below sets versions.node, without this
+  // marker the glue takes the Node path and calls require('node:fs') → crash.
   type: 'renderer',
   version: existingProcess.version || '',
   platform: existingProcess.platform || 'browser',

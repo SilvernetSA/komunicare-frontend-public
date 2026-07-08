@@ -1,9 +1,9 @@
+import SettingsIcon from '@mui/icons-material/Settings';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import SettingsIcon from '@mui/icons-material/Settings';
 
-import IconButton from '../IconButton/IconButton';
 import messages from './SettingsButton.messages';
+import IconButton from '../IconButton/IconButton';
 
 interface SettingsButtonProps {
   component?: React.ElementType;

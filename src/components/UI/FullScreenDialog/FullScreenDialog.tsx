@@ -98,6 +98,11 @@ function FullScreenDialog({
   return (
     <Dialog
       fullScreen
+      // Exclude every full-screen overlay (settings, tile editor, symbol
+      // search, analytics, etc.) from the face-tracking dwell engine, which
+      // skips anything inside a [data-dwell="off"] subtree. Only the board
+      // itself stays face-clickable. MUI forwards data-* to the dialog root.
+      data-dwell="off"
       open={open}
       TransitionComponent={getTransition(transition)}
       onClose={onClose}

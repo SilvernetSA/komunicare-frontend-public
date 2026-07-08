@@ -23,6 +23,19 @@ export const applySettingsPatchAction = (patch: Partial<Settings>): void => {
   }
 
   if (patch.speech) {
+    if (typeof patch.speech.voiceURI === 'string') {
+      const speechStore = useSpeechStore.getState();
+      const voiceURI = patch.speech.voiceURI;
+      const isCloud =
+        speechStore.voices.find((v) => v.voiceURI === voiceURI)?.voiceSource ===
+        'cloud';
+      speechStore.changeVoice({
+        voiceURI,
+        // The persisted patch carries no lang; keep the current speech lang.
+        lang: (patch.speech.lang as string) || speechStore.options.lang,
+        isCloud,
+      });
+    }
     if (typeof patch.speech.pitch === 'number') {
       useSpeechStore.getState().changePitch(patch.speech.pitch);
     }

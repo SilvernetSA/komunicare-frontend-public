@@ -71,6 +71,10 @@ export const loginFactory =
         ]);
       }
 
+      if (loginData.isFirstLogin) {
+        useAppStore.getState().enableAllTours();
+      }
+
       const remoteBoards = await fetchRemoteBoardsAction(loginData);
       if (remoteBoards.length) {
         useBoardsStore.getState().addBoards(remoteBoards);

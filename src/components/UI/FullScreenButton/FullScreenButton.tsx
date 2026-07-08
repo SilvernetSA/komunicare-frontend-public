@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { useIntl } from 'react-intl';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
+import React, { useState, useCallback } from 'react';
+import { useIntl } from 'react-intl';
 
-import IconButton from '../IconButton/IconButton';
 import messages from './FullScreenButton.messages';
+import IconButton from '../IconButton/IconButton';
 
 interface FullScreenButtonProps {
   disabled?: boolean;

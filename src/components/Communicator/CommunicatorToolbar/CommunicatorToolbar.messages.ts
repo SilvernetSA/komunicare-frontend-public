@@ -33,6 +33,10 @@ export default defineMessages({
     id: 'komunicare.components.CommunicatorToolbar.editCommunicator',
     defaultMessage: 'Build',
   },
+  createCommunicator: {
+    id: 'komunicare.components.CommunicatorToolbar.createCommunicator',
+    defaultMessage: 'New Communicator',
+  },
   addBoardButton: {
     id: 'komunicare.components.CommunicatorToolbar.addBoardButton',
     defaultMessage: 'Add Board',
@@ -119,7 +123,7 @@ export default defineMessages({
   picSeePalBoardDescription: {
     id: 'komunicare.components.CommunicatorToolbar.picSeePalBoardDescription',
     defaultMessage:
-      'Fixed board with core vocabulary, distributed in 11 columns and 6 rows. It uses ARASAAC symbols and the Fitzgerald color scheme.',
+      'Fixed board with core vocabulary, distributed in 11 columns and 6 rows. It uses AAC symbols and the Fitzgerald color scheme.',
   },
   komunicareDescription: {
     id: 'komunicare.components.CommunicatorToolbar.komunicareDescription',

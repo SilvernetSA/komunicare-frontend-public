@@ -1,10 +1,10 @@
-import React from 'react';
-import { Grid, Card, IconButton, Tooltip } from '@mui/material';
-import SpellCheckIcon from '@mui/icons-material/Spellcheck';
-import ViewModuleIcon from '@mui/icons-material/ViewModule';
-import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import EditIcon from '@mui/icons-material/Edit';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import SpellCheckIcon from '@mui/icons-material/Spellcheck';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import { Grid, Card, IconButton, Tooltip } from '@mui/material';
+import React from 'react';
 
 import './StatCards.css';
 

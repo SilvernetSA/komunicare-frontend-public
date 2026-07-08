@@ -1,7 +1,8 @@
 import React from 'react';
-import Tile from '../../Tile/Tile.component';
-import Symbol from '../../Symbol/Symbol';
+
 import { Tile as TileData } from '../../../../types/board';
+import Symbol from '../../Symbol/Symbol';
+import Tile from '../../Tile/Tile.component';
 
 interface TilePreviewProps {
   tile: TileData;

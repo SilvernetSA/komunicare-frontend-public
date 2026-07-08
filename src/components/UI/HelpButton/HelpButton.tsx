@@ -1,9 +1,9 @@
+import HelpIcon from '@mui/icons-material/Help';
 import React from 'react';
 import { useIntl } from 'react-intl';
-import HelpIcon from '@mui/icons-material/Help';
 
-import IconButton from '../IconButton/IconButton';
 import messages from '../../Settings/Settings.messages';
+import IconButton from '../IconButton/IconButton';
 
 function HelpButton(props: Record<string, unknown>) {
   const intl = useIntl();

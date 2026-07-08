@@ -1,5 +1,5 @@
-import { Tile } from '../../../../types/board';
 import { UserData } from '../../../../types/app';
+import { Tile } from '../../../../types/board';
 
 interface ImageUploadData {
   isUploaded: boolean;

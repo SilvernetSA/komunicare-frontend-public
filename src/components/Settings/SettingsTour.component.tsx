@@ -8,7 +8,7 @@ import messages from './Settings.messages';
 import 'swiper/swiper.min.css';
 import 'swiper/components/navigation/navigation.min.css';
 import 'swiper/components/pagination/pagination.min.css';
-import './Settings.css';
+import './SettingsTour.css';
 
 interface SettingsTourProps {
   isSettingsTourEnabled: boolean;
@@ -37,22 +37,59 @@ interface TourImages {
 
 const swiperUse = (SwiperCore as { use: (modules: unknown[]) => void }).use;
 
-const joyRideStyles = {
+const tobiiJoyrideStyles = {
   options: {
-    arrowColor: '#eee',
-    backgroundColor: '#eee',
-    primaryColor: '#aa00ff',
-    textColor: '#333',
-    width: 500,
+    arrowColor: '#ffffff',
+    backgroundColor: '#ffffff',
+    primaryColor: '#0084c8',
+    textColor: '#1a2640',
+    width: 520,
     zIndex: 10000,
   },
+  tooltip: {
+    borderRadius: 12,
+    boxShadow: '0 8px 32px rgba(0, 132, 200, 0.15)',
+    padding: '28px 32px',
+  },
+  tooltipTitle: {
+    fontSize: '1.1rem',
+    fontWeight: 700,
+    color: '#1a2640',
+    marginBottom: 8,
+  },
   tooltipContent: {
-    padding: '5px 5px',
+    fontSize: '1rem',
+    color: '#3d5068',
+    lineHeight: 1.6,
+    padding: '0',
+  },
+  buttonNext: {
+    backgroundColor: '#0084c8',
+    borderRadius: 8,
+    fontSize: '0.95rem',
+    fontWeight: 600,
+    padding: '10px 24px',
+  },
+  buttonBack: {
+    color: '#0084c8',
+    fontSize: '0.95rem',
+    fontWeight: 600,
+  },
+  buttonSkip: {
+    color: '#6b7f96',
+    fontSize: '0.9rem',
+  },
+  beaconInner: {
+    backgroundColor: '#0084c8',
+  },
+  beaconOuter: {
+    borderColor: '#b3d9f0',
+    backgroundColor: 'rgba(0, 132, 200, 0.2)',
   },
 };
 
 const imgFolderPath = '../../../images/tour/settingsTour/';
-let settingsTourImages: TourImages = {
+const settingsTourImages: TourImages = {
   display: [
     {
       src: imgFolderPath + 'elementsSize.png',
@@ -121,10 +158,7 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
   }, []);
 
   const [tooltipSwiperText, setTooltipSwiperText] = useState<TooltipSwiperText>(
-    {
-      title: '',
-      description: '',
-    },
+    { title: '', description: '' },
   );
 
   const handleOnSlideChange = (
@@ -154,14 +188,33 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       target: 'body',
       placement: 'center' as const,
       hideCloseButton: true,
+      styles: {
+        tooltip: {
+          width: '92vw',
+          maxWidth: 540,
+          borderRadius: 16,
+          padding: '32px 32px 24px',
+          boxShadow: '0 16px 48px rgba(0, 132, 200, 0.2)',
+        },
+      },
       content: (
-        <div>
-          <h2>
-            <FormattedMessage {...messages.walkthroughSettings} />
-          </h2>
-          <h5>
+        <div className="SettingsTour__welcome">
+          <div className="SettingsTour__welcome-header">
+            <img
+              className="SettingsTour__welcome-logo"
+              src="/images/logo.svg"
+              alt="Komunicare"
+            />
+            <div className="SettingsTour__welcome-titles">
+              <h1 className="SettingsTour__welcome-title">
+                <FormattedMessage {...messages.walkthroughSettings} />
+              </h1>
+            </div>
+          </div>
+          <div className="SettingsTour__welcome-divider" />
+          <p className="SettingsTour__welcome-body">
             <FormattedMessage {...messages.walkthroughSettingsDesc} />
-          </h5>
+          </p>
         </div>
       ),
     },
@@ -169,8 +222,11 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Language',
       content: (
-        <div>
-          <FormattedMessage {...messages.walkthroughLanguage} />
+        <div className="SettingsTour__step">
+          <span className="SettingsTour__step-icon">🌐</span>
+          <span className="SettingsTour__step-text">
+            <FormattedMessage {...messages.walkthroughLanguage} />
+          </span>
         </div>
       ),
     },
@@ -178,8 +234,11 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Speech',
       content: (
-        <div>
-          <FormattedMessage {...messages.walkthroughSpeech} />
+        <div className="SettingsTour__step">
+          <span className="SettingsTour__step-icon">🔊</span>
+          <span className="SettingsTour__step-text">
+            <FormattedMessage {...messages.walkthroughSpeech} />
+          </span>
         </div>
       ),
     },
@@ -187,8 +246,11 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Export',
       content: (
-        <div>
-          <FormattedMessage {...messages.walkthroughExport} />
+        <div className="SettingsTour__step">
+          <span className="SettingsTour__step-icon">📤</span>
+          <span className="SettingsTour__step-text">
+            <FormattedMessage {...messages.walkthroughExport} />
+          </span>
         </div>
       ),
     },
@@ -196,8 +258,11 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Import',
       content: (
-        <div>
-          <FormattedMessage {...messages.walkthroughImport} />
+        <div className="SettingsTour__step">
+          <span className="SettingsTour__step-icon">📥</span>
+          <span className="SettingsTour__step-text">
+            <FormattedMessage {...messages.walkthroughImport} />
+          </span>
         </div>
       ),
     },
@@ -205,40 +270,37 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Display',
       content: (
-        <div className="Settings__Tour__Step__Swiper__Container">
-          <h2 className="Settings_Tour_Tooltip_Swiper_Title">
+        <div className="SettingsTour__swiper-wrap">
+          <p className="SettingsTour__swiper-title">
             {tooltipSwiperText.title}
-          </h2>
+          </p>
           <Swiper
             navigation={true}
             pagination={true}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: true,
-            }}
-            className="mySwiper"
-            onSlideChange={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('display', swiper.realIndex);
-            }}
-            onInit={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('display', swiper.realIndex);
-            }}
+            autoplay={{ delay: 4000, disableOnInteraction: true }}
+            className="SettingsTour__swiper-inner mySwiper"
+            onSlideChange={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('display', swiper.realIndex)
+            }
+            onInit={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('display', swiper.realIndex)
+            }
           >
-            {settingsTourImages.display.map(
-              (imgData: TourImage, inx: number) => (
-                <SwiperSlide key={`slide-${inx}`}>
-                  <div className="swiperSlideContentContainer">
-                    <img
-                      src={imgData.src}
-                      alt={intl.formatMessage(imgData.title)}
-                      key={intl.formatMessage(imgData.title)}
-                    />
-                  </div>
-                </SwiperSlide>
-              ),
-            )}
+            {settingsTourImages.display.map((imgData: TourImage, i: number) => (
+              <SwiperSlide key={`display-${i}`}>
+                <div className="SettingsTour__slide-img-wrap">
+                  <img
+                    className="SettingsTour__slide-img"
+                    src={imgData.src}
+                    alt={intl.formatMessage(imgData.title)}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
           </Swiper>
-          <div>{tooltipSwiperText.description}</div>
+          <p className="SettingsTour__swiper-desc">
+            {tooltipSwiperText.description}
+          </p>
         </div>
       ),
     },
@@ -246,37 +308,37 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Scanning',
       content: (
-        <div>
-          <h2 className="Settings_Tour_Tooltip_Swiper_Title">
+        <div className="SettingsTour__swiper-wrap">
+          <p className="SettingsTour__swiper-title">
             {tooltipSwiperText.title}
-          </h2>
+          </p>
           <Swiper
             watchOverflow={true}
-            onSlideChange={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('scanning', swiper.realIndex);
-            }}
-            onInit={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('scanning', swiper.realIndex);
-            }}
+            className="SettingsTour__swiper-inner"
+            onSlideChange={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('scanning', swiper.realIndex)
+            }
+            onInit={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('scanning', swiper.realIndex)
+            }
           >
             {settingsTourImages.scanning.map(
-              (imgData: TourImage, _inx: number) => (
-                <SwiperSlide key={intl.formatMessage(imgData.title)}>
-                  <div className="swiperSlideContentContainer Settings__Tour__Scanning__Img">
+              (imgData: TourImage, i: number) => (
+                <SwiperSlide key={`scan-${i}`}>
+                  <div className="SettingsTour__slide-img-wrap SettingsTour__slide-img-wrap--scanning">
                     <img
-                      style={{ height: '100% ' }}
+                      className="SettingsTour__slide-img"
                       src={imgData.src}
                       alt={intl.formatMessage(imgData.title)}
-                      key={intl.formatMessage(imgData.title)}
                     />
                   </div>
                 </SwiperSlide>
               ),
             )}
           </Swiper>
-          <div className="Settings_Tour_Description_Scanning">
+          <p className="SettingsTour__swiper-desc">
             {tooltipSwiperText.description}
-          </div>
+          </p>
         </div>
       ),
     },
@@ -284,40 +346,39 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
       hideCloseButton: true,
       target: '#Navigation',
       content: (
-        <div className="Settings__Tour__Step__Swiper__Container">
-          <h2 className="Settings_Tour_Tooltip_Swiper_Title">
+        <div className="SettingsTour__swiper-wrap">
+          <p className="SettingsTour__swiper-title">
             {tooltipSwiperText.title}
-          </h2>
+          </p>
           <Swiper
             navigation={true}
             pagination={true}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: true,
-            }}
-            className="mySwiper"
-            onSlideChange={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('navigation', swiper.realIndex);
-            }}
-            onInit={(swiper: { realIndex: number }) => {
-              handleOnSlideChange('navigation', swiper.realIndex);
-            }}
+            autoplay={{ delay: 2500, disableOnInteraction: true }}
+            className="SettingsTour__swiper-inner mySwiper"
+            onSlideChange={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('navigation', swiper.realIndex)
+            }
+            onInit={(swiper: { realIndex: number }) =>
+              handleOnSlideChange('navigation', swiper.realIndex)
+            }
           >
             {settingsTourImages.navigation.map(
-              (imgData: TourImage, _inx: number) => (
-                <SwiperSlide key={intl.formatMessage(imgData.title)}>
-                  <div className="swiperSlideContentContainer">
+              (imgData: TourImage, i: number) => (
+                <SwiperSlide key={`nav-${i}`}>
+                  <div className="SettingsTour__slide-img-wrap">
                     <img
+                      className="SettingsTour__slide-img"
                       src={imgData.src}
                       alt={intl.formatMessage(imgData.title)}
-                      key={intl.formatMessage(imgData.title)}
                     />
                   </div>
                 </SwiperSlide>
               ),
             )}
           </Swiper>
-          <div>{tooltipSwiperText.description}</div>
+          <p className="SettingsTour__swiper-desc">
+            {tooltipSwiperText.description}
+          </p>
         </div>
       ),
     },
@@ -335,13 +396,12 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
         steps={settingsTourSteps as any}
         continuous={true}
         showSkipButton={true}
-        //disableScrollParentFix={true}
         showProgress={false}
         disableOverlayClose={true}
         run={isSettingsTourEnabled}
         scrollOffset={500}
         spotlightPadding={4}
-        styles={joyRideStyles}
+        styles={tobiiJoyrideStyles}
         scrollDuration={100}
         locale={{
           last: intl.formatMessage(messages.walkthroughEndTour),

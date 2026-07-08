@@ -1,6 +1,6 @@
+import { getBoardShareUrl } from '../../../../platform/browser';
 import { UserData } from '../../../../types/app';
 import { Board } from '../../../../types/board';
-import { getBoardShareUrl } from '../../../../platform/browser';
 import { getBoardDisplayTitle } from '../../../../utils/getBoardDisplayTitle';
 import { TAB_INDEXES } from '../CommunicatorDialog.constants';
 

@@ -55,11 +55,6 @@ const getConfiguredApiUrl = (): string =>
 const getConfiguredDevApiUrl = (): string =>
   String(env?.VITE_DEV_API_URL || env?.REACT_APP_DEV_API_URL || '').trim();
 
-// Resolve the dev API URL against the host the page was actually opened from.
-// VITE_DEV_API_URL (e.g. http://localhost:10010) defines the dev API *port*; when
-// the page is served over a LAN IP (a tablet on the same network), `localhost`
-// would point at that device itself — so we swap in the current hostname and keep
-// the port. localhost access from the dev machine is left untouched.
 const resolveDevApiUrl = (value: string): string => {
   if (!value) return '';
 

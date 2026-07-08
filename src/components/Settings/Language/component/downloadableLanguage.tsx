@@ -1,6 +1,7 @@
-import React from 'react';
 import { Button } from '@mui/material';
+import React from 'react';
 import { IntlShape } from 'react-intl';
+
 import messages from '../Language.messages';
 
 interface DownloadableLang {

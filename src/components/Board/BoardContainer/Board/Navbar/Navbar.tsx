@@ -13,7 +13,6 @@ import { Board } from '../../../../../types/board';
 import BackButton from '../../../../UI/BackButton/BackButton';
 import FullScreenButton from '../../../../UI/FullScreenButton/FullScreenButton';
 import LockToggle from '../../../../UI/LockToggle/LockToggle';
-import PrintBoardButton from '../../../../UI/PrintBoardButton/PrintBoardButton';
 import SettingsButton from '../../../../UI/SettingsButton/SettingsButton';
 import UserIcon from '../../../../UI/UserIcon/UserIcon';
 import messages from '../../../Board.messages';
@@ -97,7 +96,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
       <div className="Navbar__group Navbar__group--end">
         {!isLocked && (
           <>
-            <PrintBoardButton />
             {board.id &&
               !['root', 'jjmlUcQs19', 'komunicare'].includes(board.id) && (
                 <BoardShare
@@ -129,14 +127,20 @@ const Navbar: React.FC<NavbarProps> = (props) => {
               </PremiumFeature>
             )}
             */}
-            <SettingsButton component={Link} to="/settings" />
+            {/* Excluded from the face-tracking dwell engine: the virtual
+                cursor must not open settings on its own. */}
+            <span data-dwell="off">
+              <SettingsButton component={Link} to="/settings" />
+            </span>
           </>
         )}
-        <div className={'personal__account'}>
+        {/* Profile/account icon also excluded from the dwell engine. */}
+        <div className={'personal__account'} data-dwell="off">
           <UserIcon onClick={onUserIconClick} />
         </div>
       </div>
-      <div className={'open__lock'}>
+      {/* Unlock toggle also excluded from the dwell engine. */}
+      <div className={'open__lock'} data-dwell="off">
         <LockToggle
           locked={isLocked}
           onLockTick={onLockNotify}

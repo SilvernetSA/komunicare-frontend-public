@@ -1,6 +1,6 @@
-import React from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
+import React from 'react';
 
 import './NavigationButtons.css';
 

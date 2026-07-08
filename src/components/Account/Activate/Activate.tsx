@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-import { useUserStore } from '../../../store/userStore';
 import { activateAccountOnce } from './activateAccountOnce';
+import { useUserStore } from '../../../store/userStore';
 import './Activate.css';
 
 interface ActivationStatus {

@@ -1,6 +1,12 @@
 import { useTheme } from '@mui/material/styles';
 import isEmpty from 'lodash/isEmpty';
-import React, { useState, useEffect, useCallback, useRef, Fragment } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  Fragment,
+} from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,15 +24,15 @@ import {
   getTopUsed,
   AnalyticsState,
 } from './container/AnalyticsStateManager';
-import { initializeClientId } from './container/service/GoogleAnalyticsClient';
-import { getSymbolSources } from './container/SymbolSourcesHelper';
-import PremiumFeature from '../PremiumFeature/PremiumFeature';
-import FullScreenDialog from '../UI/FullScreenDialog/FullScreenDialog';
 import { useAnalyticsStore } from '../../store/analyticsStore';
 import { useAppStore } from '../../store/appStore';
 import { useBoardsStore } from '../../store/boardsStore';
 import { useNotificationStore } from '../../store/notificationStore';
 import { UserData } from '../../types/app';
+import PremiumFeature from '../PremiumFeature/PremiumFeature';
+import { initializeClientId } from './container/service/GoogleAnalyticsClient';
+import { getSymbolSources } from './container/SymbolSourcesHelper';
+import FullScreenDialog from '../UI/FullScreenDialog/FullScreenDialog';
 
 import type {
   AnalyticsTotals,
@@ -175,16 +181,24 @@ const Analytics: React.FC = () => {
     const totals = state.totals as any;
     switch (name) {
       case 'boards':
-        setDetailsData((totals?.boards?.rows ?? []) as Record<string, unknown>[]);
+        setDetailsData(
+          (totals?.boards?.rows ?? []) as Record<string, unknown>[],
+        );
         break;
       case 'words':
-        setDetailsData((totals?.words?.rows ?? []) as Record<string, unknown>[]);
+        setDetailsData(
+          (totals?.words?.rows ?? []) as Record<string, unknown>[],
+        );
         break;
       case 'phrases':
-        setDetailsData((totals?.phrases?.rows ?? []) as Record<string, unknown>[]);
+        setDetailsData(
+          (totals?.phrases?.rows ?? []) as Record<string, unknown>[],
+        );
         break;
       case 'editions':
-        setDetailsData((totals?.editions?.rows ?? []) as Record<string, unknown>[]);
+        setDetailsData(
+          (totals?.editions?.rows ?? []) as Record<string, unknown>[],
+        );
         break;
       default:
         setDetailsData([]);

@@ -29,12 +29,16 @@ const normalizeGridForFixedBoard = (board: Board): Board => {
   }, 0);
   const columns = Math.max(
     1,
-    Number(sourceGrid?.columns || 0) || orderColumns || DEFAULT_FIXED_GRID_COLUMNS,
+    Number(sourceGrid?.columns || 0) ||
+      orderColumns ||
+      DEFAULT_FIXED_GRID_COLUMNS,
   );
   const minimumRowsToFitTiles = Math.max(1, Math.ceil(tiles.length / columns));
   const baseRows = Math.max(
     1,
-    Number(sourceGrid?.rows || 0) || sourceOrder.length || minimumRowsToFitTiles,
+    Number(sourceGrid?.rows || 0) ||
+      sourceOrder.length ||
+      minimumRowsToFitTiles,
   );
 
   const nextOrder: (string | null)[][] = Array.from(
@@ -70,8 +74,15 @@ const normalizeGridForFixedBoard = (board: Board): Board => {
 
   let missingIndex = 0;
   for (let rowIndex = 0; rowIndex < nextOrder.length; rowIndex += 1) {
-    for (let colIndex = 0; colIndex < nextOrder[rowIndex].length; colIndex += 1) {
-      if (nextOrder[rowIndex][colIndex] === null && missingIndex < missingTileIds.length) {
+    for (
+      let colIndex = 0;
+      colIndex < nextOrder[rowIndex].length;
+      colIndex += 1
+    ) {
+      if (
+        nextOrder[rowIndex][colIndex] === null &&
+        missingIndex < missingTileIds.length
+      ) {
         nextOrder[rowIndex][colIndex] = missingTileIds[missingIndex];
         missingIndex += 1;
       }
@@ -79,8 +90,15 @@ const normalizeGridForFixedBoard = (board: Board): Board => {
   }
 
   while (missingIndex < missingTileIds.length) {
-    const newRow: (string | null)[] = Array.from({ length: columns }, () => null);
-    for (let colIndex = 0; colIndex < columns && missingIndex < missingTileIds.length; colIndex += 1) {
+    const newRow: (string | null)[] = Array.from(
+      { length: columns },
+      () => null,
+    );
+    for (
+      let colIndex = 0;
+      colIndex < columns && missingIndex < missingTileIds.length;
+      colIndex += 1
+    ) {
       newRow[colIndex] = missingTileIds[missingIndex];
       missingIndex += 1;
     }

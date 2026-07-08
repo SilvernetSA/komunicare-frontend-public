@@ -1,5 +1,5 @@
-import { Board } from '../../../../types/board';
 import { UserData } from '../../../../types/app';
+import { Board } from '../../../../types/board';
 
 type SetState = (state: Record<string, unknown>) => void;
 

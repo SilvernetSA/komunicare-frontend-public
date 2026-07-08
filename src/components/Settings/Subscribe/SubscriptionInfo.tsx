@@ -40,11 +40,11 @@ interface SubscriptionInfoProps {
 
 // Mapa seguro: status → clave de mensaje existente
 const STATUS_MSG: Record<string, keyof typeof messages> = {
-  active:          'active',
-  canceled:        'canceled',
-  cancelled:       'cancelled',
+  active: 'active',
+  canceled: 'canceled',
+  cancelled: 'cancelled',
   in_grace_period: 'in_grace_period',
-  not_subscribed:  'not_subscribed',
+  not_subscribed: 'not_subscribed',
 };
 
 const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
@@ -54,19 +54,20 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
   cancelSubscriptionStatus,
 }) => {
   const [cancelDialog, setCancelDialog] = useState(false);
-  const status        = useSubscriptionStore((s) => s.status);
+  const status = useSubscriptionStore((s) => s.status);
   const expirationDate = useSubscriptionStore((s) => s.expiryDate);
 
   const isActiveStatus = status === ACTIVE || status === IN_GRACE_PERIOD;
-  const isCancelled    = status === CANCELED || status === CANCELLED;
+  const isCancelled = status === CANCELED || status === CANCELLED;
 
-  const statusColor = status === ACTIVE
-    ? { backgroundColor: 'green' }
-    : { backgroundColor: 'darkorange' };
+  const statusColor =
+    status === ACTIVE
+      ? { backgroundColor: 'green' }
+      : { backgroundColor: 'darkorange' };
 
   const getPaymentLabel = (): keyof typeof messages => {
-    if (status === ACTIVE)                          return 'nextPayment';
-    if (status === IN_GRACE_PERIOD)                 return 'fixPaymentIssue';
+    if (status === ACTIVE) return 'nextPayment';
+    if (status === IN_GRACE_PERIOD) return 'fixPaymentIssue';
     if (status === CANCELED || status === CANCELLED) return 'premiumWillEnd';
     return 'nextPayment';
   };
@@ -103,7 +104,9 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
                         style={statusColor}
                       />
                       <IconButton
-                        label={intl?.formatMessage(messages.refresh) || 'Refresh'}
+                        label={
+                          intl?.formatMessage(messages.refresh) || 'Refresh'
+                        }
                         onClick={onRefreshSubscription}
                         size="large"
                       >
@@ -158,7 +161,11 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
               </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setCancelDialog(false)} color="primary" variant="text">
+              <Button
+                onClick={() => setCancelDialog(false)}
+                color="primary"
+                variant="text"
+              >
                 <FormattedMessage {...messages.close} />
               </Button>
               <Button
@@ -175,8 +182,17 @@ const SubscriptionInfo: React.FC<SubscriptionInfoProps> = ({
               </Button>
             </DialogActions>
 
-            {(cancelSubscriptionStatus === 'ok' || cancelSubscriptionStatus === 'error') && (
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '20px', mb: 2 }}>
+            {(cancelSubscriptionStatus === 'ok' ||
+              cancelSubscriptionStatus === 'error') && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  margin: '20px',
+                  mb: 2,
+                }}
+              >
                 {cancelSubscriptionStatus === 'ok' && (
                   <Typography color="primary" variant="body1">
                     <FormattedMessage {...messages.canceledSubscriptionOk} />

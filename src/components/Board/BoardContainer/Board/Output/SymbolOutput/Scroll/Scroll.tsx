@@ -1,5 +1,5 @@
-import React from 'react';
 import { useTheme, Theme } from '@mui/material/styles';
+import React from 'react';
 
 import './Scroll.css';
 

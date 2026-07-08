@@ -1,12 +1,13 @@
-import React from 'react';
-import { FormattedMessage, IntlShape } from 'react-intl';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import CheckIcon from '@mui/icons-material/Check';
 import { Button } from '@mui/material';
 import Chip from '@mui/material/Chip';
-import { getFormattedName, getNativeName } from './languageHelpers';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import React from 'react';
+import { FormattedMessage, IntlShape } from 'react-intl';
+
 import { isDownloadable } from './downloadableLanguage';
+import { getFormattedName, getNativeName } from './languageHelpers';
 import messages from '../Language.messages';
 
 interface DownloadableLang {

@@ -1,4 +1,4 @@
-import React from 'react';
+import WarningIcon from '@mui/icons-material/Warning';
 import {
   Dialog,
   DialogTitle,
@@ -7,7 +7,8 @@ import {
   DialogContentText,
   Button,
 } from '@mui/material';
-import WarningIcon from '@mui/icons-material/Warning';
+import React from 'react';
+
 import messages from '../Language.messages';
 
 interface ErrorDialogProps {

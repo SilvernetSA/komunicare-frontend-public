@@ -1,5 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import shortid from 'shortid';
+
 import { Tile, Board } from '../../../../types/board';
 
 interface TileColors {

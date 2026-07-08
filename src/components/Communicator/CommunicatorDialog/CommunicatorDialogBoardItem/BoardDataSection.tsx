@@ -1,17 +1,18 @@
-import React from 'react';
-import moment from 'moment';
+import EditIcon from '@mui/icons-material/Edit';
+import HomeIcon from '@mui/icons-material/Home';
+import PublicIcon from '@mui/icons-material/Public';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import KeyIcon from '@mui/icons-material/VpnKey';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
-import PublicIcon from '@mui/icons-material/Public';
-import KeyIcon from '@mui/icons-material/VpnKey';
-import HomeIcon from '@mui/icons-material/Home';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '../../../UI/IconButton/IconButton';
-import { TAB_INDEXES } from '../CommunicatorDialog.constants';
+import moment from 'moment';
+import React from 'react';
+
 import { Board } from '../../../../types/board';
 import { Communicator } from '../../../../types/communicator';
+import IconButton from '../../../UI/IconButton/IconButton';
+import { TAB_INDEXES } from '../CommunicatorDialog.constants';
 
 interface BoardDataSectionProps {
   title: string;

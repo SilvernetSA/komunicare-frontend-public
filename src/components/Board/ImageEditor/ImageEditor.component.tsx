@@ -1,21 +1,24 @@
-import React, { useState, useRef } from 'react';
 import { FormattedMessage, IntlShape } from 'react-intl';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
+
 import IconButton from '../../UI/IconButton/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import messages from './ImageEditor.messages';
-import RotateRightIcon from '@mui/icons-material/RotateRight';
-import DoneIcon from '@mui/icons-material/Done';
-import CropIcon from '@mui/icons-material/Crop';
+
 import BlockIcon from '@mui/icons-material/Block';
+import CloseIcon from '@mui/icons-material/Close';
+import CropIcon from '@mui/icons-material/Crop';
+import DoneIcon from '@mui/icons-material/Done';
+import RotateRightIcon from '@mui/icons-material/RotateRight';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import React, { useState, useRef } from 'react';
 
 import './ImageEditor.css';
 import Cropper from 'react-cropper';
+
+import messages from './ImageEditor.messages';
 import 'cropperjs/dist/cropper.css';
 
 // Definición de tipos para el componente

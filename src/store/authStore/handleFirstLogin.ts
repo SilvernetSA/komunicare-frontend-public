@@ -1,5 +1,4 @@
 import { apiClient } from '../apiClient';
-import { useAppStore } from '../appStore';
 
 import type { UserData } from '../../types/app';
 import type { LoginPayload } from '../../types/auth';
@@ -25,5 +24,7 @@ export const handleFirstLoginAction = async (
   } catch (_error) {
     console.error(_error);
   }
-  useAppStore.getState().enableAllTours();
+  // enableAllTours() is intentionally NOT called here.
+  // It is called in loginFactory after system communicators are fetched,
+  // so the tour gallery always renders with data available.
 };
