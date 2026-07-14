@@ -17,7 +17,7 @@ const mocks = vi.hoisted(() => ({
   activeCommunicatorId: 'comm-1',
   boards: [] as any[],
   communicators: [] as any[],
-  userEmail: 'juanperez@gmail.com' as string | undefined,
+  userEmail: 'owner@example.com' as string | undefined,
 }));
 
 vi.mock('react-router-dom', async () => {
@@ -198,19 +198,19 @@ describe('CommunicatorToolbar component', () => {
     mocks.fetchUserBoards.mockReset();
     mocks.activeBoardId = 'board-root';
     mocks.activeCommunicatorId = 'comm-1';
-    mocks.userEmail = 'juanperez@gmail.com';
+    mocks.userEmail = 'owner@example.com';
     mocks.boards = [
       {
         id: 'board-root',
         name: 'Inicio',
-        email: 'juanperez@gmail.com',
+        email: 'owner@example.com',
         hidden: false,
         tiles: [{ id: 't-root' }],
       },
       {
         id: 'board-food',
         name: 'Food',
-        email: 'juanperez@gmail.com',
+        email: 'owner@example.com',
         hidden: false,
         tiles: [],
       },
@@ -245,7 +245,7 @@ describe('CommunicatorToolbar component', () => {
 
     const menuTexts = getMenuTexts();
 
-    // Only boards with email matching 'juanperez@gmail.com'
+    // Only boards with email matching 'owner@example.com'
     expect(menuTexts).toHaveLength(2);
     expect(menuTexts[0]).toContain('Inicio');
     expect(menuTexts[1]).toContain('Food');

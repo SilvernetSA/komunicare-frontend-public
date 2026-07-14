@@ -9,15 +9,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import BoardHeader from '../BoardHeader.component';
 
 vi.mock('../../Output/Output', () => ({
-  default: ({ improvedPhrase }: { improvedPhrase?: string }) => (
-    <div data-testid="output">{improvedPhrase || ''}</div>
-  ),
-}));
-
-vi.mock('../../ImprovePhraseOutput/ImprovePhraseOutput', () => ({
-  default: ({ improvedPhrase }: { improvedPhrase?: string }) => (
-    <div data-testid="improve-phrase">{improvedPhrase || ''}</div>
-  ),
+  default: () => <div data-testid="output" />,
 }));
 
 describe('BoardHeader component', () => {

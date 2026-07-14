@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 import { useBoardsStore } from '../../../../../store/boardsStore';
 import messages from '../../../Board.messages';
-import ImprovePhraseOutput from '../ImprovePhraseOutput/ImprovePhraseOutput';
 import OutputContainer from '../Output/Output';
 
 interface DisplaySettings {
@@ -19,9 +18,6 @@ interface BoardHeaderProps {
   displaySettings: DisplaySettings;
   emptyVoiceAlert?: boolean;
   offlineVoiceAlert?: boolean;
-  improvedPhrase?: string;
-  speak?: (text: string, language?: string) => void;
-  onPhraseImproved?: (phrase: string) => void;
 }
 
 const BoardHeader: React.FC<BoardHeaderProps> = ({
@@ -29,23 +25,14 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({
   displaySettings,
   emptyVoiceAlert,
   offlineVoiceAlert,
-  improvedPhrase = '',
-  speak = () => {},
-  onPhraseImproved,
 }) => {
   const hasOutput = useBoardsStore((state) => state.output.length > 0);
 
   return (
     <div className="BoardHeader">
-      <ImprovePhraseOutput
-        improvedPhrase={improvedPhrase}
-        speak={speak}
-        onPhraseImproved={onPhraseImproved}
-      />
-
       {!displaySettings.hideOutputActive && hasOutput && (
         <div className="Board__output">
-          <OutputContainer improvedPhrase={improvedPhrase} />
+          <OutputContainer />
         </div>
       )}
 

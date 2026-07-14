@@ -115,7 +115,7 @@ const buildOfficialCommunicator = (
   overrides: Record<string, unknown> = {},
 ) => ({
   id: 'official_komunicare',
-  email: 'support@komuni.care',
+  email: 'catalog-support@example.com',
   name: 'Komunicare',
   rootBoard: 'komunicare',
   boards: ['komunicare', 'feelingsBoard'],

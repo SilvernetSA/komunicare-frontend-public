@@ -1,9 +1,7 @@
 import ClearIcon from '@mui/icons-material/Clear';
 import { IconButton as MUIIconButton, Tooltip } from '@mui/material';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import React, { useRef, useEffect, useState } from 'react';
-import { useIntl, IntlShape } from 'react-intl';
+import { useIntl } from 'react-intl';
 
 import BackspaceButton from './BackspaceButton/BackspaceButton';
 import ClearButton from './ClearButton/ClearButton';
@@ -18,7 +16,7 @@ import Symbol from '../../../../Symbol/Symbol';
 interface SymbolItem {
   image?: string;
   label: string | React.ReactNode;
-  type?: 'live' | string;
+  type?: string;
   [key: string]: unknown;
 }
 
@@ -31,17 +29,10 @@ interface SymbolOutputProps {
   onClearClick: () => void;
   onCopyClick: (phrase: string) => void;
   onRemoveClick: (index: number) => (event: React.MouseEvent) => void;
-  onKeyDown?: (event: React.KeyboardEvent) => void;
-  onSwitchLiveMode: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onWriteSymbol: (
-    index: number,
-  ) => (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   navigationSettings: NavigationSettings;
   phrase: string;
-  isLiveMode?: boolean;
   increaseOutputButtons?: boolean;
   tabIndex?: string;
-  intl?: IntlShape; // Aunque usamos useIntl, mantenemos esta prop para compatibilidad
 }
 
 const SymbolOutput: React.FC<SymbolOutputProps> = ({
@@ -53,11 +44,8 @@ const SymbolOutput: React.FC<SymbolOutputProps> = ({
   onClearClick,
   onCopyClick,
   onRemoveClick,
-  onSwitchLiveMode,
-  onWriteSymbol,
   navigationSettings,
   phrase,
-  isLiveMode,
   increaseOutputButtons,
   ...other
 }) => {
@@ -99,10 +87,6 @@ const SymbolOutput: React.FC<SymbolOutputProps> = ({
     visibility: symbols.length ? 'visible' : 'hidden',
   };
 
-  const copyButtonStyle: React.CSSProperties = {
-    visibility: symbols.length ? 'visible' : 'hidden',
-  };
-
   const speechButtonStyle: React.CSSProperties = {
     visibility: symbols.length ? 'visible' : 'hidden',
   };
@@ -119,22 +103,13 @@ const SymbolOutput: React.FC<SymbolOutputProps> = ({
     <div className="SymbolOutput">
       <Scroll scrollContainerReference={scrollContainerRef} {...other}>
         {symbols.map(({ image, label, type }, index) => (
-          <div
-            className={
-              type === 'live'
-                ? 'LiveSymbolOutput__value'
-                : 'SymbolOutput__value'
-            }
-            key={index}
-          >
+          <div className="SymbolOutput__value" key={index}>
             <Symbol
               className="SymbolOutput__symbol"
               image={image}
               label={label}
               type={type}
               labelpos="Below"
-              onWrite={onWriteSymbol(index)}
-              intl={intl}
             />
             <div className="SymbolOutput__value__IconButton">
               <MUIIconButton
@@ -220,23 +195,6 @@ const SymbolOutput: React.FC<SymbolOutputProps> = ({
               />
             </span>
           </Tooltip>
-
-          {navigationSettings.liveMode && (
-            <FormControlLabel
-              value="bottom"
-              className={increaseOutputButtons ? 'Live__switch_lg' : undefined}
-              control={
-                <Switch
-                  size="small"
-                  checked={!!isLiveMode}
-                  color="primary"
-                  onChange={onSwitchLiveMode}
-                />
-              }
-              label={intl.formatMessage(messages.live)}
-              labelPlacement="bottom"
-            />
-          )}
         </div>
       </div>
     </div>

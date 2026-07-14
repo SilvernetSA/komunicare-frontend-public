@@ -92,8 +92,6 @@ export interface BoardsStore extends BoardState {
   editTiles: (payload: { boardId: string; tiles: Tile[] }) => void;
   focusTile: (payload: { boardId: string; tileId: string }) => void;
   changeOutput: (output: Tile[]) => void;
-  changeLiveMode: () => void;
-  changeImprovedPhrase: (value: string) => void;
   downloadImagesStarted: () => void;
   downloadImageSuccess: (payload: unknown) => void;
   applyLogout: () => void;
@@ -315,10 +313,6 @@ export const useBoardsStore = create<BoardsStore>()((set, get) => ({
   },
 
   changeOutput: (output) => set({ output: [...output] }),
-
-  changeLiveMode: () => set((state) => ({ isLiveMode: !state.isLiveMode })),
-
-  changeImprovedPhrase: (value) => set({ improvedPhrase: value }),
 
   downloadImagesStarted: () => {
     set((state) =>

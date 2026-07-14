@@ -8,7 +8,6 @@ const seedLoggedInState = async (page: any) => {
         state: {
           isConnected: true,
           isFirstVisit: false,
-          improvedPhrase: '',
           liveHelp: {
             isRootBoardTourEnabled: false,
             isUnlockedTourEnabled: false,
@@ -37,7 +36,6 @@ const seedLoggedInState = async (page: any) => {
             quickUnlockActive: false,
             removeOutputActive: false,
             vocalizeFolders: false,
-            liveMode: false,
             playSoundOnTouchActive: false,
           },
           userData: {

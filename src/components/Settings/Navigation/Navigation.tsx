@@ -1,6 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
-import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -19,7 +18,6 @@ import { useNavigate } from 'react-router-dom';
 import { NAVIGATION_BUTTONS_STYLES } from './Navigation.constants';
 import messages from './Navigation.messages';
 import { useAppStore } from '../../../store/appStore';
-import { useBoardsStore } from '../../../store/boardsStore';
 import { useSettingsStore } from '../../../store/settingsStore';
 import { NavigationSettings } from '../../../types/app';
 import FullScreenDialog from '../../UI/FullScreenDialog/FullScreenDialog';
@@ -28,8 +26,6 @@ import './Navigation.css';
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
-  const isLiveMode = useBoardsStore((state) => state.isLiveMode);
-  const changeLiveMode = useBoardsStore((state) => state.changeLiveMode);
   const navigationSettings = useAppStore((state) => state.navigationSettings);
   const updateAppNavigationSettings = useAppStore(
     (state) => state.updateNavigationSettings,
@@ -48,7 +44,6 @@ const Navigation: React.FC = () => {
     shareShowActive: navigationSettings?.shareShowActive ?? false,
     removeOutputActive: navigationSettings?.removeOutputActive ?? false,
     vocalizeFolders: navigationSettings?.vocalizeFolders ?? false,
-    liveMode: navigationSettings?.liveMode ?? false,
     playSoundOnTouchActive: navigationSettings?.playSoundOnTouchActive ?? false,
     navigationButtonsStyle: navigationSettings?.navigationButtonsStyle,
   });
@@ -57,9 +52,6 @@ const Navigation: React.FC = () => {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
 
   const onSubmit = () => {
-    if ((settings.liveMode || false) !== (isLiveMode || false)) {
-      changeLiveMode();
-    }
     updateNavigationSettings(settings);
   };
 
@@ -290,31 +282,6 @@ const Navigation: React.FC = () => {
             </div>
             <div className="Navigation__row-text">
               <ResetToursItem />
-            </div>
-          </div>
-
-          {/* ── Live mode ────────────────────────────────────────────────── */}
-          <div className="Navigation__row-card">
-            <div
-              className="Navigation__row-icon"
-              style={{ background: '#283593' }}
-            >
-              <FlipCameraAndroidIcon fontSize="inherit" />
-            </div>
-            <div className="Navigation__row-text">
-              <div className="Navigation__row-title">
-                <FormattedMessage {...messages.showLiveMode} />
-              </div>
-              <div className="Navigation__row-desc">
-                <FormattedMessage {...messages.showLiveModeSecondary} />
-              </div>
-            </div>
-            <div className="Navigation__row-action">
-              <Switch
-                checked={settings.liveMode || false}
-                onChange={() => toggle('liveMode')}
-                color="secondary"
-              />
             </div>
           </div>
 

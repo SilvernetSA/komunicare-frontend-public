@@ -2,7 +2,6 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 
 import SharePhraseDialog from './components/SharePhraseDialog';
-import { useBoardsStore } from '../../../../../../store/boardsStore';
 import ShareButton from '../SymbolOutput/ShareButton/ShareButton';
 import './PhraseShare.css';
 
@@ -22,6 +21,7 @@ interface PhraseShareProps {
 
 const PhraseShare: React.FC<PhraseShareProps> = ({
   label,
+  phrase,
   intl,
   open = false,
   fullScreen,
@@ -32,13 +32,11 @@ const PhraseShare: React.FC<PhraseShareProps> = ({
   hidden,
   increaseOutputButtons,
 }) => {
-  const improvedPhrase = useBoardsStore((state) => state.improvedPhrase);
-
   const sanitizePhrase = (text: string | undefined): string =>
-    text ? text.replace(/["""]/g, '') : '';
+    text ? text.replace(/["""]/g, '').trim() : '';
 
-  const phrase = sanitizePhrase(improvedPhrase);
-  const hasPhrase = !!phrase;
+  const sanitizedPhrase = sanitizePhrase(phrase);
+  const hasPhrase = !!sanitizedPhrase;
 
   const shareStyle: React.CSSProperties = {
     ...style,
@@ -61,7 +59,7 @@ const PhraseShare: React.FC<PhraseShareProps> = ({
       <SharePhraseDialog
         open={open}
         fullScreen={fullScreen}
-        phrase={phrase}
+        phrase={sanitizedPhrase}
         intl={intl}
         onClose={onShareClose}
         onCopyPhrase={onCopyPhrase}

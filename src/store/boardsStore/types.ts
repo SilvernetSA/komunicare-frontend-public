@@ -8,8 +8,6 @@ export interface BoardState {
   isFetching: boolean;
   images: unknown[];
   isFixed: boolean;
-  isLiveMode: boolean;
-  improvedPhrase: string;
 }
 
 export interface BoardPageParams {

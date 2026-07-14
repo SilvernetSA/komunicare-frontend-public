@@ -10,8 +10,6 @@ const initialBoardsState: BoardState = {
   isFetching: false,
   images: [],
   isFixed: false,
-  isLiveMode: false,
-  improvedPhrase: '',
 };
 
 export const cloneInitialState = (): BoardState =>

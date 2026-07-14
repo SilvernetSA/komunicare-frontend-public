@@ -47,15 +47,6 @@ const messages = {
     id: 'komunicare.components.Settings.Navigation.vocalizeFoldersSecondary',
     defaultMessage: "Reads a folder's name out loud when clicked",
   },
-  showLiveMode: {
-    id: 'komunicare.components.Settings.Navigation.showLiveMode',
-    defaultMessage: 'Use the Live Mode',
-  },
-  showLiveModeSecondary: {
-    id: 'komunicare.components.Settings.Navigation.showLiveModeSecondary',
-    defaultMessage:
-      'Live mode allows you to write text directly into the output bar and quickly play the sound. It is intended for users that can write.',
-  },
   bigScroll: {
     id: 'komunicare.components.Settings.Navigation.bigScroll',
     defaultMessage: 'Enable big scroll buttons',
@@ -81,15 +72,6 @@ const messages = {
   onTop: {
     id: 'komunicare.components.Settings.Navigation.onTop',
     defaultMessage: 'On top',
-  },
-  activeImprovePhrase: {
-    id: 'komunicare.components.Settings.Navigation.activeImprovePhrase',
-    defaultMessage: 'Use Improve Phrase',
-  },
-  activeImprovePhraseSecondary: {
-    id: 'komunicare.components.Settings.Navigation.activeImprovePhraseSecondary',
-    defaultMessage:
-      'Improve Phrase allows you to grammatically improve the output phrase using Artificial intelligence. It is intended for users of core boards',
   },
   activePlaySoundOnTouch: {
     id: 'komunicare.components.Settings.Navigation.activePlaySoundOnTouch',

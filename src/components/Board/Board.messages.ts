@@ -255,14 +255,6 @@ const messages: Messages = defineMessages({
     id: 'komunicare.components.Board.tilesPastedError',
     defaultMessage: 'WARNING: There was an error on tiles paste.',
   },
-  live: {
-    id: 'komunicare.components.Board.live',
-    defaultMessage: 'LIVE',
-  },
-  writeAndSay: {
-    id: 'komunicare.components.Board.writeAndSay',
-    defaultMessage: 'Write and say',
-  },
   //TODO, transtale to french
   outputPlaySpeech: {
     id: 'komunicare.components.Output.playSpeech',

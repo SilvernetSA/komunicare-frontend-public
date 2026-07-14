@@ -1,10 +1,10 @@
-import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import SearchIcon from '@mui/icons-material/Search';
 import Slide from '@mui/material/Slide';
 import React from 'react';
 
@@ -62,12 +62,12 @@ const BoardImageDialog: React.FC<BoardImageDialogProps> = ({
         <Button
           variant="contained"
           color="primary"
-          startIcon={<AutoAwesomeIcon />}
+          startIcon={<SearchIcon />}
           onClick={onSymbolSearchClick}
         >
           {intl
             ? intl.formatMessage(messages.imageSearch)
-            : 'Generate pictogram with AI'}
+            : 'Search for symbols'}
         </Button>
         <InputImage onChange={onImageChange} intl={intl} />
         {!!imageBoard && <img src={imageBoard} alt={board.name} />}

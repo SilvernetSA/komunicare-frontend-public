@@ -26,7 +26,6 @@ import {
 import { handleApiUpdates } from './utils-simple/handleApiUpdates';
 import { translateBoard } from './utils-simple/translateBoard';
 import { EMPTY_VOICES } from '../../providers/SpeechProvider/SpeechProvider.constants';
-import { speak } from '../../providers/SpeechProvider/speechService';
 import { useAppStore } from '../../store/appStore';
 import { useBoardsStore } from '../../store/boardsStore';
 import { useCommunicatorsStore } from '../../store/communicatorsStore';
@@ -77,7 +76,6 @@ const BoardContainer: React.FC = () => {
   );
   const navHistory = useBoardsStore((s) => s.navHistory);
   const output = useBoardsStore((s) => s.output);
-  const improvedPhrase = useBoardsStore((s) => s.improvedPhrase);
 
   const changeBoard = useBoardsStore((s) => s.changeBoard);
   const previousBoard = useBoardsStore((s) => s.previousBoard);
@@ -793,8 +791,6 @@ const BoardContainer: React.FC = () => {
             String(messages.originalCommunicatorCopyNamePrompt.defaultMessage),
           )
         }
-        improvedPhrase={improvedPhrase}
-        speak={speak}
       />
       <BoardDialogs
         copyPublicBoard={copyPublicBoard}

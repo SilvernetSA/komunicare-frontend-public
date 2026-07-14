@@ -43,12 +43,12 @@ describe('boardsStore and communicatorsStore cache', () => {
   });
 
   it('reuses the cached user boards page for the same request', async () => {
-    mocks.appStoreState.userData = { email: 'juanperez@gmail.com' };
+    mocks.appStoreState.userData = { email: 'owner@example.com' };
     mocks.apiClientGet.mockImplementation((url: string) => {
       if (url.includes('/board/byemail/')) {
         return Promise.resolve({
           data: {
-            data: [{ id: 'board-1', tiles: [], email: 'juanperez@gmail.com' }],
+            data: [{ id: 'board-1', tiles: [], email: 'owner@example.com' }],
             total: 1,
           },
         });
@@ -69,7 +69,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       ([url]: [string]) => url.includes('/board/byemail/'),
     );
     expect(boardByEmailCalls).toHaveLength(1);
-    expect(boardByEmailCalls[0][0]).toContain('juanperez@gmail.com');
+    expect(boardByEmailCalls[0][0]).toContain('owner@example.com');
     expect(second).toEqual(first);
   });
 
@@ -94,7 +94,7 @@ describe('boardsStore and communicatorsStore cache', () => {
   });
 
   it('reuses cached communicators for the same user', async () => {
-    mocks.appStoreState.userData = { email: 'juanperez@gmail.com' };
+    mocks.appStoreState.userData = { email: 'owner@example.com' };
     const mockCommunicator = {
       id: 'comm-1',
       boards: ['root'],
@@ -121,17 +121,17 @@ describe('boardsStore and communicatorsStore cache', () => {
       ([url]: [string]) => url.includes('/communicator/byemail/'),
     );
     expect(communicatorByEmailCalls).toHaveLength(1);
-    expect(communicatorByEmailCalls[0][0]).toContain('juanperez@gmail.com');
+    expect(communicatorByEmailCalls[0][0]).toContain('owner@example.com');
     expect(second).toEqual(first);
   });
 
   it('replaces the local default communicator when the API returns official communicators', async () => {
-    mocks.appStoreState.userData = { email: 'juanperez@gmail.com' };
+    mocks.appStoreState.userData = { email: 'owner@example.com' };
     const myComms = [
       {
         id: 'comm-root',
         name: "Komunicare's Communicator",
-        email: 'caro@komuni.care',
+        email: 'official-a@example.com',
         boards: ['root', 'jjmlUcQs19', 'komunicare'],
         defaultBoardsIncluded: [],
         rootBoard: 'root',
@@ -139,7 +139,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       {
         id: 'comm-picseepal',
         name: "Komunicare's Communicator",
-        email: 'julian@komuni.care',
+        email: 'official-b@example.com',
         boards: ['root', 'jjmlUcQs19', 'komunicare'],
         defaultBoardsIncluded: [],
         rootBoard: 'jjmlUcQs19',
@@ -147,7 +147,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       {
         id: 'comm-komunicare',
         name: "Komunicare's Communicator",
-        email: 'lucho@komuni.care',
+        email: 'official-c@example.com',
         boards: ['root', 'jjmlUcQs19', 'komunicare'],
         defaultBoardsIncluded: [],
         rootBoard: 'komunicare',

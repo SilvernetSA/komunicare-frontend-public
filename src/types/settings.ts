@@ -12,8 +12,6 @@ export interface NavigationConfig {
   quickUnlockActive: boolean;
   removeOutputActive: boolean;
   vocalizeFolders: boolean;
-  liveMode: boolean;
-  improvePhraseActive: boolean;
 }
 
 export interface NavigationSettings {
@@ -23,7 +21,6 @@ export interface NavigationSettings {
   shareShowActive?: boolean;
   removeOutputActive?: boolean;
   vocalizeFolders?: boolean;
-  liveMode?: boolean;
   playSoundOnTouchActive?: boolean;
   navigationButtonsStyle?: string;
 }
@@ -44,12 +41,9 @@ export interface Settings {
   language?: Record<string, unknown>;
   speech?: Record<string, unknown>;
   display?: Record<string, unknown>;
-  faceTracking?: Record<string, unknown>;
   navigation?: NavigationConfig;
   user?: string;
   devices?: Device[];
-  selectedKeyboard?: 'EYE' | 'POINTER';
-  keyboardDistribution?: 'VERTICAL' | 'HORIZONTAL';
   displaySettings?: DisplaySettings;
   navigationSettings?: NavigationSettings;
 }

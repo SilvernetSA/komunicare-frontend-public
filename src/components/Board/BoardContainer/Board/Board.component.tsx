@@ -80,8 +80,6 @@ interface BoardProps {
   onCopyTiles?: () => void;
   onPasteTiles?: () => void;
   changeDefaultBoard?: (selection: string | DefaultBoardSelection) => void;
-  improvedPhrase?: string;
-  speak?: (text: string) => void;
   showNotification?: (message: string) => void;
 }
 
@@ -131,8 +129,6 @@ const Board: React.FC<BoardProps> = ({
   isScroll = false,
   totalRows,
   changeDefaultBoard,
-  improvedPhrase,
-  speak,
   canAccessToContent,
   onTileClick,
   onFocusTile,
@@ -214,8 +210,6 @@ const Board: React.FC<BoardProps> = ({
     },
     [],
   );
-
-  const handleImprovedPhrase = useCallback((_improvedPhrase: string) => {}, []);
 
   const handleBoardTitleClose = useCallback(() => {
     setOpenTitleDialog(false);
@@ -317,9 +311,6 @@ const Board: React.FC<BoardProps> = ({
           displaySettings={displaySettings}
           emptyVoiceAlert={emptyVoiceAlert}
           offlineVoiceAlert={offlineVoiceAlert}
-          improvedPhrase={improvedPhrase}
-          speak={speak}
-          onPhraseImproved={handleImprovedPhrase}
         />
         <div className="BoardSideButtonsContainer">
           {caBackButtonActive && (

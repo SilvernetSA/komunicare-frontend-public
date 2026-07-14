@@ -29,7 +29,6 @@ interface LiveHelp {
 export interface AppState {
   isConnected: boolean;
   isFirstVisit: boolean;
-  improvedPhrase: string;
   liveHelp: LiveHelp;
   displaySettings: DisplaySettings;
   navigationSettings: NavigationSettings;
@@ -40,7 +39,6 @@ export interface AppState {
 const initialAppState: AppState = {
   isConnected: true,
   isFirstVisit: true,
-  improvedPhrase: '',
   liveHelp: {
     isRootBoardTourEnabled: true,
     isUnlockedTourEnabled: true,
@@ -69,7 +67,6 @@ const initialAppState: AppState = {
     quickUnlockActive: false,
     removeOutputActive: false,
     vocalizeFolders: false,
-    liveMode: false,
     playSoundOnTouchActive: false,
   },
   userData: {},
@@ -81,7 +78,6 @@ export interface AppStore extends AppState {
   updateConnectivity: (isConnected: boolean) => void;
   finishFirstVisit: () => void;
   disableTour: (patch: Partial<LiveHelp>) => void;
-  updateImprovedPhrase: (value: string) => void;
   enableAllTours: () => void;
   updateUserData: (payload: UserData | Record<string, unknown>) => void;
   setUnloggedUserLocation: (
@@ -128,9 +124,6 @@ export const useAppStore = create<AppStore>()(
             ...patch,
           },
         }));
-      },
-      updateImprovedPhrase: (value) => {
-        set({ improvedPhrase: value });
       },
       enableAllTours: () => {
         set({
@@ -210,7 +203,6 @@ export const useAppStore = create<AppStore>()(
             quickUnlockActive: false,
             removeOutputActive: false,
             vocalizeFolders: false,
-            liveMode: false,
             playSoundOnTouchActive: false,
             ...persistedState.navigationSettings,
           };

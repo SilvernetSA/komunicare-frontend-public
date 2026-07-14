@@ -131,7 +131,7 @@ describe('copyOnWrite protections', () => {
         id: 'komunicare_default',
         name: 'Komunicare',
         description: 'Komunicare default communicator',
-        email: 'support@komuni.care',
+        email: 'catalog-support@example.com',
         rootBoard: 'komunicare',
         boards: ['komunicare', 'jjmlUcQs19'],
         defaultBoardsIncluded: [
@@ -183,7 +183,7 @@ describe('copyOnWrite protections', () => {
         id: 'komunicare_default',
         name: 'Komunicare',
         description: 'Komunicare default communicator',
-        email: 'support@komuni.care',
+        email: 'catalog-support@example.com',
         rootBoard: 'komunicare',
         boards: ['komunicare', 'jjmlUcQs19'],
         defaultBoardsIncluded: [
@@ -223,7 +223,7 @@ describe('copyOnWrite protections', () => {
       communicator: {
         id: 'official_komunicare',
         name: 'Komunicare',
-        email: 'support@komuni.care',
+        email: 'catalog-support@example.com',
         rootBoard: 'komunicare',
         boards: ['komunicare'],
         defaultBoardsIncluded: [
@@ -249,7 +249,7 @@ describe('copyOnWrite protections', () => {
   it('finds an existing personal copy by board membership to avoid duplicate communicator creation', () => {
     const activeCommunicator = {
       id: 'official_advanced',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       defaultBoardsIncluded: [
         { nameOnJSON: 'komunicare', homeBoard: 'komunicare' },
       ],
@@ -281,7 +281,7 @@ describe('copyOnWrite protections', () => {
   it('finds komunicare personal copy when canonical root board was already replaced', () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: "Komunicare's Communicator",
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard', 'chatBoard'],
@@ -316,7 +316,7 @@ describe('copyOnWrite protections', () => {
   it('accepts temporary local copy ids to avoid duplicate creation before API id sync', () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: "Komunicare's Communicator",
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -351,7 +351,7 @@ describe('copyOnWrite protections', () => {
   it('finds an existing personal copy by explicit copySource', () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -383,7 +383,7 @@ describe('copyOnWrite protections', () => {
   it('returns the local personal copy without forcing a refresh', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -420,7 +420,7 @@ describe('copyOnWrite protections', () => {
   it('retries after a forced refresh when no local personal copy exists', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -459,7 +459,7 @@ describe('copyOnWrite protections', () => {
   it('falls back to refreshed-store communicators when the refresh returns an empty list', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -493,7 +493,7 @@ describe('copyOnWrite protections', () => {
   it('returns a provided existing communicator copy without refreshing or creating', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -547,7 +547,7 @@ describe('copyOnWrite protections', () => {
   it('returns an existing communicator copy after refresh without creating a new one', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -608,7 +608,7 @@ describe('copyOnWrite protections', () => {
       id: 'komunicare_default',
       name: 'Komunicare',
       description: 'Komunicare default communicator',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'jjmlUcQs19'],
       defaultBoardsIncluded: [
@@ -667,7 +667,7 @@ describe('copyOnWrite protections', () => {
   it('aborts protected-board copy workflow after handling an existing communicator copy', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -719,7 +719,7 @@ describe('copyOnWrite protections', () => {
   it('continues protected-board copy workflow after handling an existing communicator copy', async () => {
     const activeCommunicator = {
       id: 'official_komunicare',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'feelingsBoard'],
@@ -775,7 +775,7 @@ describe('copyOnWrite protections', () => {
       id: 'official_advanced',
       name: 'Avanzado',
       description: 'Comunicador Avanzado',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       rootBoard: 'root',
       boards: ['root', 'jjmlUcQs19', 'komunicare'],
       defaultBoardsIncluded: [
@@ -818,7 +818,7 @@ describe('copyOnWrite protections', () => {
       id: 'official_advanced',
       name: 'Avanzado',
       description: 'Comunicador Avanzado',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       rootBoard: 'root',
       boards: ['root', 'jjmlUcQs19', 'komunicare'],
       defaultBoardsIncluded: [
@@ -856,7 +856,7 @@ describe('copyOnWrite protections', () => {
   it('buildCommunicatorCopy sets copy source metadata from official communicator', () => {
     const officialCommunicator = {
       id: 'komunicare_default',
-      email: 'support@komuni.care',
+      email: 'catalog-support@example.com',
       name: 'Komunicare',
       rootBoard: 'komunicare',
       boards: ['komunicare', 'jjmlUcQs19'],

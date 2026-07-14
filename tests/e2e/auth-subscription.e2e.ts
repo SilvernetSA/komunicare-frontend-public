@@ -36,10 +36,10 @@ test('signup flow submits the form and shows the verification message', async ({
 
   await page.locator('.WelcomeScreen__button--signup').click();
 
-  await page.locator('input[name="name"]').fill('Damian QA');
+  await page.locator('input[name="name"]').fill('QA User');
   await page
     .locator('[aria-labelledby="sign-up"] input[name="email"]')
-    .fill('damian.qa@example.com');
+    .fill('qa@example.com');
   await page.locator('input[name="password"]').fill('Secret123!');
   await page.locator('input[name="passwordConfirm"]').fill('Secret123!');
   await page.locator('input[name="isTermsAccepted"]').check();
@@ -81,7 +81,7 @@ test('forgot password flow requests reset and renders success state', async ({
 
   await page
     .locator('[aria-labelledby="forgot"] input[name="email"]')
-    .fill('damian.qa@example.com');
+    .fill('qa@example.com');
   await page
     .locator('[aria-labelledby="forgot"] button[type="submit"]')
     .click();
@@ -99,7 +99,6 @@ test('subscription screen loads plans and starts checkout request', async ({
         state: {
           isConnected: true,
           isFirstVisit: false,
-          improvedPhrase: '',
           liveHelp: {
             isRootBoardTourEnabled: false,
             isUnlockedTourEnabled: false,
@@ -128,7 +127,6 @@ test('subscription screen loads plans and starts checkout request', async ({
             quickUnlockActive: false,
             removeOutputActive: false,
             vocalizeFolders: false,
-            liveMode: false,
             playSoundOnTouchActive: false,
           },
           userData: {

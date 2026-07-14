@@ -28,8 +28,6 @@ describe('updateBoardsAfterCreateApiBoard', () => {
       isFetching: true,
       images: [],
       isFixed: false,
-      isLiveMode: false,
-      improvedPhrase: '',
     } as any;
 
     const result = updateBoardsAfterCreateApiBoard(
@@ -61,8 +59,6 @@ describe('updateBoardsAfterCreateApiBoard', () => {
       isFetching: true,
       images: [],
       isFixed: false,
-      isLiveMode: false,
-      improvedPhrase: '',
     } as any;
 
     const result = updateBoardsAfterCreateApiBoard(

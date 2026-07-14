@@ -1,11 +1,8 @@
 import { Typography } from '@mui/material';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import classNames from 'classnames';
 import React from 'react';
-import { IntlShape } from 'react-intl';
 
 import { LABEL_POSITION_BELOW } from '../../Settings/Display/Display.constants';
-import messages from '../Board.messages';
 import './Symbol.css';
 
 interface SymbolProps {
@@ -24,15 +21,7 @@ interface SymbolProps {
   /**
    * Type of symbol
    */
-  type?: 'live' | string;
-  /**
-   * Function to handle writing in live mode
-   */
-  onWrite?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  /**
-   * Internationalization object
-   */
-  intl?: IntlShape;
+  type?: string;
   /**
    * Key path for legacy symbol images
    */
@@ -52,44 +41,14 @@ const Symbol: React.FC<SymbolProps> = ({
   label,
   labelpos = LABEL_POSITION_BELOW,
   keyPath: _keyPath,
-  type,
-  onWrite,
-  intl,
   image,
   ...other
 }) => {
   const symbolClassName = classNames('Symbol', className);
 
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      return;
-    }
-  };
-
   return (
     <div className={symbolClassName} {...other}>
-      {type === 'live' && intl && (
-        <OutlinedInput
-          id="outlined-live-input"
-          margin="none"
-          color="primary"
-          placeholder={intl.formatMessage(messages.writeAndSay)}
-          autoFocus={true}
-          multiline
-          rows={5}
-          value={label as string}
-          onChange={onWrite}
-          fullWidth={true}
-          onKeyPress={handleKeyPress}
-          style={{
-            padding: '0.5em 0.8em 0.5em 0.8em',
-            height: '100%',
-          }}
-          className={'liveInput'}
-        />
-      )}
-      {type !== 'live' && labelpos === 'Above' && (
+      {labelpos === 'Above' && (
         <Typography className="Symbol__label">{label}</Typography>
       )}
       {image && (
@@ -104,7 +63,7 @@ const Symbol: React.FC<SymbolProps> = ({
           />
         </div>
       )}
-      {type !== 'live' && labelpos === 'Below' && (
+      {labelpos === 'Below' && (
         <Typography className="Symbol__label">{label}</Typography>
       )}
     </div>
