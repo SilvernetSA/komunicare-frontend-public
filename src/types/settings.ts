@@ -12,6 +12,7 @@ export interface NavigationConfig {
   quickUnlockActive: boolean;
   removeOutputActive: boolean;
   vocalizeFolders: boolean;
+  improvePhraseActive: boolean;
 }
 
 export interface NavigationSettings {
@@ -23,6 +24,7 @@ export interface NavigationSettings {
   vocalizeFolders?: boolean;
   playSoundOnTouchActive?: boolean;
   navigationButtonsStyle?: string;
+  improvePhraseActive?: boolean;
 }
 
 export interface DisplaySettings {

@@ -4,8 +4,11 @@ import React from 'react';
 import { IntlShape } from 'react-intl';
 import { Link } from 'react-router-dom';
 
+import { speak as speakService } from '../../../../../providers/SpeechProvider/speechService';
 import { useBoardsStore } from '../../../../../store/boardsStore';
 import messages from '../../../Board.messages';
+import ImprovePhraseOutput from '../ImprovePhraseOutput/ImprovePhraseOutput';
+import { useImprovePhrase } from '../ImprovePhraseOutput/useImprovePhrase';
 import OutputContainer from '../Output/Output';
 
 interface DisplaySettings {
@@ -26,10 +29,20 @@ const BoardHeader: React.FC<BoardHeaderProps> = ({
   emptyVoiceAlert,
   offlineVoiceAlert,
 }) => {
+  // Drive the GPT phrase-improvement suggestion here (always mounted).
+  useImprovePhrase();
+
   const hasOutput = useBoardsStore((state) => state.output.length > 0);
+  const improvedPhrase = useBoardsStore((state) => state.improvedPhrase);
+
+  const handleSpeak = (phrase: string) => {
+    speakService(phrase);
+  };
 
   return (
     <div className="BoardHeader">
+      <ImprovePhraseOutput improvedPhrase={improvedPhrase} speak={handleSpeak} />
+
       {!displaySettings.hideOutputActive && hasOutput && (
         <div className="Board__output">
           <OutputContainer />
