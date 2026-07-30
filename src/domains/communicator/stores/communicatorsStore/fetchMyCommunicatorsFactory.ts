@@ -41,6 +41,7 @@ export const fetchMyCommunicatorsFactory =
       cacheAge < COMMUNICATORS_CACHE_TTL_MS;
 
     if (canUseCache) {
+      get().getApiMyCommunicatorsSuccess({ data: lastFetchedCommunicators });
       return lastFetchedCommunicators;
     }
 

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../../../store/boardsStore', () => ({
+vi.mock('@/domains/board/stores/boardsStore', () => ({
   useBoardsStore: {
     getState: vi.fn(),
   },
@@ -12,7 +12,7 @@ vi.mock('@/domains/communicator/stores/communicatorsStore', () => ({
   },
 }));
 
-vi.mock('../../../utils/switchCommunicatorNavigation', () => ({
+vi.mock('@/utils/switchCommunicatorNavigation', () => ({
   switchCommunicatorNavigation: vi.fn(),
 }));
 
@@ -89,7 +89,7 @@ describe('handleUrlBoardSyncEffect', () => {
       setBlockedPrivateBoard,
       historyRemoveBoard: vi.fn(),
       navigate,
-      pathname: '/board/public-board',
+      pathname: '/communicator/comm-a/board/public-board',
       lastNavigateTargetRef: { current: '' },
       loadingUrlBoardIdRef: { current: '' },
     });
@@ -111,56 +111,137 @@ describe('handleUrlBoardSyncEffect', () => {
     expect(setBlockedPrivateBoard).not.toHaveBeenCalled();
   });
 
-  it('does not switch communicator when a fetched accessible URL board already belongs to the active communicator', async () => {
-    const board = {
-      id: 'public-board',
+  it('prefers the communicator-scoped copied board over a local exact-id URL match', async () => {
+    const officialBoard = {
+      id: 'official-child',
       isFixed: false,
-      isPublic: true,
-      email: 'other@example.com',
+      isPublic: false,
+      email: 'official@example.com',
+    } as any;
+    const copiedBoard = {
+      id: 'personal-copy',
+      sourceBoardId: 'official-child',
+      isFixed: false,
+      isPublic: false,
+      email: 'user@example.com',
     } as any;
     const changeBoard = vi.fn();
-    const fetchBoardById = vi.fn().mockResolvedValue(board);
+    const fetchBoardById = vi.fn();
     const navigate = vi.fn();
-    const setBlockedPrivateBoard = vi.fn();
 
     mockCommunicatorsStoreGetState.mockReturnValue({
-      activeCommunicatorId: 'comm-a',
+      activeCommunicatorId: 'copy-comm',
       communicators: [
         {
-          boards: ['public-board'],
-          id: 'comm-a',
-          rootBoard: 'public-board',
-        },
-        {
-          boards: ['other-board'],
-          id: 'comm-b',
-          rootBoard: 'other-board',
+          boards: ['personal-copy'],
+          copySource: 'official-comm',
+          id: 'copy-comm',
+          rootBoard: 'personal-copy',
         },
       ],
     } as any);
 
     handleUrlBoardSyncEffect({
-      urlId: 'public-board',
+      urlCommunicatorId: 'copy-comm',
+      urlId: 'official-child',
       activeBoardId: undefined,
-      boards: [],
+      boards: [officialBoard, copiedBoard],
       changeBoard,
       fetchBoardById,
-      userEmail: 'current@example.com',
-      setBlockedPrivateBoard,
+      userEmail: 'user@example.com',
+      setBlockedPrivateBoard: vi.fn(),
       historyRemoveBoard: vi.fn(),
       navigate,
-      pathname: '/board/public-board',
+      pathname: '/communicator/copy-comm/board/official-child',
       lastNavigateTargetRef: { current: '' },
       loadingUrlBoardIdRef: { current: '' },
     });
 
     await flushEffect();
 
-    expect(fetchBoardById).toHaveBeenCalledWith('public-board');
+    expect(fetchBoardById).not.toHaveBeenCalled();
+    expect(changeBoard).toHaveBeenCalledWith('personal-copy');
+    expect(changeBoard).not.toHaveBeenCalledWith('official-child');
     expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
-    expect(changeBoard).toHaveBeenCalledWith('public-board');
     expect(navigate).not.toHaveBeenCalled();
-    expect(setBlockedPrivateBoard).not.toHaveBeenCalled();
+  });
+
+  it('rechecks the latest URL communicator scoped copy before activating a fetched original board', async () => {
+    const officialBoard = {
+      id: 'official-child',
+      isFixed: false,
+      isPublic: false,
+      email: 'official@example.com',
+    } as any;
+    const copiedBoard = {
+      id: 'personal-copy',
+      sourceBoardId: 'official-child',
+      isFixed: false,
+      isPublic: false,
+      email: 'user@example.com',
+    } as any;
+    const changeBoard = vi.fn();
+    const navigate = vi.fn();
+
+    let boardState = {
+      activeBoardId: undefined,
+      boards: [] as any[],
+    };
+    let communicatorState = {
+      activeCommunicatorId: undefined,
+      communicators: [
+        {
+          boards: ['official-child'],
+          id: 'official-comm',
+          rootBoard: 'official-child',
+        },
+        {
+          boards: ['personal-copy'],
+          copySource: 'official-comm',
+          id: 'copy-comm',
+          rootBoard: 'personal-copy',
+        },
+      ],
+    } as any;
+
+    mockBoardsStoreGetState.mockImplementation(() => boardState as any);
+    mockCommunicatorsStoreGetState.mockImplementation(() => communicatorState);
+
+    const fetchBoardById = vi.fn().mockImplementation(async () => {
+      boardState = {
+        ...boardState,
+        boards: [officialBoard, copiedBoard],
+      };
+      communicatorState = {
+        ...communicatorState,
+        activeCommunicatorId: 'copy-comm',
+      };
+
+      return officialBoard;
+    });
+
+    handleUrlBoardSyncEffect({
+      urlCommunicatorId: 'copy-comm',
+      urlId: 'official-child',
+      activeBoardId: undefined,
+      boards: [],
+      changeBoard,
+      fetchBoardById,
+      userEmail: 'user@example.com',
+      setBlockedPrivateBoard: vi.fn(),
+      historyRemoveBoard: vi.fn(),
+      navigate,
+      pathname: '/communicator/copy-comm/board/official-child',
+      lastNavigateTargetRef: { current: '' },
+      loadingUrlBoardIdRef: { current: '' },
+    });
+
+    await flushEffect();
+
+    expect(fetchBoardById).toHaveBeenCalledWith('official-child');
+    expect(changeBoard).toHaveBeenCalledWith('personal-copy');
+    expect(changeBoard).not.toHaveBeenCalledWith('official-child');
+    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
   });
 
   it('blocks a fetched private board owned by another user', async () => {
@@ -184,7 +265,7 @@ describe('handleUrlBoardSyncEffect', () => {
       setBlockedPrivateBoard,
       historyRemoveBoard: vi.fn(),
       navigate: vi.fn(),
-      pathname: '/board/private-board',
+      pathname: '/communicator/comm-a/board/private-board',
       lastNavigateTargetRef: { current: '' },
       loadingUrlBoardIdRef: { current: '' },
     });
@@ -192,117 +273,8 @@ describe('handleUrlBoardSyncEffect', () => {
     await flushEffect();
 
     expect(fetchBoardById).toHaveBeenCalledWith('private-board');
-    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
     expect(changeBoard).not.toHaveBeenCalled();
     expect(setBlockedPrivateBoard).toHaveBeenCalledWith(true);
-  });
-
-  it('switches communicator before activating a local URL board owned by another communicator', async () => {
-    const localBoard = {
-      id: 'local-board',
-      isFixed: false,
-      isPublic: false,
-      email: 'owner@example.com',
-    } as any;
-    const changeBoard = vi.fn();
-    const fetchBoardById = vi.fn();
-    const navigate = vi.fn();
-
-    mockCommunicatorsStoreGetState.mockReturnValue({
-      activeCommunicatorId: 'comm-a',
-      communicators: [
-        {
-          boards: ['other-board'],
-          id: 'comm-a',
-          rootBoard: 'other-board',
-        },
-        {
-          boards: ['local-board'],
-          id: 'comm-b',
-          rootBoard: 'local-board',
-        },
-      ],
-    } as any);
-
-    handleUrlBoardSyncEffect({
-      urlId: 'local-board',
-      activeBoardId: undefined,
-      boards: [localBoard],
-      changeBoard,
-      fetchBoardById,
-      userEmail: 'current@example.com',
-      setBlockedPrivateBoard: vi.fn(),
-      historyRemoveBoard: vi.fn(),
-      navigate,
-      pathname: '/board/local-board',
-      lastNavigateTargetRef: { current: '' },
-      loadingUrlBoardIdRef: { current: '' },
-    });
-
-    await flushEffect();
-
-    expect(fetchBoardById).not.toHaveBeenCalled();
-    expect(mockSwitchCommunicatorNavigation).toHaveBeenCalledWith({
-      communicator: {
-        boards: ['local-board'],
-        id: 'comm-b',
-        rootBoard: 'local-board',
-      },
-      navigate,
-      skipBoardNavigation: true,
-    });
-    expect(changeBoard).toHaveBeenCalledWith('local-board');
-    expect(navigate).not.toHaveBeenCalled();
-  });
-
-  it('does not switch communicator when a local URL board already belongs to the active communicator', async () => {
-    const localBoard = {
-      id: 'local-board',
-      isFixed: false,
-      isPublic: false,
-      email: 'owner@example.com',
-    } as any;
-    const changeBoard = vi.fn();
-    const fetchBoardById = vi.fn();
-    const navigate = vi.fn();
-
-    mockCommunicatorsStoreGetState.mockReturnValue({
-      activeCommunicatorId: 'comm-a',
-      communicators: [
-        {
-          boards: ['local-board'],
-          id: 'comm-a',
-          rootBoard: 'local-board',
-        },
-        {
-          boards: ['other-board'],
-          id: 'comm-b',
-          rootBoard: 'other-board',
-        },
-      ],
-    } as any);
-
-    handleUrlBoardSyncEffect({
-      urlId: 'local-board',
-      activeBoardId: undefined,
-      boards: [localBoard],
-      changeBoard,
-      fetchBoardById,
-      userEmail: 'current@example.com',
-      setBlockedPrivateBoard: vi.fn(),
-      historyRemoveBoard: vi.fn(),
-      navigate,
-      pathname: '/board/local-board',
-      lastNavigateTargetRef: { current: '' },
-      loadingUrlBoardIdRef: { current: '' },
-    });
-
-    await flushEffect();
-
-    expect(fetchBoardById).not.toHaveBeenCalled();
-    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
-    expect(changeBoard).toHaveBeenCalledWith('local-board');
-    expect(navigate).not.toHaveBeenCalled();
   });
 
   it('switches communicator when the fallback board belongs to another communicator', async () => {
@@ -312,9 +284,7 @@ describe('handleUrlBoardSyncEffect', () => {
       rootBoard: 'fallback-board',
     } as any;
     const changeBoard = vi.fn();
-    const fetchBoardById = vi
-      .fn()
-      .mockRejectedValue(new Error('missing board'));
+    const fetchBoardById = vi.fn().mockRejectedValue(new Error('missing board'));
     const historyRemoveBoard = vi.fn();
     const navigate = vi.fn();
 
@@ -344,7 +314,7 @@ describe('handleUrlBoardSyncEffect', () => {
       setBlockedPrivateBoard: vi.fn(),
       historyRemoveBoard,
       navigate,
-      pathname: '/board/missing-board',
+      pathname: '/communicator/comm-a/board/missing-board',
       lastNavigateTargetRef: { current: '' },
       loadingUrlBoardIdRef: { current: '' },
     });
@@ -358,62 +328,12 @@ describe('handleUrlBoardSyncEffect', () => {
       skipBoardNavigation: true,
     });
     expect(changeBoard).toHaveBeenCalledWith('fallback-board');
-    expect(navigate).toHaveBeenCalledWith('/board/fallback-board', {
-      replace: true,
-    });
-  });
-
-  it('does not switch communicator when the fallback board already belongs to the active communicator', async () => {
-    const changeBoard = vi.fn();
-    const fetchBoardById = vi
-      .fn()
-      .mockRejectedValue(new Error('missing board'));
-    const historyRemoveBoard = vi.fn();
-    const navigate = vi.fn();
-
-    mockBoardsStoreGetState.mockReturnValue({
-      activeBoardId: undefined,
-      boards: [{ id: 'active-board' }],
-    } as any);
-    mockCommunicatorsStoreGetState.mockReturnValue({
-      activeCommunicatorId: 'comm-a',
-      communicators: [
-        {
-          boards: ['active-board'],
-          id: 'comm-a',
-          rootBoard: 'active-board',
-        },
-        {
-          boards: ['other-board'],
-          id: 'comm-b',
-          rootBoard: 'other-board',
-        },
-      ],
-    } as any);
-
-    handleUrlBoardSyncEffect({
-      urlId: 'missing-board',
-      activeBoardId: undefined,
-      boards: [],
-      changeBoard,
-      fetchBoardById,
-      userEmail: 'current@example.com',
-      setBlockedPrivateBoard: vi.fn(),
-      historyRemoveBoard,
-      navigate,
-      pathname: '/board/missing-board',
-      lastNavigateTargetRef: { current: '' },
-      loadingUrlBoardIdRef: { current: '' },
-    });
-
-    await flushEffect();
-
-    expect(historyRemoveBoard).toHaveBeenCalledWith('missing-board');
-    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
-    expect(changeBoard).toHaveBeenCalledWith('active-board');
-    expect(navigate).toHaveBeenCalledWith('/board/active-board', {
-      replace: true,
-    });
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/comm-a/board/fallback-board',
+      {
+        replace: true,
+      },
+    );
   });
 });
 
@@ -450,7 +370,7 @@ describe('handleLateBoardFallbackEffect', () => {
       changeBoard,
       fetchBoardById: vi.fn(),
       navigate,
-      pathname: '/board/missing-board',
+      pathname: '/communicator/comm-a/board/missing-board',
       lastNavigateTargetRef: { current: '' },
     });
 
@@ -463,55 +383,11 @@ describe('handleLateBoardFallbackEffect', () => {
       skipBoardNavigation: true,
     });
     expect(changeBoard).toHaveBeenCalledWith('fallback-board');
-    expect(navigate).toHaveBeenCalledWith('/board/fallback-board', {
-      replace: true,
-    });
-  });
-
-  it('does not switch communicator before activating a late fallback board already owned by the active communicator', async () => {
-    const changeBoard = vi.fn();
-    const historyRemoveBoard = vi.fn();
-    const navigate = vi.fn();
-
-    handleLateBoardFallbackEffect({
-      isInitialized: true,
-      activeBoardId: 'missing-active-board',
-      boards: [{ id: 'active-board' } as any],
-      communicators: [
-        {
-          boards: ['active-board'],
-          id: 'comm-a',
-          rootBoard: 'active-board',
-          name: '',
-          author: '',
-          email: '',
-        },
-        {
-          boards: ['other-board'],
-          id: 'comm-b',
-          rootBoard: 'other-board',
-          name: '',
-          author: '',
-          email: '',
-        },
-      ],
-      activeCommunicatorId: 'comm-a',
-      urlId: 'missing-board',
-      historyRemoveBoard,
-      changeBoard,
-      fetchBoardById: vi.fn(),
-      navigate,
-      pathname: '/board/missing-board',
-      lastNavigateTargetRef: { current: '' },
-    });
-
-    await flushEffect();
-
-    expect(historyRemoveBoard).toHaveBeenCalledWith('missing-board');
-    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
-    expect(changeBoard).toHaveBeenCalledWith('active-board');
-    expect(navigate).toHaveBeenCalledWith('/board/active-board', {
-      replace: true,
-    });
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/comm-a/board/fallback-board',
+      {
+        replace: true,
+      },
+    );
   });
 });

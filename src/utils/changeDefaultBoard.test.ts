@@ -67,19 +67,19 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../store/appStore', () => ({
+vi.mock('@/domains/app/stores/appStore', () => ({
   useAppStore: {
     getState: () => mocks.appState,
   },
 }));
 
-vi.mock('../store/boardsStore', () => ({
+vi.mock('@/domains/board/stores/boardsStore', () => ({
   useBoardsStore: {
     getState: () => mocks.boardsState,
   },
 }));
 
-vi.mock('../store/communicatorsStore', () => ({
+vi.mock('@/domains/communicator/stores/communicatorsStore', () => ({
   useCommunicatorsStore: {
     getState: () => mocks.communicatorsState,
   },
@@ -315,5 +315,74 @@ describe('changeDefaultBoard', () => {
       communicatorId: 'remote-copy',
       shouldPersist: true,
     });
+  });
+
+  it('switches dynamic system communicators using their root instead of reusing the active board', async () => {
+    const navigate = vi.fn();
+    const selectedCommunicator = {
+      id: 'official_feelings',
+      email: 'catalog-support@example.com',
+      name: 'Feelings',
+      rootBoard: 'feelings_root',
+      boards: ['feelings_root', 'feelingsBoard'],
+      defaultBoardsIncluded: defaultBoardsIncluded,
+    };
+
+    mocks.boardsState.activeBoardId = 'feelingsBoard';
+    mocks.boardsState.boards = [
+      { id: 'feelings_root', name: 'Feelings Root' },
+      { id: 'feelingsBoard', name: 'Feelings Board' },
+    ];
+    mocks.communicatorsState.communicators = [
+      buildOfficialCommunicator({
+        id: 'official_komunicare',
+        rootBoard: 'komunicare',
+        boards: ['komunicare', 'feelingsBoard'],
+      }),
+      selectedCommunicator,
+    ];
+    mocks.communicatorsState.activeCommunicatorId = 'official_komunicare';
+    mocks.switchCommunicatorNavigation.mockImplementationOnce(
+      ({ communicator, navigate, preferActiveBoard = true }: any) => {
+        mocks.communicatorsState.changeCommunicator(communicator.id);
+
+        const activeBoardId = mocks.boardsState.activeBoardId;
+        const nextBoardId =
+          (preferActiveBoard &&
+            activeBoardId &&
+            communicator.boards?.includes(activeBoardId) &&
+            activeBoardId) ||
+          communicator.rootBoard ||
+          communicator.boards?.[0] ||
+          '';
+
+        if (!nextBoardId) {
+          return;
+        }
+
+        mocks.boardsState.switchBoard(nextBoardId);
+        navigate?.(`/communicator/${communicator.id}/board/${nextBoardId}`, {
+          replace: true,
+        });
+      },
+    );
+
+    await changeDefaultBoard(
+      { type: 'default', boardName: selectedCommunicator.id },
+      navigate,
+    );
+
+    expect(mocks.switchCommunicatorNavigation).toHaveBeenCalledWith({
+      communicator: selectedCommunicator,
+      navigate,
+      preferActiveBoard: false,
+    });
+    expect(mocks.communicatorsState.changeCommunicator).toHaveBeenCalledWith(
+      selectedCommunicator.id,
+    );
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/official_feelings/board/feelings_root',
+      { replace: true },
+    );
   });
 });

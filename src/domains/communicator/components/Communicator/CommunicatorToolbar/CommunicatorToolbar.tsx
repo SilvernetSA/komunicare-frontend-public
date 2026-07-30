@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import messages from './CommunicatorToolbar.messages';
 import './CommunicatorToolbar.css';
@@ -27,6 +27,7 @@ import {
 } from '@/utils/changeDefaultBoard';
 import { getBoardDisplayTitle } from '@/utils/getBoardDisplayTitle';
 import { switchCommunicatorNavigation } from '@/utils/switchCommunicatorNavigation';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 import boardMessages from '@/domains/board/components/Board/Board.messages';
 import FormDialog from '@/domains/shared/components/UI/FormDialog/FormDialog';
 import CommunicatorDialog from '../CommunicatorDialog/CommunicatorDialog';
@@ -66,6 +67,9 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
 
   // ── routing / i18n ───────────────────────────────────────────────────────────
   const navigate = useNavigate();
+  const { communicatorId: routeCommunicatorId } = useParams<{
+    communicatorId?: string;
+  }>();
   const intl = useIntl();
 
   // ── store subscriptions ──────────────────────────────────────────────────────
@@ -95,8 +99,13 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
     communicators.find((c) => c.id === activeCommunicatorId) ||
     emptyCommunicator;
 
-  // Keep activeCommunicatorId in sync with the active board.
+  // Keep activeCommunicatorId in sync with the active board only on
+  // non-scoped routes. /communicator/:communicatorId/... is owned by Board.tsx.
   useEffect(() => {
+    if (routeCommunicatorId) {
+      return;
+    }
+
     if (
       currentCommunicator.id &&
       currentCommunicator.id !== activeCommunicatorId
@@ -105,7 +114,7 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
         .getState()
         .changeCommunicator(currentCommunicator.id);
     }
-  }, [activeCommunicatorId, currentCommunicator.id]);
+  }, [routeCommunicatorId, activeCommunicatorId, currentCommunicator.id]);
 
   const lowerUserEmail = typeof userEmail === 'string' ? userEmail.toLowerCase() : '';
   const userBoards = lowerUserEmail
@@ -128,7 +137,7 @@ const CommunicatorToolbar: React.FC<CommunicatorToolbarProps> = ({
   const switchBoardHandler = (board: Board) => {
     setBoardsMenu(null);
     useBoardsStore.getState().switchBoard(board.id);
-    navigate(`/board/${board.id}`, { replace: true });
+    navigate(buildBoardPath(board.id), { replace: true });
   };
 
   const editCommunicatorTitle = async (name: string) => {

@@ -2,6 +2,7 @@ import { UserData } from '@/types/app';
 import { Board } from '@/types/board';
 import { Communicator } from '@/types/communicator';
 import { switchCommunicatorNavigation } from '@/utils/switchCommunicatorNavigation';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 import { TAB_INDEXES } from '../CommunicatorDialog.constants';
 import messages from '../CommunicatorDialog.messages';
 
@@ -173,7 +174,7 @@ export const setRootBoard = async (
     });
     switchBoard(board.id);
     if (navigate) {
-      navigate(`/board/${board.id}`, { replace: true });
+      navigate(buildBoardPath(board.id), { replace: true });
     }
 
     if ('name' in userData && 'email' in userData) {

@@ -5,6 +5,7 @@ import {
 } from './defaultBoardsIncluded';
 import { persistStartupCommunicatorSelection } from './persistStartupCommunicatorSelection';
 import { switchCommunicatorNavigation } from './switchCommunicatorNavigation';
+import { buildBoardPath } from './buildBoardPath';
 import {
   isProtectedCommunicator,
   findExistingPersonalCopyForBoardWithRefresh,
@@ -127,7 +128,7 @@ const switchActiveBoard = (
 
   useBoardsStore.getState().switchBoard(homeBoardId);
   if (navigate) {
-    navigate(`/board/${homeBoardId}`, { replace: true });
+    navigate(buildBoardPath(homeBoardId), { replace: true });
   }
 };
 
@@ -381,7 +382,11 @@ export async function changeDefaultBoard(
         (c) => String(c.id) === normalizedSelection.boardName,
       );
       if (systemComm) {
-        switchCommunicatorNavigation({ communicator: systemComm, navigate });
+        switchCommunicatorNavigation({
+          communicator: systemComm,
+          navigate,
+          preferActiveBoard: false,
+        });
         return;
       }
     }

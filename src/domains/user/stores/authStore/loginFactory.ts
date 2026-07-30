@@ -56,7 +56,7 @@ export const loginFactory =
       useCommunicatorsStore.getState().applyLoginSuccess(loginData);
       useSettingsStore.getState().applyLoginSuccess(loginData);
       useSubscriptionStore.getState().applyLoginSuccess(loginData);
-      useBoardsStore.getState().switchBoard('');
+      useBoardsStore.getState().resetActiveBoardSelection();
 
       if (loginData.isFirstLogin) {
         await handleFirstLoginAction(loginData);
@@ -69,6 +69,8 @@ export const loginFactory =
             force: false,
           }),
         ]);
+
+        await useCommunicatorsStore.getState().fetchMyCommunicators();
       }
 
       if (loginData.isFirstLogin) {

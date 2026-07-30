@@ -44,8 +44,10 @@ import {
   getCachedSystemBoards,
   getCachedSystemHashes,
 } from './systemCatalogCache';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 
 import type { Board, Tile } from '@/types/board';
+import type { Communicator } from '@/types/communicator';
 
 // Initialise the system boards runtime cache from persisted data
 const cachedSystemBoards = getCachedSystemBoards();
@@ -61,6 +63,65 @@ const resetAllBoardPageCaches = () => {
 const resetAllUserBoardCaches = () => {
   resetFetchUserBoardsCache();
   resetAllBoardPageCaches();
+};
+
+const collectCommunicatorScopedBoardIds = (
+  communicator?: Communicator,
+): Set<string> => {
+  const boardIds = new Set<string>();
+
+  const rootBoard = String(communicator?.rootBoard || '').trim();
+  if (rootBoard) {
+    boardIds.add(rootBoard);
+  }
+
+  (Array.isArray(communicator?.boards) ? communicator.boards : []).forEach(
+    (boardId) => {
+      const normalizedBoardId = String(boardId || '').trim();
+      if (normalizedBoardId) {
+        boardIds.add(normalizedBoardId);
+      }
+    },
+  );
+
+  (Array.isArray(communicator?.defaultBoardsIncluded)
+    ? communicator.defaultBoardsIncluded
+    : []
+  ).forEach((entry) => {
+    const homeBoard = String(entry?.homeBoard || '').trim();
+    if (homeBoard) {
+      boardIds.add(homeBoard);
+    }
+  });
+
+  return boardIds;
+};
+
+const resolveLocalBoardForFetch = (
+  boards: Board[],
+  boardId: string,
+): Board | undefined => {
+  const normalizedBoardId = String(boardId || '').trim();
+  if (!normalizedBoardId) {
+    return undefined;
+  }
+
+  const communicatorState = useCommunicatorsStore.getState();
+  const activeCommunicator = communicatorState.communicators.find(
+    (communicator) => communicator.id === communicatorState.activeCommunicatorId,
+  );
+  const scopedBoardIds = collectCommunicatorScopedBoardIds(activeCommunicator);
+
+  const scopedCopiedBoard = boards.find(
+    (board) =>
+      scopedBoardIds.has(String(board.id || '').trim()) &&
+      String(board.sourceBoardId || '').trim() === normalizedBoardId,
+  );
+  if (scopedCopiedBoard) {
+    return scopedCopiedBoard;
+  }
+
+  return boards.find((board) => board.id === normalizedBoardId);
 };
 
 const buildInitialBoardsState = (): BoardState => {
@@ -87,6 +148,7 @@ export interface BoardsStore extends BoardState {
   historyRemoveBoard: (boardId: string) => void;
   unmarkBoard: (boardId: string) => void;
   switchBoard: (boardId: string) => void;
+  resetActiveBoardSelection: () => void;
   createTile: (payload: { boardId: string; tile: Tile }) => void;
   deleteTiles: (payload: { boardId: string; tileIds: string[] }) => void;
   editTiles: (payload: { boardId: string; tiles: Tile[] }) => void;
@@ -267,6 +329,10 @@ export const useBoardsStore = create<BoardsStore>()((set, get) => ({
     set({ navHistory: [boardId], activeBoardId: boardId });
   },
 
+  resetActiveBoardSelection: () => {
+    set({ navHistory: [], activeBoardId: null });
+  },
+
   createTile: ({ boardId, tile }) => {
     set((state) => ({
       boards: state.boards.map((board) =>
@@ -345,13 +411,20 @@ export const useBoardsStore = create<BoardsStore>()((set, get) => ({
 
   upsertRemoteBoard: upsertRemoteBoardFactory(get),
 
-  fetchBoardById: (boardId) =>
-    fetchBoardById(
+  fetchBoardById: async (boardId) => {
+    const board = await fetchBoardById(
       boardId,
-      () => get().boards.find((board) => board.id === boardId),
+      () => resolveLocalBoardForFetch(get().boards, boardId),
       () => get().fetchSystemBoards(),
-      () => get().boards.find((board) => board.id === boardId),
-    ),
+      () => resolveLocalBoardForFetch(get().boards, boardId),
+    );
+
+    set((state) => ({
+      boards: mergeRemoteBoards(state.boards, [board]),
+    }));
+
+    return board;
+  },
 
   fetchPublicBoardsPage: (params) => fetchPublicBoardsPage(params),
 

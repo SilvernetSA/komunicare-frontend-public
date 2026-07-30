@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { useEffect, useRef } from 'react';
 import Helmet from 'react-helmet';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import registerServiceWorker from '@/registerServiceWorker';
 import { useAppStore } from '@/domains/app/stores/appStore';
@@ -23,7 +23,15 @@ import TrialRemainingModal from '@/domains/subscription/components/PremiumFeatur
 import { DISPLAY_SIZE_STANDARD } from '@/domains/settings/components/Settings/Display/Display.constants';
 import Settings from '@/domains/settings/components/Settings/Settings.wrapper';
 import WelcomeScreen from '@/domains/user/components/WelcomeScreen/WelcomeScreen';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import './App.css';
+
+const LegacyBoardRedirect: React.FC<{ isLogged: boolean }> = ({ isLogged }) => {
+  const { id } = useParams<{ id: string }>();
+  const activeCommunicatorId = useCommunicatorsStore((s) => s.activeCommunicatorId);
+  if (!isLogged) return <Navigate to="/login-signup" replace />;
+  return <Navigate to={`/communicator/${activeCommunicatorId}/board/${id}`} replace />;
+};
 
 const App: React.FC = () => {
   const navigate = useNavigate();
@@ -138,10 +146,15 @@ const App: React.FC = () => {
         <Route path="/reset/:userid/:url" element={<ChangePassword />} />
         <Route path="/login/:type/callback" element={<OAuthLogin />} />
         <Route
-          path="/board/:id"
+          path="/communicator/:communicatorId/board/:id"
           element={
             <PrivateRoute isLogged={isLogged} component={BoardContainer} />
           }
+        />
+        {/* Legacy redirect: /board/:id → /communicator/default/board/:id */}
+        <Route
+          path="/board/:id"
+          element={<LegacyBoardRedirect isLogged={isLogged} />}
         />
         {isDownloadingLang && (
           <Route

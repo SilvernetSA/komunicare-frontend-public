@@ -1,6 +1,10 @@
 import { NavigateFunction } from 'react-router-dom';
 
 import {
+  CANONICAL_ROOT_BOARD_IDS,
+  findCommunicatorScopedBoardBySourceId,
+  resolveLocalUrlBoard,
+  resolveRouteCommunicator,
   resolveSafeFallbackBoardId,
   syncBoardOwnerAndActivate,
 } from './navigationHelpers';
@@ -8,8 +12,10 @@ import { useBoardsStore } from '@/domains/board/stores/boardsStore';
 import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import { Board as BoardModel } from '@/types/board';
 import { Communicator } from '@/types/communicator';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 
 interface UrlSyncEffectParams {
+  urlCommunicatorId?: string;
   urlId?: string;
   activeBoardId?: string | null;
   boards: BoardModel[];
@@ -36,6 +42,7 @@ const canActivateFetchedUrlBoard = ({
  * Syncs URL board id with in-memory store board state, including fallback routing.
  */
 export const handleUrlBoardSyncEffect = ({
+  urlCommunicatorId,
   urlId,
   activeBoardId,
   boards,
@@ -50,6 +57,13 @@ export const handleUrlBoardSyncEffect = ({
   loadingUrlBoardIdRef,
 }: UrlSyncEffectParams): void => {
   if (!urlId) return;
+
+  const communicatorState = useCommunicatorsStore.getState();
+  const routeCommunicator = resolveRouteCommunicator({
+    communicators: communicatorState.communicators as Communicator[],
+    urlCommunicatorId,
+    activeCommunicatorId: communicatorState.activeCommunicatorId,
+  });
 
   const activateUrlBoardWithOwnerSync = ({
     boardId,
@@ -72,11 +86,15 @@ export const handleUrlBoardSyncEffect = ({
     });
   };
 
-  if (activeBoardId === urlId && boards.some((board) => board.id === urlId)) {
+  const localBoard = resolveLocalUrlBoard({
+    boards,
+    communicator: routeCommunicator,
+    urlId,
+  });
+  if (localBoard?.id && activeBoardId === localBoard.id) {
     return;
   }
 
-  const localBoard = boards.find((b) => b.id === urlId);
   if (localBoard) {
     void activateUrlBoardWithOwnerSync({
       boardId: localBoard.id,
@@ -93,14 +111,29 @@ export const handleUrlBoardSyncEffect = ({
   fetchBoardById(urlId)
     .then((board) => {
       if (!board) return;
-      if (!canActivateFetchedUrlBoard({ board, userEmail })) {
+
+      const latestBoardState = useBoardsStore.getState();
+      const latestCommunicatorState = useCommunicatorsStore.getState();
+      const latestRouteCommunicator = resolveRouteCommunicator({
+        communicators: latestCommunicatorState.communicators as Communicator[],
+        urlCommunicatorId,
+        activeCommunicatorId: latestCommunicatorState.activeCommunicatorId,
+      });
+      const resolvedRouteBoard =
+        resolveLocalUrlBoard({
+          boards: latestBoardState.boards as BoardModel[],
+          communicator: latestRouteCommunicator,
+          urlId,
+        }) || board;
+
+      if (!canActivateFetchedUrlBoard({ board: resolvedRouteBoard, userEmail })) {
         setBlockedPrivateBoard(true);
         return;
       }
 
       return activateUrlBoardWithOwnerSync({
-        boardId: board.id,
-        resolvedBoard: board,
+        boardId: resolvedRouteBoard.id,
+        resolvedBoard: resolvedRouteBoard,
       });
     })
     .catch(() => {
@@ -149,6 +182,7 @@ interface InitEffectParams {
   setSyncedUserEmail: (email: string) => void;
   getApiObjects: () => Promise<void>;
   urlId?: string;
+  urlCommunicatorId?: string;
   fetchBoardById: (id: string) => Promise<BoardModel | undefined>;
   historyRemoveBoard: (id: string) => void;
   changeBoard: (id: string) => void;
@@ -167,6 +201,7 @@ export const runBoardInitializationEffect = async ({
   setSyncedUserEmail,
   getApiObjects,
   urlId,
+  urlCommunicatorId,
   fetchBoardById,
   historyRemoveBoard,
   changeBoard,
@@ -199,23 +234,79 @@ export const runBoardInitializationEffect = async ({
       boardState.boards.some((board) => board.id === currentActiveBoardId),
     );
 
+    const routeCommunicatorAfterFetch = resolveRouteCommunicator({
+      communicators: communicatorState.communicators as Communicator[],
+      urlCommunicatorId,
+      activeCommunicatorId: communicatorState.activeCommunicatorId,
+    });
+    const routeCommunicatorIdAfterFetch =
+      routeCommunicatorAfterFetch?.id ||
+      urlCommunicatorId ||
+      communicatorState.activeCommunicatorId;
+    const communicatorScopedActiveBoard = findCommunicatorScopedBoardBySourceId(
+      {
+        boards: boardState.boards as BoardModel[],
+        communicator: routeCommunicatorAfterFetch,
+        sourceBoardId: currentActiveBoardId,
+      },
+    );
+    const fallbackBoardId =
+      communicatorScopedActiveBoard?.id || routeCommunicatorAfterFetch?.rootBoard;
+    if (
+      fallbackBoardId &&
+      ((routeCommunicatorAfterFetch as any)?.copySource ||
+        (routeCommunicatorAfterFetch as any)?.copySourceCommunicatorId) &&
+      CANONICAL_ROOT_BOARD_IDS.has(currentActiveBoardId || '') &&
+      !routeCommunicatorAfterFetch?.boards?.includes(currentActiveBoardId || '')
+    ) {
+      changeBoard(fallbackBoardId);
+
+      if (!(urlCommunicatorId && urlId && urlId !== fallbackBoardId)) {
+        navigate(buildBoardPath(fallbackBoardId, routeCommunicatorIdAfterFetch), {
+          replace: true,
+        });
+      }
+      return;
+    }
+
     if (!currentActiveBoardExists) {
-      const communicatorRootBoard = communicatorState.communicators.find(
-        (c) => c.id === communicatorState.activeCommunicatorId,
-      )?.rootBoard;
+      const communicatorRootBoard = routeCommunicatorAfterFetch?.rootBoard;
 
       let targetId = communicatorRootBoard || boardState.boards[0]?.id;
       let resolvedTargetBoard: BoardModel | undefined;
+      let preserveUrlBoardSegment = false;
 
       if (urlId) {
-        resolvedTargetBoard = boardState.boards.find((b) => b.id === urlId);
+        resolvedTargetBoard = resolveLocalUrlBoard({
+          boards: boardState.boards as BoardModel[],
+          communicator: routeCommunicatorAfterFetch,
+          urlId,
+        });
         if (resolvedTargetBoard?.id) {
           targetId = resolvedTargetBoard.id;
+          preserveUrlBoardSegment = resolvedTargetBoard.id !== urlId;
         } else {
           try {
-            resolvedTargetBoard = await fetchBoardById(urlId);
+            const fetchedTargetBoard = await fetchBoardById(urlId);
+            const latestBoardState = useBoardsStore.getState();
+            const latestCommunicatorState = useCommunicatorsStore.getState();
+
+            resolvedTargetBoard =
+              resolveLocalUrlBoard({
+                boards: latestBoardState.boards as BoardModel[],
+                communicator: resolveRouteCommunicator({
+                  communicators:
+                    latestCommunicatorState.communicators as Communicator[],
+                  urlCommunicatorId,
+                  activeCommunicatorId:
+                    latestCommunicatorState.activeCommunicatorId,
+                }),
+                urlId,
+              }) || fetchedTargetBoard;
+
             if (resolvedTargetBoard?.id) {
               targetId = resolvedTargetBoard.id;
+              preserveUrlBoardSegment = resolvedTargetBoard.id !== urlId;
             }
           } catch {
             historyRemoveBoard(urlId);
@@ -243,7 +334,7 @@ export const runBoardInitializationEffect = async ({
           activeCommunicatorId: communicatorState.activeCommunicatorId,
           navigate,
           navigation:
-            urlId !== targetId
+            !preserveUrlBoardSegment && urlId !== targetId
               ? {
                   mode: 'replace',
                   urlId,
@@ -267,6 +358,7 @@ interface LateFallbackEffectParams {
   communicators: Communicator[];
   activeCommunicatorId?: string;
   urlId?: string;
+  urlCommunicatorId?: string;
   historyRemoveBoard: (id: string) => void;
   changeBoard: (id: string) => void;
   fetchBoardById: (id: string) => Promise<BoardModel | undefined>;
@@ -285,6 +377,7 @@ export const handleLateBoardFallbackEffect = ({
   communicators,
   activeCommunicatorId,
   urlId,
+  urlCommunicatorId,
   historyRemoveBoard,
   changeBoard,
   fetchBoardById,
@@ -300,14 +393,25 @@ export const handleLateBoardFallbackEffect = ({
     return;
   }
 
+  const routeCommunicator = resolveRouteCommunicator({
+    communicators,
+    urlCommunicatorId,
+    activeCommunicatorId,
+  });
+  if (routeCommunicator?.rootBoard === activeBoardId) {
+    return;
+  }
+
   const fallbackId = resolveSafeFallbackBoardId({
     availableBoards: boards,
     availableCommunicators: communicators as Communicator[],
     currentCommunicatorId: activeCommunicatorId,
   });
-  const localUrlBoard = urlId
-    ? boards.find((board) => board.id === urlId)
-    : undefined;
+  const localUrlBoard = resolveLocalUrlBoard({
+    boards,
+    communicator: routeCommunicator,
+    urlId,
+  });
   const targetId = localUrlBoard?.id || fallbackId;
 
   if (urlId && !localUrlBoard) {
@@ -330,7 +434,7 @@ export const handleLateBoardFallbackEffect = ({
     activeCommunicatorId,
     navigate,
     navigation:
-      urlId !== targetId
+      !localUrlBoard && urlId !== targetId
         ? {
             mode: 'replace',
             urlId,

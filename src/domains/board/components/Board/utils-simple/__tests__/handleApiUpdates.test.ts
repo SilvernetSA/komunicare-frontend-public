@@ -16,7 +16,7 @@ const mocks = vi.hoisted(() => ({
   communicators: [] as any[],
 }));
 
-vi.mock('../../../../utils/getBoardDisplayTitle', () => ({
+vi.mock('@/utils/getBoardDisplayTitle', () => ({
   getBoardDisplayTitle: mocks.getBoardDisplayTitle,
 }));
 
@@ -34,7 +34,7 @@ vi.mock('../copyOnWrite', () => ({
     mocks.resolveProtectedBoardCommunicatorCopy,
 }));
 
-vi.mock('../../../../store/boardsStore/prepareBoardForPersistence', () => ({
+vi.mock('@/domains/board/stores/boardsStore/prepareBoardForPersistence', () => ({
   prepareBoardForPersistence: mocks.prepareBoardForPersistence,
 }));
 
@@ -42,7 +42,7 @@ vi.mock('../saveProtectedBoardWorkflow', () => ({
   saveProtectedBoardWorkflow: mocks.saveProtectedBoardWorkflow,
 }));
 
-vi.mock('../../../../store/communicatorsStore', () => ({
+vi.mock('@/domains/communicator/stores/communicatorsStore', () => ({
   useCommunicatorsStore: {
     getState: () => ({
       activeCommunicatorId: mocks.activeCommunicatorId,
@@ -320,7 +320,7 @@ describe('handleApiUpdates', () => {
     });
     expect(params.switchBoard).toHaveBeenCalledWith('returned-child-board-id');
     expect(params.navigate).toHaveBeenCalledWith(
-      '/board/returned-child-board-id',
+      '/communicator/active-communicator-id/board/returned-child-board-id',
       { replace: true },
     );
 
@@ -449,6 +449,33 @@ describe('handleApiUpdates', () => {
         boardId: 'komunicare',
       }),
     );
+  });
+
+  it('does not abort when the existing copy is already the active communicator', async () => {
+    mocks.isOwnedByUser.mockReturnValue(true);
+    mocks.resolveBundleNameForBoard.mockReturnValue('komunicare');
+    mocks.resolveCommunicatorBundle.mockReturnValue('komunicare');
+
+    const communicator = createCommunicator({
+      id: 'active-copy',
+      email: 'user@example.com',
+      rootBoard: 'personal-root',
+    });
+    const onExistingCopyFound = vi.fn();
+    const params = createParams({
+      board: createBoard({ id: 'komunicare' }),
+      communicator,
+      onExistingCopyFound,
+    });
+
+    await expect(handleApiUpdates(params as any)).resolves.toBe(true);
+
+    const workflowParams = mocks.saveProtectedBoardWorkflow.mock.calls[0][0] as any;
+
+    expect(
+      workflowParams.communicatorCopyParams.onExistingCopy(communicator),
+    ).toBe(false);
+    expect(onExistingCopyFound).not.toHaveBeenCalled();
   });
 
   it('skips communicator-copy resolution for non-protected boards in the shared workflow helper', async () => {

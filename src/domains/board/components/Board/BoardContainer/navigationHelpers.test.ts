@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../../../utils/switchCommunicatorNavigation', () => ({
+vi.mock('@/utils/switchCommunicatorNavigation', () => ({
   switchCommunicatorNavigation: vi.fn(),
 }));
 
@@ -38,7 +38,9 @@ describe('ensureBoardLoadedAndActivate', () => {
     expect(resolvedBoard).toBe(board);
     expect(fetchBoardById).not.toHaveBeenCalled();
     expect(changeBoard).toHaveBeenCalledWith('board-1');
-    expect(navigate).toHaveBeenCalledWith('/board/board-1');
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/komunicare_default/board/board-1',
+    );
   });
 
   it('fetches a missing board and navigates with replace mode', async () => {
@@ -67,8 +69,13 @@ describe('ensureBoardLoadedAndActivate', () => {
     expect(resolvedBoard).toBe(board);
     expect(fetchBoardById).toHaveBeenCalledWith('board-2');
     expect(changeBoard).toHaveBeenCalledWith('board-2');
-    expect(navigate).toHaveBeenCalledWith('/board/board-2', { replace: true });
-    expect(lastNavigateTargetRef.current).toBe('/board/board-2');
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/komunicare_default/board/board-2',
+      { replace: true },
+    );
+    expect(lastNavigateTargetRef.current).toBe(
+      '/communicator/komunicare_default/board/board-2',
+    );
 
     vi.runAllTimers();
 
@@ -186,6 +193,29 @@ describe('syncCommunicatorForBoardOwner', () => {
 
     expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
   });
+
+  it('does not switch back to the official communicator when the active communicator is its personal copy', () => {
+    syncCommunicatorForBoardOwner({
+      boardId: 'official-board',
+      communicators: [
+        {
+          boards: ['official-board'],
+          id: 'official-comm',
+          rootBoard: 'official-board',
+        } as any,
+        {
+          boards: ['personal-copy'],
+          copySourceCommunicatorId: 'official-comm',
+          id: 'copy-comm',
+          rootBoard: 'personal-copy',
+        } as any,
+      ],
+      activeCommunicatorId: 'copy-comm',
+      navigate: vi.fn(),
+    });
+
+    expect(mockSwitchCommunicatorNavigation).not.toHaveBeenCalled();
+  });
 });
 
 describe('syncBoardOwnerAndActivate', () => {
@@ -227,7 +257,9 @@ describe('syncBoardOwnerAndActivate', () => {
     expect(resolvedBoard).toBe(board);
     expect(fetchBoardById).not.toHaveBeenCalled();
     expect(changeBoard).toHaveBeenCalledWith('board-1');
-    expect(navigate).toHaveBeenCalledWith('/board/board-1');
+    expect(navigate).toHaveBeenCalledWith(
+      '/communicator/komunicare_default/board/board-1',
+    );
     expect(steps).toEqual(['syncCommunicator', 'changeBoard']);
   });
 

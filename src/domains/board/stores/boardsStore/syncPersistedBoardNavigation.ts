@@ -1,6 +1,7 @@
 import { reconcilePersistedBoard } from './reconcilePersistedBoard';
 import { Board } from '@/types/board';
 import { persistStartupCommunicatorSelection } from '@/utils/persistStartupCommunicatorSelection';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 
 interface SyncPersistedBoardNavigationParams {
   board: Board;
@@ -43,5 +44,5 @@ export async function syncPersistedBoardNavigation(
   });
 
   switchBoard(persistedBoardId);
-  navigate(`/board/${persistedBoardId}`, { replace: true });
+  navigate(buildBoardPath(persistedBoardId, communicatorId), { replace: true });
 }

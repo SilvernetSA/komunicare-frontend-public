@@ -10,6 +10,7 @@ import {
 } from './copyOnWrite';
 import { nameFromKey } from './nameFromKey';
 import { saveProtectedBoardWorkflow } from './saveProtectedBoardWorkflow';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 import { prepareBoardForPersistence } from '@/domains/board/stores/boardsStore/prepareBoardForPersistence';
 import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import { UserData } from '@/types/app';
@@ -337,6 +338,10 @@ export async function handleApiUpdates(
     navigate,
     showNotification,
     onExistingCopy: (existingCopy) => {
+      if (String((existingCopy as any)?.id || '') === String((communicator as any)?.id || '')) {
+        return false;
+      }
+
       onExistingCopyFound?.(existingCopy as any);
       return true;
     },
@@ -388,7 +393,7 @@ export async function handleApiUpdates(
         createParentBoard: true,
       });
       switchBoard(parentBoardId);
-      navigate(`/board/${parentBoardId}`, { replace: true });
+      navigate(buildBoardPath(parentBoardId), { replace: true });
       return true;
     }
 

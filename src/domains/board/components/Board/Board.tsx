@@ -16,6 +16,14 @@ import {
   runUserObjectsSyncEffect,
   runBoardInitializationEffect,
 } from './BoardContainer/effects';
+import {
+  CANONICAL_ROOT_BOARD_IDS,
+  findCommunicatorScopedBoardBySourceId,
+  resolveLocalUrlBoard,
+  resolveRouteCommunicator,
+  syncBoardOwnerAndActivate,
+  usesExactCommunicatorBoard,
+} from './BoardContainer/navigationHelpers';
 import BoardDialogs from './BoardDialogs/BoardDialogs';
 import TileEditor from './TileEditor/TileEditor.refactored';
 import {
@@ -36,8 +44,9 @@ import Board from './BoardContainer/Board/Board.component';
 import { uploadTileSound } from '@/domains/ai/stores/uploadsStore/uploadTileSound';
 import { Board as BoardModel, Tile } from '@/types/board';
 import { Communicator } from '@/types/communicator';
-import { changeDefaultBoard } from '@/utils/changeDefaultBoard';
-import { DefaultBoardSelection } from '@/utils/changeDefaultBoard';
+import { buildBoardPath } from '@/utils/buildBoardPath';
+import { changeDefaultBoard, DefaultBoardSelection } from '@/utils/changeDefaultBoard';
+
 import { handleConfirmDelete as handleConfirmDeleteUtil } from './BoardContainer/handlers/handleConfirmDelete';
 import { handleTileClick as handleTileClickUtil } from './BoardContainer/handlers/handleTileClick';
 
@@ -59,7 +68,10 @@ function getFilteredBoards(boards: BoardModel[], communicator: Communicator) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 const BoardContainer: React.FC = () => {
-  const { id: urlId } = useParams<{ id: string }>();
+  const { id: urlId, communicatorId: urlCommunicatorId } = useParams<{
+    id: string;
+    communicatorId: string;
+  }>();
   const navigate = useNavigate();
   const location = useLocation();
   const intl = useIntl();
@@ -126,6 +138,20 @@ const BoardContainer: React.FC = () => {
   const communicator = communicators.find(
     (c) => c.id === activeCommunicatorId,
   ) as Communicator;
+  const routeCommunicator = resolveRouteCommunicator({
+    communicators: communicators as Communicator[],
+    urlCommunicatorId,
+    activeCommunicatorId,
+  });
+  const localUrlBoardId = resolveLocalUrlBoard({
+    boards,
+    communicator: routeCommunicator,
+    urlId,
+  })?.id;
+  const routeUsesExactCommunicatorBoard = usesExactCommunicatorBoard({
+    communicator: routeCommunicator,
+    boardId: urlId,
+  });
   const emptyVoiceAlert = !(
     voices.length > 0 && speechOptions.voiceURI !== EMPTY_VOICES
   );
@@ -157,6 +183,95 @@ const BoardContainer: React.FC = () => {
   const loadingUrlBoardIdRef = useRef('');
   const lastNavigateTargetRef = useRef('');
 
+  useEffect(() => {
+    if (!urlCommunicatorId || urlCommunicatorId === activeCommunicatorId) {
+      return;
+    }
+
+    const activeCommunicator = communicators.find(
+      (candidate) => candidate.id === activeCommunicatorId,
+    );
+    if (activeCommunicator) {
+      const copySource = (activeCommunicator as any).copySource;
+      const copySourceId = (activeCommunicator as any).copySourceCommunicatorId;
+      if (copySource === urlCommunicatorId || copySourceId === urlCommunicatorId) {
+        const communicatorScopedUrlBoard = findCommunicatorScopedBoardBySourceId({
+          boards,
+          communicator: activeCommunicator,
+          sourceBoardId: urlId,
+        });
+        const targetBoardId =
+          communicatorScopedUrlBoard?.id ||
+          (CANONICAL_ROOT_BOARD_IDS.has(String(urlId || ''))
+            ? String(urlId || '')
+            : '') ||
+          activeCommunicator.rootBoard ||
+          activeCommunicator.boards?.[0];
+        if (targetBoardId) {
+          navigate(buildBoardPath(targetBoardId, activeCommunicatorId), {
+            replace: true,
+          });
+        }
+        return;
+      }
+    }
+
+    const communicatorFromUrl = communicators.find(
+      (candidate) => candidate.id === urlCommunicatorId,
+    );
+    if (communicatorFromUrl) {
+      useCommunicatorsStore.getState().changeCommunicator(urlCommunicatorId);
+    }
+  }, [
+    urlCommunicatorId,
+    urlId,
+    activeCommunicatorId,
+    boards,
+    communicators,
+    navigate,
+  ]);
+
+  useEffect(() => {
+    if (!urlCommunicatorId || !urlId || !routeCommunicator?.id) {
+      return;
+    }
+
+    if (!routeUsesExactCommunicatorBoard) {
+      return;
+    }
+
+    const normalizedUrlId = String(urlId || '').trim();
+    if (
+      normalizedUrlId &&
+      activeBoardId === normalizedUrlId &&
+      activeCommunicatorId === routeCommunicator.id
+    ) {
+      return;
+    }
+
+    void syncBoardOwnerAndActivate({
+      boardId: normalizedUrlId,
+      availableBoards: boards,
+      fetchBoardById,
+      changeBoard,
+      communicators: communicators as Communicator[],
+      activeCommunicatorId,
+      navigate,
+    }).catch(() => undefined);
+  }, [
+    urlCommunicatorId,
+    urlId,
+    routeCommunicator,
+    routeUsesExactCommunicatorBoard,
+    activeBoardId,
+    activeCommunicatorId,
+    boards,
+    fetchBoardById,
+    changeBoard,
+    communicators,
+    navigate,
+  ]);
+
   // ── Traducir el board activo cuando cambia ───────────────────────────────────
   useEffect(() => {
     if (activeBoard) {
@@ -169,6 +284,7 @@ const BoardContainer: React.FC = () => {
   useEffect(() => {
     handleUrlBoardSyncEffect({
       urlId,
+      urlCommunicatorId,
       activeBoardId,
       boards,
       changeBoard,
@@ -181,7 +297,7 @@ const BoardContainer: React.FC = () => {
       lastNavigateTargetRef,
       loadingUrlBoardIdRef,
     });
-  }, [urlId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [urlId, urlCommunicatorId, activeCommunicatorId, localUrlBoardId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Inicialización ───────────────────────────────────────────────────────────
   useEffect(() => {
@@ -193,6 +309,7 @@ const BoardContainer: React.FC = () => {
       },
       getApiObjects,
       urlId,
+      urlCommunicatorId,
       fetchBoardById,
       historyRemoveBoard,
       changeBoard,
@@ -214,6 +331,45 @@ const BoardContainer: React.FC = () => {
 
   // ── Fallback: si el board llega tarde, activarlo automáticamente ────────────
   useEffect(() => {
+    if (!isInitialized || !routeCommunicator) {
+      return;
+    }
+
+    const isPersonalCopy = Boolean(
+      (routeCommunicator as any)?.copySource ||
+        (routeCommunicator as any)?.copySourceCommunicatorId,
+    );
+    const communicatorScopedActiveBoard = findCommunicatorScopedBoardBySourceId(
+      {
+        boards,
+        communicator: routeCommunicator,
+        sourceBoardId: activeBoardId,
+      },
+    );
+    const fallbackBoardId =
+      communicatorScopedActiveBoard?.id || routeCommunicator.rootBoard;
+    if (
+      isPersonalCopy &&
+      CANONICAL_ROOT_BOARD_IDS.has(activeBoardId || '') &&
+      !routeCommunicator.boards?.includes(activeBoardId || '') &&
+      fallbackBoardId &&
+      fallbackBoardId !== activeBoardId
+    ) {
+      changeBoard(fallbackBoardId);
+      navigate(buildBoardPath(fallbackBoardId, routeCommunicator.id), {
+        replace: true,
+      });
+    }
+  }, [
+    isInitialized,
+    routeCommunicator,
+    activeBoardId,
+    boards,
+    changeBoard,
+    navigate,
+  ]);
+
+  useEffect(() => {
     return handleLateBoardFallbackEffect({
       isInitialized,
       activeBoardId,
@@ -221,6 +377,7 @@ const BoardContainer: React.FC = () => {
       communicators: communicators as Communicator[],
       activeCommunicatorId,
       urlId,
+      urlCommunicatorId,
       historyRemoveBoard,
       changeBoard,
       fetchBoardById,
@@ -249,13 +406,13 @@ const BoardContainer: React.FC = () => {
       if (!prevId) return;
       changeBoard(prevId);
       previousBoard();
-      navigate(`/board/${prevId}`, { replace: true });
+      navigate(buildBoardPath(prevId), { replace: true });
       return;
     }
     // No history (e.g. after a page refresh on a sub-board) — go to communicator root.
     const rootId = communicator?.rootBoard;
     if (rootId && rootId !== activeBoardId) {
-      navigate(`/board/${rootId}`, { replace: true });
+      navigate(buildBoardPath(rootId), { replace: true });
     }
   }, [
     navHistory,
@@ -269,7 +426,7 @@ const BoardContainer: React.FC = () => {
   const handleRequestToRootBoard = useCallback(() => {
     toRootBoard();
     const rootId = navHistory[0];
-    if (rootId) navigate(`/board/${rootId}`, { replace: true });
+    if (rootId) navigate(buildBoardPath(rootId), { replace: true });
   }, [toRootBoard, navHistory, navigate]);
 
   const handleLockClick = useCallback(() => {
@@ -306,6 +463,23 @@ const BoardContainer: React.FC = () => {
     setIsSelectAll(true);
   }, [activeBoard, isSelectAll]);
 
+  const handleExistingCopyFound = useCallback(
+    (targetCommunicator: Communicator) => {
+      useCommunicatorsStore.getState().changeCommunicator(targetCommunicator.id);
+      const targetBoardId =
+        (targetCommunicator as any).rootBoard || targetCommunicator.boards?.[0];
+      if (targetBoardId) {
+        switchBoard(targetBoardId);
+        navigate(buildBoardPath(targetBoardId, targetCommunicator.id), {
+          replace: true,
+        });
+      }
+      setSelectedTileIds([]);
+      setIsSelecting(false);
+    },
+    [navigate, setIsSelecting, setSelectedTileIds, switchBoard],
+  );
+
   const runApiUpdate = useCallback(
     (payload: ApiUpdatePayload) =>
       handleApiUpdates({
@@ -327,15 +501,7 @@ const BoardContainer: React.FC = () => {
           uploadTileSound(tileToUpload, userData),
         showNotification,
         communicators: communicators as any,
-        onExistingCopyFound: (targetCommunicator: Communicator) => {
-          useCommunicatorsStore.getState().changeCommunicator(targetCommunicator.id);
-          const targetBoardId =
-            (targetCommunicator as any).rootBoard || targetCommunicator.boards?.[0];
-          if (targetBoardId) {
-            switchBoard(targetBoardId);
-            navigate(`/board/${targetBoardId}`, { replace: true });
-          }
-        },
+        onExistingCopyFound: handleExistingCopyFound,
       }),
     [
       userData,
@@ -350,6 +516,7 @@ const BoardContainer: React.FC = () => {
       switchBoard,
       lang,
       navigate,
+      handleExistingCopyFound,
       showNotification,
       communicators,
     ],
@@ -395,15 +562,8 @@ const BoardContainer: React.FC = () => {
         fetchMyCommunicators,
       });
       if (existingCopy) {
-        useCommunicatorsStore.getState().changeCommunicator(existingCopy.id);
-        const targetBoardId =
-          (existingCopy as any).rootBoard || existingCopy.boards?.[0];
-        if (targetBoardId) {
-          switchBoard(targetBoardId);
-          navigate(`/board/${targetBoardId}`, { replace: true });
-        }
+        handleExistingCopyFound(existingCopy as any);
         setTileEditorOpen(true);
-        setIsSelecting(false);
         return;
       }
     }
@@ -414,10 +574,10 @@ const BoardContainer: React.FC = () => {
     communicator,
     communicators,
     fetchMyCommunicators,
+    handleExistingCopyFound,
     navigate,
     setIsSelecting,
     setTileEditorOpen,
-    switchBoard,
     userData,
   ]);
 
@@ -501,7 +661,7 @@ const BoardContainer: React.FC = () => {
     createBoard(copiedBoard);
     addBoardCommunicator(copiedBoard.id);
     switchBoard(copiedBoard.id);
-    navigate(`/board/${copiedBoard.id}`, { replace: true });
+    navigate(buildBoardPath(copiedBoard.id), { replace: true });
     setCopyPublicBoard(false);
   }, [
     copyPublicBoard,

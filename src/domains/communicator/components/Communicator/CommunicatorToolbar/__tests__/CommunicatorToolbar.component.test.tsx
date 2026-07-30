@@ -15,6 +15,7 @@ const mocks = vi.hoisted(() => ({
   changeCommunicator: vi.fn(),
   activeBoardId: 'board-root',
   activeCommunicatorId: 'comm-1',
+  routeCommunicatorId: undefined as string | undefined,
   boards: [] as any[],
   communicators: [] as any[],
   userEmail: 'owner@example.com' as string | undefined,
@@ -28,6 +29,7 @@ vi.mock('react-router-dom', async () => {
   return {
     ...actual,
     useNavigate: () => mocks.navigate,
+    useParams: () => ({ communicatorId: mocks.routeCommunicatorId }),
   };
 });
 
@@ -35,7 +37,7 @@ vi.mock('../DefaultBoardSelector/DefaultBoardSelector', () => ({
   default: () => <div data-testid="default-board-selector" />,
 }));
 
-vi.mock('../../../UI/FormDialog/FormDialog', () => ({
+vi.mock('@/domains/shared/components/UI/FormDialog/FormDialog', () => ({
   default: ({
     open,
     children,
@@ -111,7 +113,7 @@ vi.mock('@mui/material/ListItemText', () => ({
   ),
 }));
 
-vi.mock('../../../../store/boardsStore', () => ({
+vi.mock('@/domains/board/stores/boardsStore', () => ({
   useBoardsStore: Object.assign(
     (selector: (state: Record<string, unknown>) => unknown) =>
       selector({
@@ -128,7 +130,7 @@ vi.mock('../../../../store/boardsStore', () => ({
   ),
 }));
 
-vi.mock('../../../../store/communicatorsStore', () => {
+vi.mock('@/domains/communicator/stores/communicatorsStore', () => {
   const useCommunicatorsStore = Object.assign(
     (selector: (state: Record<string, unknown>) => unknown) =>
       selector({
@@ -137,6 +139,7 @@ vi.mock('../../../../store/communicatorsStore', () => {
       }),
     {
       getState: () => ({
+        activeCommunicatorId: mocks.activeCommunicatorId,
         changeCommunicator: mocks.changeCommunicator,
         updateRemoteCommunicator: vi.fn(),
         upsertCommunicator: vi.fn(),
@@ -147,7 +150,7 @@ vi.mock('../../../../store/communicatorsStore', () => {
   return { useCommunicatorsStore };
 });
 
-vi.mock('../../../../store/appStore', () => ({
+vi.mock('@/domains/app/stores/appStore', () => ({
   useAppStore: (selector: (state: Record<string, unknown>) => unknown) =>
     selector({
       userData: {
@@ -159,7 +162,7 @@ vi.mock('../../../../store/appStore', () => ({
     }),
 }));
 
-vi.mock('../../../../store/notificationStore', () => ({
+vi.mock('@/domains/notifications/stores/notificationStore', () => ({
   useNotificationStore: {
     getState: () => ({
       showNotification: vi.fn(),
@@ -198,6 +201,7 @@ describe('CommunicatorToolbar component', () => {
     mocks.fetchUserBoards.mockReset();
     mocks.activeBoardId = 'board-root';
     mocks.activeCommunicatorId = 'comm-1';
+    mocks.routeCommunicatorId = undefined;
     mocks.userEmail = 'owner@example.com';
     mocks.boards = [
       {
@@ -269,9 +273,57 @@ describe('CommunicatorToolbar component', () => {
     });
 
     expect(mocks.switchBoard).toHaveBeenCalledWith('board-food');
-    expect(mocks.navigate).toHaveBeenCalledWith('/board/board-food', {
-      replace: true,
-    });
+    expect(mocks.navigate).toHaveBeenCalledWith(
+      '/communicator/comm-1/board/board-food',
+      {
+        replace: true,
+      },
+    );
+  });
+
+  it('syncs communicator from the active board when the route is not communicator-scoped', async () => {
+    mocks.activeCommunicatorId = 'comm-2';
+    mocks.communicators = [
+      {
+        id: 'comm-1',
+        name: 'Komunicare',
+        rootBoard: 'board-root',
+        boards: ['board-root', 'board-food'],
+      },
+      {
+        id: 'comm-2',
+        name: 'Other communicator',
+        rootBoard: 'board-other',
+        boards: ['board-other'],
+      },
+    ];
+
+    await renderToolbar();
+
+    expect(mocks.changeCommunicator).toHaveBeenCalledWith('comm-1');
+  });
+
+  it('does not sync communicator from the active board when the route already provides a communicator id', async () => {
+    mocks.routeCommunicatorId = 'comm-route';
+    mocks.activeCommunicatorId = 'comm-2';
+    mocks.communicators = [
+      {
+        id: 'comm-1',
+        name: 'Komunicare',
+        rootBoard: 'board-root',
+        boards: ['board-root', 'board-food'],
+      },
+      {
+        id: 'comm-2',
+        name: 'Other communicator',
+        rootBoard: 'board-other',
+        boards: ['board-other'],
+      },
+    ];
+
+    await renderToolbar();
+
+    expect(mocks.changeCommunicator).not.toHaveBeenCalled();
   });
 
   it('fetches user boards on mount when user is logged in', async () => {

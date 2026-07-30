@@ -3,6 +3,7 @@ import { NavigateFunction } from 'react-router-dom';
 
 import { Communicator } from '@/types/communicator';
 import { switchCommunicatorNavigation } from '@/utils/switchCommunicatorNavigation';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 
 interface HandleGoToExistingCopyParams {
   communicators: Communicator[];
@@ -42,7 +43,7 @@ export const handleGoToExistingCopy = ({
     navigate,
     skipBoardNavigation: true,
   });
-  navigate(`/board/${targetBoardId}`, { replace: true });
+  navigate(buildBoardPath(targetBoardId, targetCommunicator.id), { replace: true });
   setExistingCopyFoundOpen(false);
   setSelectedTileIds([]);
   setIsSelecting(false);

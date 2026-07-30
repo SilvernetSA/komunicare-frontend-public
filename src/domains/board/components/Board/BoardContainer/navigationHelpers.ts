@@ -3,6 +3,7 @@ import { NavigateFunction } from 'react-router-dom';
 import { Board as BoardModel } from '@/types/board';
 import { Communicator } from '@/types/communicator';
 import { switchCommunicatorNavigation } from '@/utils/switchCommunicatorNavigation';
+import { buildBoardPath } from '@/utils/buildBoardPath';
 
 export const CANONICAL_ROOT_BOARD_IDS = new Set(['komunicare']);
 export const DEFAULT_SYSTEM_ROOT_BOARD_ID = 'komunicare';
@@ -17,6 +18,122 @@ export const getBoardOwnerCommunicator = (
   availableCommunicators.find((item) =>
     Array.isArray(item?.boards) ? item.boards.includes(boardId) : false,
   );
+
+const collectCommunicatorScopedBoardIds = (
+  communicator?: Communicator,
+): Set<string> => {
+  const boardIds = new Set<string>();
+
+  const rootBoard = String(communicator?.rootBoard || '').trim();
+  if (rootBoard) {
+    boardIds.add(rootBoard);
+  }
+
+  (Array.isArray(communicator?.boards) ? communicator.boards : []).forEach(
+    (boardId) => {
+      const normalizedBoardId = String(boardId || '').trim();
+      if (normalizedBoardId) {
+        boardIds.add(normalizedBoardId);
+      }
+    },
+  );
+
+  (Array.isArray(communicator?.defaultBoardsIncluded)
+    ? communicator.defaultBoardsIncluded
+    : []
+  ).forEach((entry) => {
+    const homeBoard = String(entry?.homeBoard || '').trim();
+    if (homeBoard) {
+      boardIds.add(homeBoard);
+    }
+  });
+
+  return boardIds;
+};
+
+export const findCommunicatorScopedBoardBySourceId = ({
+  boards,
+  communicator,
+  sourceBoardId,
+}: {
+  boards: BoardModel[];
+  communicator?: Communicator;
+  sourceBoardId?: string | null;
+}): BoardModel | undefined => {
+  const normalizedSourceBoardId = String(sourceBoardId || '').trim();
+  if (!normalizedSourceBoardId) {
+    return undefined;
+  }
+
+  const scopedBoardIds = collectCommunicatorScopedBoardIds(communicator);
+
+  return boards.find(
+    (board) =>
+      scopedBoardIds.has(String(board.id || '').trim()) &&
+      String(board.sourceBoardId || '').trim() === normalizedSourceBoardId,
+  );
+};
+
+export const resolveRouteCommunicator = ({
+  communicators,
+  urlCommunicatorId,
+  activeCommunicatorId,
+}: {
+  communicators: Communicator[];
+  urlCommunicatorId?: string;
+  activeCommunicatorId?: string;
+}) =>
+  communicators.find((communicator) => communicator.id === urlCommunicatorId) ||
+  communicators.find(
+    (communicator) => communicator.id === activeCommunicatorId,
+  );
+
+export const resolveLocalUrlBoard = ({
+  boards,
+  communicator,
+  urlId,
+}: {
+  boards: BoardModel[];
+  communicator?: Communicator;
+  urlId?: string | null;
+}): BoardModel | undefined => {
+  const normalizedUrlId = String(urlId || '').trim();
+  if (!normalizedUrlId) {
+    return undefined;
+  }
+
+  return (
+    findCommunicatorScopedBoardBySourceId({
+      boards,
+      communicator,
+      sourceBoardId: normalizedUrlId,
+    }) ||
+    boards.find((board) => String(board.id || '').trim() === normalizedUrlId)
+  );
+};
+
+export const usesExactCommunicatorBoard = ({
+  communicator,
+  boardId,
+}: {
+  communicator?: Communicator;
+  boardId?: string | null;
+}): boolean => {
+  const normalizedBoardId = String(boardId || '').trim();
+  if (!normalizedBoardId || !communicator) {
+    return false;
+  }
+
+  return (
+    String(communicator.rootBoard || '').trim() === normalizedBoardId ||
+    (Array.isArray(communicator.boards)
+      ? communicator.boards.some(
+          (candidateBoardId) =>
+            String(candidateBoardId || '').trim() === normalizedBoardId,
+        )
+      : false)
+  );
+};
 
 type SyncCommunicatorForBoardOwnerParams = {
   boardId: string;
@@ -36,6 +153,17 @@ export const syncCommunicatorForBoardOwner = ({
 }: SyncCommunicatorForBoardOwnerParams) => {
   const ownerCommunicator = getBoardOwnerCommunicator(communicators, boardId);
   if (ownerCommunicator?.id && ownerCommunicator.id !== activeCommunicatorId) {
+    const activeCommunicator = communicators.find(
+      (communicator) => communicator.id === activeCommunicatorId,
+    );
+    const isPersonalCopyOfOwner =
+      (activeCommunicator as any)?.copySource === ownerCommunicator.id ||
+      (activeCommunicator as any)?.copySourceCommunicatorId ===
+        ownerCommunicator.id;
+    if (isPersonalCopyOfOwner) {
+      return;
+    }
+
     switchCommunicatorNavigation({
       communicator: ownerCommunicator,
       navigate,
@@ -150,7 +278,7 @@ export const ensureBoardLoadedAndActivate = async ({
       lastNavigateTargetRef: navigation.lastNavigateTargetRef,
     });
   } else if (navigation) {
-    navigation.navigate(`/board/${board.id}`);
+    navigation.navigate(buildBoardPath(board.id));
   }
 
   return board;
@@ -207,8 +335,9 @@ export const navigateToBoardReplace = ({
     return;
   }
 
-  const targetPath = `/board/${nextBoardId}`;
-  if (pathname === targetPath) return;
+  const targetPath = buildBoardPath(nextBoardId);
+  // Also match legacy /board/:id paths so we don't loop on old-format URLs.
+  if (pathname === targetPath || pathname === `/board/${nextBoardId}`) return;
   if (lastNavigateTargetRef.current === targetPath) return;
   lastNavigateTargetRef.current = targetPath;
   navigate(targetPath, { replace: true });

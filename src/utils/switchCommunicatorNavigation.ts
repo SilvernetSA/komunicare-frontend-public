@@ -1,5 +1,6 @@
 import { useBoardsStore } from '@/domains/board/stores/boardsStore';
 import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
+import { buildBoardPath } from './buildBoardPath';
 
 import type { Communicator } from '../types/communicator';
 
@@ -59,6 +60,6 @@ export function switchCommunicatorNavigation(
 
   boardsState.switchBoard(nextBoardId);
   if (navigate) {
-    navigate(`/board/${nextBoardId}`, { replace: true });
+    navigate(buildBoardPath(nextBoardId, targetCommunicator.id), { replace: true });
   }
 }
