@@ -10,7 +10,7 @@ import {
 } from './speechService';
 import tts from './tts';
 import { IS_ANDROID } from '../../platform';
-import { useSpeechStore } from '../../store/voicesStore';
+import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
 
 interface SpeechProviderProps {
   children: ReactNode;

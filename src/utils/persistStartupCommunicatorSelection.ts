@@ -1,4 +1,4 @@
-import { useSettingsStore } from '../store/settingsStore';
+import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
 
 interface PersistStartupCommunicatorSelectionOptions {
   communicatorId?: string;

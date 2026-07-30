@@ -1,5 +1,5 @@
 import { normalizeDefaultBoardsIncluded } from './defaultBoardsIncluded';
-import { useCommunicatorsStore } from '../store/communicatorsStore';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import { Communicator } from '../types/communicator';
 
 function getActiveCommunicator(): Communicator | undefined {

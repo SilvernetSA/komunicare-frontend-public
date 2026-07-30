@@ -56,7 +56,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       return Promise.resolve({ data: [] });
     });
 
-    const { useBoardsStore } = await import('../boardsStore');
+    const { useBoardsStore } = await import('@/domains/board/stores/boardsStore');
 
     const first = await useBoardsStore
       .getState()
@@ -74,7 +74,7 @@ describe('boardsStore and communicatorsStore cache', () => {
   });
 
   it('returns an empty paginated response without hitting the API when the user has no email', async () => {
-    const { useBoardsStore } = await import('../boardsStore');
+    const { useBoardsStore } = await import('@/domains/board/stores/boardsStore');
 
     const response = await useBoardsStore
       .getState()
@@ -110,7 +110,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       return Promise.resolve({ data: [] });
     });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     const first = await useCommunicatorsStore.getState().fetchMyCommunicators();
     const second = await useCommunicatorsStore
@@ -162,7 +162,7 @@ describe('boardsStore and communicatorsStore cache', () => {
       return Promise.resolve({ data: [] });
     });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     await useCommunicatorsStore.getState().fetchMyCommunicators();
 
@@ -203,8 +203,8 @@ describe('boardsStore and communicatorsStore cache', () => {
       return Promise.resolve({ data: [] });
     });
 
-    const { useBoardsStore } = await import('../boardsStore');
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useBoardsStore } = await import('@/domains/board/stores/boardsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     await useBoardsStore.getState().getApiObjects();
 
@@ -272,8 +272,8 @@ describe('boardsStore and communicatorsStore cache', () => {
       }),
     );
 
-    const { useBoardsStore } = await import('../boardsStore');
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useBoardsStore } = await import('@/domains/board/stores/boardsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     expect(useBoardsStore.getState().boards.map((board) => board.id)).toContain(
       'root',

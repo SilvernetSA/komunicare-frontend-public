@@ -1,4 +1,4 @@
-export type { AuthState } from '../store/authStore/types';
+export type { AuthState } from '@/domains/user/stores/authStore/types';
 export type {
   LoginPayload,
   LoginArgs,

@@ -38,7 +38,7 @@ describe('zustand search stores cache', () => {
       data: { lang: 'es-ES', voices: [] },
     });
 
-    const { useLanguageStore } = await import('../languageStore');
+    const { useLanguageStore } = await import('@/domains/settings/stores/languageStore');
 
     const first = await useLanguageStore.getState().fetchLanguage('es-ES');
     const second = await useLanguageStore.getState().fetchLanguage('es-ES');
@@ -65,7 +65,7 @@ describe('zustand search stores cache', () => {
       return Promise.resolve({ status: 200, data: null });
     });
 
-    const { useArasaacStore } = await import('../arasaacStore');
+    const { useArasaacStore } = await import('@/domains/board/stores/arasaacStore');
 
     const firstSearch = await useArasaacStore
       .getState()
@@ -100,7 +100,7 @@ describe('zustand search stores cache', () => {
       data: [{ id: 'symbol-1' }],
     });
 
-    const { useGlobalSymbolsStore } = await import('../globalSymbolsStore');
+    const { useGlobalSymbolsStore } = await import('@/domains/board/stores/globalSymbolsStore');
 
     const first = await useGlobalSymbolsStore
       .getState()

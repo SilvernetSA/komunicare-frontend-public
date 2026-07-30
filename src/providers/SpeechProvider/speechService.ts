@@ -1,14 +1,14 @@
 import tts from './tts';
-import { APP_LANGS } from '../../components/App/App.constants';
+import { APP_LANGS } from '@/domains/app/components/App/App.constants';
 import {
   getSupportedLangs,
   getDefaultLang,
   getVoiceURI,
   filterLocalLangs,
 } from '../../i18n';
-import { useLanguageStore } from '../../store/languageStore';
-import { useNotificationStore } from '../../store/notificationStore';
-import { useSpeechStore } from '../../store/voicesStore';
+import { useLanguageStore } from '@/domains/settings/stores/languageStore';
+import { useNotificationStore } from '@/domains/notifications/stores/notificationStore';
+import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
 import { Voice, TtsEngine } from '../../types/speech';
 
 export const getTtsEngines = () => {

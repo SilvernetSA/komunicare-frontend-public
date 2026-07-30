@@ -8,8 +8,8 @@ import React, { ReactNode } from 'react';
 
 import RTLSupport from './RTLSupport';
 import { FONTS_FAMILIES, DEFAULT_FONT_FAMILY } from './ThemeProvider.constants';
-import { useAppStore } from '../../store/appStore';
-import { useLanguageStore } from '../../store/languageStore';
+import { useAppStore } from '@/domains/app/stores/appStore';
+import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 
 const setRootFontFamily = (fontFamily: string): void => {
   const rootElement = document.querySelector(':root') as HTMLElement;

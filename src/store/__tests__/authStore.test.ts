@@ -130,7 +130,7 @@ describe('authStore cache', () => {
       },
     });
 
-    const { useAuthStore } = await import('../authStore');
+    const { useAuthStore } = await import('@/domains/user/stores/authStore');
 
     const first = await useAuthStore.getState().getUserLocation();
     const second = await useAuthStore.getState().getUserLocation();
@@ -150,7 +150,7 @@ describe('authStore cache', () => {
       },
     });
 
-    const { useAuthStore } = await import('../authStore');
+    const { useAuthStore } = await import('@/domains/user/stores/authStore');
 
     const first = await useAuthStore.getState().getUserData('user-1');
     const second = await useAuthStore.getState().getUserData('user-1');

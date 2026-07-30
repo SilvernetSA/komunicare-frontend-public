@@ -1,5 +1,5 @@
-import { useSubscriptionStore } from '../../store/subscriptionStore';
-import { useUserStore } from '../../store/userStore';
+import { useSubscriptionStore } from '@/domains/subscription/stores/subscriptionStore';
+import { useUserStore } from '@/domains/user/stores/userStore';
 import { SubscriptionData } from '../../types/subscription';
 
 interface SubscriptionPayload extends Partial<SubscriptionData> {

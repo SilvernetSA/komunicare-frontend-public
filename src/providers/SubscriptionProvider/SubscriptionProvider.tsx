@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
-import { useAppStore } from '../../store/appStore';
-import { useSubscriptionStore } from '../../store/subscriptionStore';
+import { useAppStore } from '@/domains/app/stores/appStore';
+import { useSubscriptionStore } from '@/domains/subscription/stores/subscriptionStore';
 
 interface SubscriptionProviderProps {
   children: React.ReactNode;

@@ -97,7 +97,7 @@ describe('useCommunicatorsStore.fetchSystemCommunicators', () => {
         data: [buildApiCommunicator({ id: 'comm-official-2' })],
       });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     expect(
       useCommunicatorsStore
@@ -146,7 +146,7 @@ describe('useCommunicatorsStore.fetchSystemCommunicators', () => {
         data: [buildApiCommunicator({ id: 'comm-official-success' })],
       });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     await useCommunicatorsStore.getState().fetchSystemCommunicators();
     expect(mocks.apiClientGet).toHaveBeenCalledTimes(1);

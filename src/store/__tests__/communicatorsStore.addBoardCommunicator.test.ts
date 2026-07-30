@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { useCommunicatorsStore } from '../communicatorsStore';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 
 const makeCommunicator = (overrides: Record<string, unknown> = {}) =>
   ({

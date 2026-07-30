@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, ReactNode } from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { DEFAULT_LANG } from '../../components/App/App.constants';
+import { DEFAULT_LANG } from '@/domains/app/components/App/App.constants';
 import { importTranslation } from '../../i18n';
-import { useLanguageStore } from '../../store/languageStore';
-import { useNotificationStore } from '../../store/notificationStore';
-import { useSpeechStore } from '../../store/voicesStore';
+import { useLanguageStore } from '@/domains/settings/stores/languageStore';
+import { useNotificationStore } from '@/domains/notifications/stores/notificationStore';
+import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
 
 interface LanguageProviderProps {
   children: ReactNode;

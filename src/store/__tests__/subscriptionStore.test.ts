@@ -57,7 +57,7 @@ describe('subscriptionStore request de-duplication', () => {
     });
     mocks.getSubscriberByUserIdApi.mockReturnValue(inFlightRequest);
 
-    const { useSubscriptionStore } = await import('../subscriptionStore');
+    const { useSubscriptionStore } = await import('@/domains/subscription/stores/subscriptionStore');
 
     const first = useSubscriptionStore
       .getState()
@@ -85,7 +85,7 @@ describe('subscriptionStore request de-duplication', () => {
     });
     mocks.apiClientGet.mockReturnValue(inFlightRequest);
 
-    const { useSubscriptionStore } = await import('../subscriptionStore');
+    const { useSubscriptionStore } = await import('@/domains/subscription/stores/subscriptionStore');
 
     const first = useSubscriptionStore.getState().updatePlans({ force: true });
     const second = useSubscriptionStore.getState().updatePlans({ force: true });

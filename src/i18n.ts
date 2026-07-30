@@ -1,7 +1,7 @@
 import { alpha3TToAlpha2 } from '@cospired/i18n-iso-languages';
 import { alpha3ToAlpha2 } from 'i18n-iso-countries';
 
-import { APP_LANGS, DEFAULT_LANG } from './components/App/App.constants';
+import { APP_LANGS, DEFAULT_LANG } from './domains/app/components/App/App.constants';
 import { EMPTY_VOICES } from './providers/SpeechProvider/SpeechProvider.constants';
 import { Voice } from './types/speech';
 

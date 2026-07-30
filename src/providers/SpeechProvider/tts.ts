@@ -8,8 +8,8 @@ import {
   IS_BROWSING_FROM_SAFARI,
 } from '../../constants';
 import { IS_ANDROID } from '../../platform';
-import { useAppStore } from '../../store/appStore';
-import { useSpeechStore } from '../../store/voicesStore';
+import { useAppStore } from '@/domains/app/stores/appStore';
+import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
 import { Voice, SpeakOptions } from '../../types/speech';
 
 interface QueueItem {

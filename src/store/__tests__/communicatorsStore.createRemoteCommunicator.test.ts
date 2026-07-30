@@ -81,7 +81,7 @@ describe('useCommunicatorsStore.createRemoteCommunicator', () => {
       data: { communicator: createdCommunicator },
     });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
     useCommunicatorsStore.getState().createCommunicator(draftCommunicator);
     useCommunicatorsStore.getState().changeCommunicator(tempId);
 
@@ -136,7 +136,7 @@ describe('useCommunicatorsStore.createRemoteCommunicator', () => {
       },
     });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     const result = await useCommunicatorsStore
       .getState()
@@ -176,7 +176,7 @@ describe('useCommunicatorsStore.createRemoteCommunicator', () => {
       },
     });
 
-    const { useCommunicatorsStore } = await import('../communicatorsStore');
+    const { useCommunicatorsStore } = await import('@/domains/communicator/stores/communicatorsStore');
 
     await expect(
       useCommunicatorsStore.getState().createRemoteCommunicator({

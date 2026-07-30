@@ -1,12 +1,6 @@
-import komunicare from './store/boardsCatalog/komunicare';
+import type { Board } from './types/board';
 
-interface Boards {
-  komunicare: typeof komunicare;
-}
-
-export const DEFAULT_BOARDS: Boards = {
-  komunicare: komunicare,
-};
+export const DEFAULT_BOARDS: Record<string, Board[]> = {};
 
 export const dataURLtoFile = (
   dataurl: string,

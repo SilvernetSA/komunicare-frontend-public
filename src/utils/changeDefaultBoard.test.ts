@@ -94,10 +94,10 @@ vi.mock('./switchCommunicatorNavigation', () => ({
   switchCommunicatorNavigation: mocks.switchCommunicatorNavigation,
 }));
 
-vi.mock('../components/Board/utils-simple/copyOnWrite', async () => {
+vi.mock('@/domains/board/components/Board/utils-simple/copyOnWrite', async () => {
   const actual = await vi.importActual<
-    typeof import('../components/Board/utils-simple/copyOnWrite')
-  >('../components/Board/utils-simple/copyOnWrite');
+    typeof import('@/domains/board/components/Board/utils-simple/copyOnWrite')
+  >('@/domains/board/components/Board/utils-simple/copyOnWrite');
 
   return {
     ...actual,

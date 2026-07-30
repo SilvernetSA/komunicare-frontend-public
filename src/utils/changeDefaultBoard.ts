@@ -9,10 +9,10 @@ import {
   isProtectedCommunicator,
   findExistingPersonalCopyForBoardWithRefresh,
   prepareCommunicatorCopyDraft,
-} from '../components/Board/utils-simple/copyOnWrite';
-import { useAppStore } from '../store/appStore';
-import { useBoardsStore } from '../store/boardsStore';
-import { useCommunicatorsStore } from '../store/communicatorsStore';
+} from '@/domains/board/components/Board/utils-simple/copyOnWrite';
+import { useAppStore } from '@/domains/app/stores/appStore';
+import { useBoardsStore } from '@/domains/board/stores/boardsStore';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import { UserData } from '../types/app';
 import { Board } from '../types/board';
 import { Communicator } from '../types/communicator';

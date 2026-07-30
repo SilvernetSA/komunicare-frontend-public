@@ -1,5 +1,5 @@
-import { useBoardsStore } from '../store/boardsStore';
-import { useCommunicatorsStore } from '../store/communicatorsStore';
+import { useBoardsStore } from '@/domains/board/stores/boardsStore';
+import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 
 import type { Communicator } from '../types/communicator';
 

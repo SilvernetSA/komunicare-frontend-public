@@ -12,7 +12,7 @@ import { TouchBackend } from 'react-dnd-touch-backend';
 import { createRoot, Root } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import App from './components/App/App';
+import App from './domains/app/components/App/App';
 import { NODE_ENV, AZURE_INST_KEY } from './constants';
 import './index.css';
 import LanguageProvider from './providers/LanguageProvider/LanguageProvider';

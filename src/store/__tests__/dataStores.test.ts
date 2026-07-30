@@ -52,7 +52,7 @@ describe('zustand data stores cache', () => {
       data: { language: { lang: 'es-ES' } },
     });
 
-    const { useSettingsStore } = await import('../settingsStore');
+    const { useSettingsStore } = await import('@/domains/settings/stores/settingsStore');
 
     const first = await useSettingsStore.getState().fetchSettings();
     const second = await useSettingsStore.getState().fetchSettings();
@@ -68,7 +68,7 @@ describe('zustand data stores cache', () => {
       data: { id: 'user-1', name: 'Juan Perez' },
     });
 
-    const { useUserStore } = await import('../userStore');
+    const { useUserStore } = await import('@/domains/user/stores/userStore');
 
     const first = await useUserStore.getState().getUserDataById('user-1');
     const second = await useUserStore.getState().getUserDataById('user-1');
@@ -83,7 +83,7 @@ describe('zustand data stores cache', () => {
       data: { id: 'sub-1', userId: 'user-1', status: 'active' },
     });
 
-    const { useSubscriberStore } = await import('../subscriberStore');
+    const { useSubscriberStore } = await import('@/domains/user/stores/subscriberStore');
 
     const first = await useSubscriberStore
       .getState()
