@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import Joyride, { STATUS } from 'react-joyride';
-import SwiperCore, { Navigation, Pagination, Autoplay } from 'swiper/core';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import messages from './Settings.messages';
-import 'swiper/swiper.min.css';
-import 'swiper/components/navigation/navigation.min.css';
-import 'swiper/components/pagination/pagination.min.css';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import './SettingsTour.css';
 
 interface SettingsTourProps {
@@ -34,8 +34,6 @@ interface TourImages {
   scanning: TourImage[];
   navigation: TourImage[];
 }
-
-const swiperUse = (SwiperCore as { use: (modules: unknown[]) => void }).use;
 
 const joyrideStyles = {
   options: {
@@ -153,10 +151,6 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
   disableTour,
   isSettingsTourEnabled,
 }) => {
-  useEffect(() => {
-    swiperUse([Navigation, Pagination, Autoplay]);
-  }, []);
-
   const [tooltipSwiperText, setTooltipSwiperText] = useState<TooltipSwiperText>(
     { title: '', description: '' },
   );
@@ -275,6 +269,7 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
             {tooltipSwiperText.title}
           </p>
           <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
             navigation={true}
             pagination={true}
             autoplay={{ delay: 4000, disableOnInteraction: true }}
@@ -313,6 +308,7 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
             {tooltipSwiperText.title}
           </p>
           <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
             watchOverflow={true}
             className="SettingsTour__swiper-inner"
             onSlideChange={(swiper: { realIndex: number }) =>
@@ -351,6 +347,7 @@ const SettingsTour: React.FC<SettingsTourProps> = ({
             {tooltipSwiperText.title}
           </p>
           <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
             navigation={true}
             pagination={true}
             autoplay={{ delay: 2500, disableOnInteraction: true }}

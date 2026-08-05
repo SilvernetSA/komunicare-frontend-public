@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import {
   MERCADOPAGO_HOSTED_TEST_MODE,
   MERCADOPAGO_PUBLIC_KEY,

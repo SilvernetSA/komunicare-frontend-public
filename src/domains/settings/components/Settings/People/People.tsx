@@ -9,8 +9,8 @@ import './People.css';
 import { useAppStore } from '@/domains/app/stores/appStore';
 import { useAuthStore } from '@/domains/user/stores/authStore';
 import { UserData } from '@/types/app';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
-import UserIcon from '@/domains/shared/components/UI/UserIcon/UserIcon';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
+import UserIcon from '@/domains/app/components/UserIcon/UserIcon';
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 

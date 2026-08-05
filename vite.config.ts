@@ -23,8 +23,8 @@ const propTypesPlugin = () => {
   return {
     name: 'prop-types-global',
     transformIndexHtml: {
-      enforce: 'pre' as const,
-      transform(html: string) {
+      order: 'pre' as const,
+      handler(html: string) {
         return html.replace(
           '<head>',
           `<head>
@@ -75,31 +75,57 @@ export default defineConfig(({ mode }) => {
         include: ['**/*.jsx', '**/*.tsx', '**/*.js'],
       }),
       VitePWA({
-        registerType: 'autoUpdate',
-        includeAssets: ['logo.svg', 'logo_150_150.png'],
+        // 'prompt' (not 'autoUpdate'): the generated SW must NOT skipWaiting
+        // on its own. autoUpdate calls skipWaiting/clientsClaim on install and
+        // purges the old precache while the current page is still running — the
+        // page then fails to load chunks whose hashed names the new deploy
+        // replaced, leaving a blank screen. 'prompt' also injects a
+        // SKIP_WAITING message handler into the SW, which registerServiceWorker
+        // uses to apply the update atomically: post SKIP_WAITING -> the new SW
+        // activates and purges the old cache -> we reload on 'controllerchange'
+        // so index.html and its chunks come from the NEW precache together.
+        registerType: 'prompt',
+        // Single registrar: registerServiceWorker.ts owns registration and the
+        // onupdatefound handler. Without this, vite-plugin-pwa also injects
+        // registerSW.js and double-registers /sw.js, racing our update hook.
+        injectRegister: false,
+        includeAssets: [
+          'logo.svg',
+          'logo_150_150.png',
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'pwa-maskable-512x512.png',
+        ],
         manifest: {
-          name: 'Komunicare',
+          id: '/',
+          name: 'Komunicare - AAC Communication Board',
           short_name: 'Komunicare',
+          description:
+            'Komunicare is an augmentative and alternative communication (AAC) application, allowing users with speech and language impairments (Autism, Cerebral Palsy) to communicate with symbols and text-to-speech.',
           theme_color: '#000000',
+          background_color: '#ffffff',
           start_url: '/',
+          scope: '/',
           display: 'standalone',
           icons: [
             {
-              src: '/images/touch/apple-touch-icon.png',
-              sizes: '180x180',
+              src: '/pwa-192x192.png',
+              sizes: '192x192',
               type: 'image/png',
+              purpose: 'any',
             },
             {
-              src: '/images/touch/touch-icon-iphone-retina.png',
-              sizes: '180x180',
+              src: '/pwa-512x512.png',
+              sizes: '512x512',
               type: 'image/png',
+              purpose: 'any',
             },
             {
-              src: '/images/touch/touch-icon-ipad-retina.png',
-              sizes: '167x167',
+              src: '/pwa-maskable-512x512.png',
+              sizes: '512x512',
               type: 'image/png',
+              purpose: 'maskable',
             },
-            { src: '/logo_150_150.png', sizes: '150x150', type: 'image/png' },
           ],
         },
         workbox: {
@@ -118,6 +144,19 @@ export default defineConfig(({ mode }) => {
               options: {
                 cacheName: 'pdfmake',
                 expiration: { maxEntries: 4, maxAgeSeconds: 7 * 24 * 3600 },
+              },
+            },
+            {
+              // vendor-*.js is excluded from precache (globIgnores) but had no
+              // runtime rule, so it was never cached — after a deploy the old
+              // hashed vendor chunk 404s. Hashed filenames are immutable, so
+              // CacheFirst is safe and keeps the app resilient offline.
+              urlPattern: ({ url }) =>
+                url.pathname.includes('/assets/vendor-'),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'vendor',
+                expiration: { maxEntries: 8, maxAgeSeconds: 30 * 24 * 3600 },
               },
             },
             {
@@ -159,6 +198,19 @@ export default defineConfig(({ mode }) => {
       port: 3001,
       host: true,
       open: mode !== 'test',
+      // Opt-in same-origin API proxy for dev instances on ports the API's
+      // CORS allowlist doesn't cover. Run with:
+      //   DEV_API_PROXY_TARGET=https://komunicare-api-dev.komuni.care \
+      //   VITE_API_URL=/dev-api vite --port 3003
+      proxy: process.env.DEV_API_PROXY_TARGET
+        ? {
+            '/dev-api': {
+              target: process.env.DEV_API_PROXY_TARGET,
+              changeOrigin: true,
+              rewrite: (path) => path.replace(/^\/dev-api/, ''),
+            },
+          }
+        : undefined,
     },
 
     // Configuración del build
@@ -226,6 +278,15 @@ export default defineConfig(({ mode }) => {
           __dirname,
           'src/shims/jss-plugin-globalThis.ts',
         ),
+        // Force CJS build in non-production modes: react-joyride@2.9.x ships a
+        // malformed ESM bundle (imports scattered mid-file) that confuses Rollup's
+        // namespace initialisation in dev builds, causing "Class extends undefined".
+        ...(mode !== 'production' && {
+          'react-joyride': resolve(
+            __dirname,
+            'node_modules/react-joyride/dist/index.js',
+          ),
+        }),
       },
     },
 
@@ -252,6 +313,7 @@ export default defineConfig(({ mode }) => {
         '@mui/material',
         '@mui/icons-material',
         'prop-types',
+        'react-joyride',
         'react-grid-layout',
         'react-resizable',
         'react-draggable',

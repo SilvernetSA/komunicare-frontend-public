@@ -13,7 +13,7 @@ import { useAppStore } from '@/domains/app/stores/appStore';
 import { useAuthStore } from '@/domains/user/stores/authStore';
 import { useSubscriptionStore } from '@/domains/subscription/stores/subscriptionStore';
 import { Product } from '@/types/subscription';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import './Subscribe.css';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────

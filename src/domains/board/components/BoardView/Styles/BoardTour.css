@@ -1,0 +1,112 @@
+/* Tobii AAC style — tour steps */
+
+.BoardTour__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  color: #1a2640;
+  line-height: 1.6;
+}
+
+.BoardTour__step-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.BoardTour__step-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a2640;
+  margin: 0;
+}
+
+/* Onboarding first step */
+
+.BoardTour__onboarding {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.BoardTour__onboarding-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.BoardTour__onboarding-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.BoardTour__onboarding-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a2640;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.BoardTour__onboarding-subtitle {
+  font-size: 1rem;
+  color: #3d5068;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.BoardTour__onboarding-divider {
+  height: 1px;
+  background: #e8eef5;
+  margin-bottom: 20px;
+}
+
+.BoardTour__onboarding-defaults {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.BoardTour__onboarding-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #0084c8;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.BoardTour__onboarding-back:hover {
+  color: #005f96;
+}
+
+.BoardTour__onboarding-defaults-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a2640;
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .BoardTour__onboarding-header {
+    align-items: flex-start;
+  }
+
+  .BoardTour__onboarding-title {
+    font-size: 1.3rem;
+  }
+
+  .BoardTour__onboarding-subtitle {
+    font-size: 0.95rem;
+  }
+}

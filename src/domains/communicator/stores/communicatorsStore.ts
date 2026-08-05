@@ -1,29 +1,40 @@
 import { create } from 'zustand';
 
-import { applyLoginSuccessFactory } from './communicatorsStore/applyLoginSuccessFactory';
-import { createRemoteCommunicatorFactory } from './communicatorsStore/createRemoteCommunicatorFactory';
-import { deleteRemoteCommunicatorFactory } from './communicatorsStore/deleteRemoteCommunicatorFactory';
-import {
-  fetchMyCommunicatorsFactory,
-  resetCommunicatorsFetchCache,
-} from './communicatorsStore/fetchMyCommunicatorsFactory';
-import {
-  fetchSystemCommunicatorsFactory,
-  initSystemCommunicatorsCache,
-  systemCommunicatorIds,
-} from './communicatorsStore/fetchSystemCommunicatorsFactory';
-import { mergeCommunicators } from './communicatorsStore/mergeCommunicators';
-import { updateRemoteCommunicatorFactory } from './communicatorsStore/updateRemoteCommunicatorFactory';
-import {
-  normalizeCommunicatorDefaultBoardsIncluded,
-  normalizeDefaultBoardsIncluded,
-} from '@/utils/defaultBoardsIncluded';
+import type { Communicator } from '@/types/communicator';
+import type {
+  CommunicatorPageParams,
+  CommunicatorPageResponse,
+} from '@/types/communicator';
+
+import { useAppStore } from '@/domains/app/stores/appStore';
 import {
   getCachedSystemCommunicators,
   getCachedSystemHashes,
 } from '@/domains/board/stores/systemCatalogCache';
-
-import type { Communicator } from '@/types/communicator';
+import { applyLoginSuccessFactory } from '@/domains/communicator/stores/communicatorsStore/applyLoginSuccessFactory';
+import { copyOfficialCommunicatorFactory } from '@/domains/communicator/stores/communicatorsStore/copyOfficialCommunicatorFactory';
+import { copyPublicCommunicatorFactory } from '@/domains/communicator/stores/communicatorsStore/copyPublicCommunicatorFactory';
+import { createRemoteCommunicatorFactory } from '@/domains/communicator/stores/communicatorsStore/createRemoteCommunicatorFactory';
+import { deleteRemoteCommunicatorFactory } from '@/domains/communicator/stores/communicatorsStore/deleteRemoteCommunicatorFactory';
+import {
+  fetchMyCommunicatorsFactory,
+  resetCommunicatorsFetchCache,
+} from '@/domains/communicator/stores/communicatorsStore/fetchMyCommunicatorsFactory';
+import {
+  fetchPublicCommunicatorsPage,
+  resetPublicCommunicatorsPageCache,
+} from '@/domains/communicator/stores/communicatorsStore/fetchPublicCommunicatorsPage';
+import {
+  fetchSystemCommunicatorsFactory,
+  initSystemCommunicatorsCache,
+  systemCommunicatorIds,
+} from '@/domains/communicator/stores/communicatorsStore/fetchSystemCommunicatorsFactory';
+import { mergeCommunicators } from '@/domains/communicator/stores/communicatorsStore/mergeCommunicators';
+import { updateRemoteCommunicatorFactory } from '@/domains/communicator/stores/communicatorsStore/updateRemoteCommunicatorFactory';
+import {
+  normalizeCommunicatorDefaultBoardsIncluded,
+  normalizeDefaultBoardsIncluded,
+} from '@/utils/defaultBoardsIncluded';
 
 interface DefaultBoardData {
   nameOnJSON: string;
@@ -36,7 +47,15 @@ export interface CommunicatorState {
   isFetching: boolean;
 }
 
-const defaultCommunicatorID = 'komunicare_default';
+const defaultOfficialCommunicatorId = 'komunicare';
+
+// Bootstrap system communicators from persisted data
+const cachedSystemCommunicators = getCachedSystemCommunicators();
+const cachedSystemHashes = getCachedSystemHashes();
+initSystemCommunicatorsCache(
+  cachedSystemCommunicators,
+  cachedSystemHashes.communicatorsHash || '',
+);
 
 const mergeSystemWithUserCommunicators = (
   currentCommunicators: Communicator[],
@@ -56,20 +75,62 @@ const mergeSystemWithUserCommunicators = (
   return [...systemCommunicators, ...normalizedMyCommunicators];
 };
 
-const cachedSystemCommunicators = getCachedSystemCommunicators();
-const cachedSystemHashes = getCachedSystemHashes();
-initSystemCommunicatorsCache(
-  cachedSystemCommunicators,
-  cachedSystemHashes.communicatorsHash || '',
-);
+const getPersistedPreferredCommunicatorId = (
+  communicators: Communicator[],
+): string | undefined => {
+  const userData = (useAppStore.getState().userData as any) || {};
+  const candidateIds = [
+    userData.activeCommunicatorId,
+    userData.settings?.activeCommunicatorId,
+    userData.settings?.communicatorId,
+  ]
+    .map((communicatorId) => String(communicatorId || '').trim())
+    .filter(Boolean);
 
-const buildInitialCommunicatorState = (): CommunicatorState => ({
-  communicators: cachedSystemCommunicators.length
-    ? cachedSystemCommunicators.map(normalizeCommunicatorDefaultBoardsIncluded)
-    : [],
-  activeCommunicatorId: defaultCommunicatorID,
-  isFetching: false,
-});
+  return candidateIds.find((communicatorId) =>
+    communicators.some((communicator) => communicator.id === communicatorId),
+  );
+};
+
+const syncPreferredCommunicatorInAppStore = (communicatorId: string): void => {
+  if (!communicatorId) {
+    return;
+  }
+
+  const appStore = useAppStore.getState() as {
+    updateUserData?: (payload: Record<string, unknown>) => void;
+    userData?: Record<string, unknown>;
+  };
+  const currentUserData = appStore.userData || {};
+
+  if (!currentUserData.email || typeof appStore.updateUserData !== 'function') {
+    return;
+  }
+
+  appStore.updateUserData({
+    ...currentUserData,
+    activeCommunicatorId: communicatorId,
+    settings: {
+      ...((currentUserData.settings as Record<string, unknown>) || {}),
+      activeCommunicatorId: communicatorId,
+      communicatorId,
+    },
+  });
+};
+
+const buildInitialCommunicatorState = (): CommunicatorState => {
+  const communicators = cachedSystemCommunicators.map(
+    normalizeCommunicatorDefaultBoardsIncluded,
+  );
+  const activeCommunicatorId =
+    communicators[0]?.id || defaultOfficialCommunicatorId;
+
+  return {
+    communicators,
+    activeCommunicatorId,
+    isFetching: false,
+  };
+};
 
 const initialCommunicatorState = buildInitialCommunicatorState();
 
@@ -84,11 +145,12 @@ export interface CommunicatorsStore extends CommunicatorState {
   setApiStarted: () => void;
   setApiFailure: () => void;
   editCommunicator: (communicator: Communicator) => void;
-  addBoardCommunicator: (boardId: string) => void;
-  deleteBoardCommunicator: (boardId: string) => void;
+  addBoardCommunicator: (boardId: string, communicatorId?: string) => void;
+  deleteBoardCommunicator: (boardId: string, communicatorId?: string) => void;
   replaceBoardCommunicator: (payload: {
     prevBoardId: string;
     nextBoardId: string;
+    communicatorId?: string;
   }) => void;
   addDefaultBoardIncluded: (payload: DefaultBoardData) => void;
   updateDefaultBoardsIncluded: (payload: DefaultBoardData[]) => void;
@@ -102,14 +164,20 @@ export interface CommunicatorsStore extends CommunicatorState {
   fetchMyCommunicators: (options?: {
     force?: boolean;
   }) => Promise<Communicator[]>;
+  fetchPublicCommunicatorsPage: (
+    params?: CommunicatorPageParams,
+  ) => Promise<CommunicatorPageResponse>;
   fetchSystemCommunicators: (options?: { force?: boolean }) => Promise<void>;
   createRemoteCommunicator: (payload: {
     communicator: Communicator;
     tempId: string;
   }) => Promise<Communicator>;
+  copyOfficialCommunicator: (communicatorId: string) => Promise<Communicator>;
+  copyPublicCommunicator: (communicatorId: string) => Promise<Communicator>;
   updateRemoteCommunicator: (
     communicator: Communicator,
   ) => Promise<Communicator>;
+  setDefaultCommunicator: (communicatorId: string) => Promise<void>;
   deleteRemoteCommunicator: (communicatorId: string) => Promise<void>;
   applyLogout: () => void;
 }
@@ -172,11 +240,13 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
     },
 
     changeCommunicator: (communicatorId) => {
+      if (get().activeCommunicatorId === communicatorId) return;
       const exists = get().communicators.find(
         ({ id }) => id === communicatorId,
       );
       if (!exists) return;
       set({ activeCommunicatorId: communicatorId });
+      syncPreferredCommunicatorInAppStore(communicatorId);
     },
 
     setApiFetching: (value) => set({ isFetching: Boolean(value) }),
@@ -197,10 +267,12 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
       });
     },
 
-    addBoardCommunicator: (boardId) => {
+    addBoardCommunicator: (boardId, communicatorId) => {
       set((state) => {
+        const targetCommunicatorId =
+          communicatorId || state.activeCommunicatorId;
         const active = state.communicators.find(
-          (c) => c.id === state.activeCommunicatorId,
+          (c) => c.id === targetCommunicatorId,
         );
         if (!active) return state;
         const index = state.communicators.indexOf(active);
@@ -212,10 +284,12 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
       });
     },
 
-    deleteBoardCommunicator: (boardId) => {
+    deleteBoardCommunicator: (boardId, communicatorId) => {
       set((state) => {
+        const targetCommunicatorId =
+          communicatorId || state.activeCommunicatorId;
         const active = state.communicators.find(
-          (c) => c.id === state.activeCommunicatorId,
+          (c) => c.id === targetCommunicatorId,
         );
         if (!active || !active.boards) return state;
         const index = state.communicators.indexOf(active);
@@ -228,10 +302,16 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
       });
     },
 
-    replaceBoardCommunicator: ({ prevBoardId, nextBoardId }) => {
+    replaceBoardCommunicator: ({
+      prevBoardId,
+      nextBoardId,
+      communicatorId,
+    }) => {
       set((state) => {
+        const targetCommunicatorId =
+          communicatorId || state.activeCommunicatorId;
         const active = state.communicators.find(
-          (c) => c.id === state.activeCommunicatorId,
+          (c) => c.id === targetCommunicatorId,
         );
         if (!active || !active.boards) return state;
         const index = state.communicators.indexOf(active);
@@ -299,65 +379,63 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
     },
 
     getApiMyCommunicatorsSuccess: ({ data }) => {
-      set((state) => {
-        const myCommunicators = mergeSystemWithUserCommunicators(
-          state.communicators,
-          data,
+      const state = get();
+      const myCommunicators = mergeSystemWithUserCommunicators(
+        state.communicators,
+        data,
+      );
+      const persistedPreferredCommunicatorId =
+        getPersistedPreferredCommunicatorId(myCommunicators);
+      const defaultCommunicatorId = myCommunicators.find(
+        (communicator) => communicator.isDefault,
+      )?.id;
+      const currentActiveExists = myCommunicators.some(
+        (communicator) => communicator.id === state.activeCommunicatorId,
+      );
+      const currentNonSystemCommunicatorId =
+        currentActiveExists &&
+        !systemCommunicatorIds.has(state.activeCommunicatorId)
+          ? state.activeCommunicatorId
+          : '';
+      let activeCommunicatorId =
+        persistedPreferredCommunicatorId ||
+        currentNonSystemCommunicatorId ||
+        defaultCommunicatorId ||
+        '';
+
+      if (
+        !activeCommunicatorId &&
+        systemCommunicatorIds.has(state.activeCommunicatorId)
+      ) {
+        // Active communicator is a system one. If the user has a personal
+        // copy of it, switch automatically so they always land on their own
+        // communicator after login instead of the shared system one.
+        const personalCopy = data.find(
+          (c) =>
+            c.copySource === state.activeCommunicatorId ||
+            (c as any).copySourceCommunicatorId === state.activeCommunicatorId,
         );
-
-        const personalCommunicators = myCommunicators.filter(
-          (c) => !systemCommunicatorIds.has(String(c.id || '')),
-        );
-        const isActiveSystem =
-          systemCommunicatorIds.size > 0 &&
-          systemCommunicatorIds.has(String(state.activeCommunicatorId || ''));
-        const isActiveInList = myCommunicators.some(
-          (c) => c.id === state.activeCommunicatorId,
-        );
-        // Only keep the current selection if it is already a personal communicator.
-        // System communicator or unresolved default → find the right personal copy.
-        const isActivePersonal = isActiveInList && !isActiveSystem;
-
-        let activeCommunicatorId: string;
-        if (!isActivePersonal && personalCommunicators.length > 0) {
-          // Walk system communicators in store order to find a matching personal copy.
-          // If the active is a known system communicator, match it directly;
-          // otherwise (e.g. initial "komunicare_default") fall through to the first
-          // system communicator that has a personal copy.
-          const systemCommunicators = myCommunicators.filter((c) =>
-            systemCommunicatorIds.has(String(c.id || '')),
-          );
-          const lookupIds = isActiveSystem
-            ? [state.activeCommunicatorId, ...systemCommunicators.map((c) => String(c.id))]
-            : systemCommunicators.map((c) => String(c.id));
-
-          let matchingCopy: Communicator | undefined;
-          for (const sysId of lookupIds) {
-            matchingCopy = personalCommunicators.find(
-              (c) => (c as any).copySourceCommunicatorId === sysId,
-            );
-            if (matchingCopy) break;
-          }
-
-          const defaultPersonal = personalCommunicators.find(
-            (c) => (c as any).isDefault,
-          );
-          activeCommunicatorId =
-            matchingCopy?.id ||
-            defaultPersonal?.id ||
-            personalCommunicators[0].id;
-        } else {
-          activeCommunicatorId = isActiveInList
-            ? state.activeCommunicatorId
-            : myCommunicators[0]?.id || defaultCommunicatorID;
+        if (personalCopy) {
+          activeCommunicatorId = personalCopy.id;
         }
+      }
 
-        return {
-          isFetching: false,
-          activeCommunicatorId,
-          communicators: myCommunicators,
-        };
+      if (!activeCommunicatorId && currentActiveExists) {
+        activeCommunicatorId = state.activeCommunicatorId;
+      }
+
+      if (!activeCommunicatorId) {
+        // Current communicator no longer exists (e.g. deleted zombie); fall back.
+        activeCommunicatorId =
+          myCommunicators[0]?.id || defaultOfficialCommunicatorId;
+      }
+
+      set({
+        isFetching: false,
+        activeCommunicatorId,
+        communicators: myCommunicators,
       });
+      syncPreferredCommunicatorInAppStore(activeCommunicatorId);
     },
 
     // ── Delegated async actions ──────────────────────────────────────────────
@@ -367,22 +445,46 @@ export const useCommunicatorsStore = create<CommunicatorsStore>()((
     fetchSystemCommunicators: fetchSystemCommunicatorsFactory(
       set,
       get,
-      defaultCommunicatorID,
+      defaultOfficialCommunicatorId,
     ),
 
     fetchMyCommunicators: fetchMyCommunicatorsFactory(get),
+
+    fetchPublicCommunicatorsPage: (params) =>
+      fetchPublicCommunicatorsPage(params),
 
     createRemoteCommunicator: createRemoteCommunicatorFactory(
       createCommunicatorCache,
       get,
     ),
 
+    copyOfficialCommunicator: copyOfficialCommunicatorFactory(get),
+
+    copyPublicCommunicator: copyPublicCommunicatorFactory(get),
+
     updateRemoteCommunicator: updateRemoteCommunicatorFactory(get),
+
+    setDefaultCommunicator: async (communicatorId: string) => {
+      const target = get().communicators.find((c) => c.id === communicatorId);
+      if (!target) return;
+      const updated = await get().updateRemoteCommunicator({
+        ...target,
+        isDefault: true,
+      } as Communicator);
+      set((state: CommunicatorState) => ({
+        communicators: state.communicators.map((c) =>
+          c.id === updated.id
+            ? { ...c, isDefault: true }
+            : { ...c, isDefault: false },
+        ),
+      }));
+    },
 
     deleteRemoteCommunicator: deleteRemoteCommunicatorFactory(get, set),
 
     applyLogout: () => {
       resetCommunicatorsFetchCache();
+      resetPublicCommunicatorsPageCache();
       set({ ...initialCommunicatorState });
     },
   };

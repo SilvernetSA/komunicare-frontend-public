@@ -29,7 +29,7 @@ import {
 import { useAppStore } from '@/domains/app/stores/appStore';
 import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
 import { DisplaySettings } from '@/types/app';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import './Display.css';
 
 // ─── Component ─────────────────────────────────────────────────────────────────

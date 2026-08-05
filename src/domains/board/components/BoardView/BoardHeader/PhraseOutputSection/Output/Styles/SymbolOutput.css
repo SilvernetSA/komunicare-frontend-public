@@ -1,0 +1,218 @@
+.SymbolOutput {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* ── Action panel: top row (keyboard, share) + primary row (play, backspace,
+      clear-all). Play leads the primary row for reachability. ── */
+.SymbolOutput__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  margin-left: auto;
+  min-width: fit-content;
+  gap: 2px;
+  padding-right: 4px;
+}
+
+.SymbolOutput__actions__row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Secondary actions are more compact than the primary row. */
+.SymbolOutput__actions__row--top button.Output__button__sm,
+.SymbolOutput__actions__row--top button.Output__button__lg {
+  height: 48px !important;
+  width: 48px !important;
+  min-height: 48px;
+  min-width: 48px;
+  margin-right: 0;
+}
+
+.SymbolOutput__actions__row--top svg.Output__icon__sm,
+.SymbolOutput__actions__row--top svg.Output__icon__lg {
+  height: 26px !important;
+  width: 26px !important;
+}
+
+.SymbolOutput__actions__row button.Output__button__sm {
+  height: 64px !important;
+  width: 64px !important;
+  min-height: 64px;
+  min-width: 64px;
+}
+
+.SymbolOutput__actions__row svg.Output__icon__sm {
+  height: 34px !important;
+  width: 34px !important;
+}
+
+.SymbolOutput__actions--lg
+  .SymbolOutput__actions__row
+  button.Output__button__lg {
+  height: 84px !important;
+  width: 84px !important;
+  min-height: 84px;
+  min-width: 84px;
+  margin-right: 0;
+}
+
+.SymbolOutput__actions--lg .SymbolOutput__actions__row svg.Output__icon__lg {
+  height: 44px !important;
+  width: 44px !important;
+}
+
+/* Play: state color as a circle around the icon; the full rounded rectangle
+   (same 8px radius as the side navigation buttons) fills on hover / dwell. */
+.SymbolOutput__play button {
+  position: relative;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+}
+
+.SymbolOutput__play button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 52px;
+  height: 52px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: var(--kmc-primary);
+}
+
+.SymbolOutput__actions--lg .SymbolOutput__play button::before {
+  width: 68px;
+  height: 68px;
+}
+
+.SymbolOutput__play button:disabled::before {
+  background-color: #d5d5d5;
+}
+
+.SymbolOutput__play button svg {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+.SymbolOutput__play button:not(:disabled):hover,
+.SymbolOutput__play button:not(:disabled).dwell-focus {
+  background-color: rgba(13, 71, 161, 0.9);
+}
+
+.playSpeechBtn {
+  color: #fff;
+}
+
+.is-dark .SymbolOutput {
+  background: #eee;
+  color: #000;
+}
+
+.SymbolOutput__value {
+  height: calc(100% - 10px);
+  min-width: 90px;
+  padding: 0 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.LiveSymbolOutput__value {
+  display: flex;
+  height: 100%;
+  min-width: 130px;
+  padding: 3px 4px;
+  align-self: stretch;
+  position: relative;
+  overflow: hidden;
+}
+
+.SymbolOutput__symbol {
+  color: #000;
+}
+
+.SymbolOutput__value__IconButton {
+  position: absolute;
+  --close-button-top: -10px;
+  top: -10px;
+  top: var(--close-button-top);
+  right: -10px;
+}
+
+.LiveSymbolOutput__value > .SymbolOutput__value__IconButton {
+  --close-button-top-live-difference: -5px;
+  top: -5px;
+  top: calc(var(--close-button-top) - var(--close-button-top-live-difference));
+}
+
+.SymbolOutput__value .Symbol__image-container,
+.LiveSymbolOutput__value .Symbol__image-container {
+  min-height: 0;
+}
+
+.SymbolOutput__actions .MuiFormControlLabel-label {
+  font-size: 11px;
+}
+
+button.Output__button__sm {
+  align-self: center;
+  height: 80px !important;
+  width: 80px !important;
+  min-height: 80px;
+  min-width: 80px;
+}
+
+button.Output__button__lg {
+  align-self: center;
+  height: 100px !important;
+  width: 100px !important;
+  min-height: 100px;
+  min-width: 100px;
+  margin-right: 15px;
+}
+
+svg.Output__icon__sm {
+  height: 40px !important;
+  width: 40px !important;
+}
+
+svg.Output__icon__lg {
+  height: 50px !important;
+  width: 50px !important;
+}
+
+/* Prevent the big buttons on small screens */
+
+@media (min-width: 480px) {
+  label.Live__switch_lg {
+    height: 95%;
+    width: 100px;
+    justify-content: center;
+    margin-left: 0px;
+    margin-right: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  button.Output__button__lg {
+    align-self: center;
+    height: 80px !important;
+    width: 80px !important;
+    min-height: 80px;
+    min-width: 80px;
+    margin-right: unset;
+  }
+
+  svg.Output__icon__lg {
+    height: 40px !important;
+    width: 40px !important;
+  }
+}

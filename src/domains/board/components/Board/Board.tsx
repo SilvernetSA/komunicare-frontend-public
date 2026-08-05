@@ -40,7 +40,7 @@ import { useCommunicatorsStore } from '@/domains/communicator/stores/communicato
 import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 import { useNotificationStore } from '@/domains/notifications/stores/notificationStore';
 import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
-import Board from './BoardContainer/Board/Board.component';
+import BoardView from '../BoardView';
 import { uploadTileSound } from '@/domains/ai/stores/uploadsStore/uploadTileSound';
 import { Board as BoardModel, Tile } from '@/types/board';
 import { Communicator } from '@/types/communicator';
@@ -876,7 +876,7 @@ const BoardContainer: React.FC = () => {
 
   return (
     <Fragment>
-      <Board
+      <BoardView
         canAccessToContent
         board={translatedBoard}
         intl={intl as any}

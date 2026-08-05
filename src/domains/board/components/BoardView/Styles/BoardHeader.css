@@ -1,0 +1,13 @@
+/* Two stacked input lines: AI suggestion bar + output bar (the output bar
+   hosts the play/backspace/clear/keyboard/share button group). */
+.BoardHeader__inputs {
+  display: flex;
+  align-items: stretch;
+}
+
+.BoardHeader__lines {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}

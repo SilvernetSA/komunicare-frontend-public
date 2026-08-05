@@ -1,0 +1,138 @@
+.Symbol {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.Tile .Symbol {
+  max-height: none;
+  padding-bottom: 0;
+}
+
+.Tile--folder .Symbol {
+  padding-top: var(--folder-flap-height);
+}
+
+.SymbolSearch__Suggestion > .Symbol {
+  position: unset;
+}
+
+.LiveSymbolOutput__value > .Symbol {
+  padding: 0.2em 0.9em 0.2em 0.9em;
+}
+
+.Symbol textarea {
+  align-self: flex-start;
+  font-weight: 700;
+  max-height: 90%;
+}
+
+.is-dark .liveInput {
+  color: black;
+  background-color: white;
+}
+
+.is-dark .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline,
+.is-dark .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: black;
+}
+
+.is-dark .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #78909c;
+}
+
+.SymbolOutput .scanner__focused {
+  outline: 4px solid rgba(255, 0, 0, 1);
+}
+
+.Symbol__image-container {
+  position: relative;
+  flex: 1;
+  width: 97%;
+  margin: auto;
+  min-height: 40px;
+}
+
+.Tile .Symbol__image-container {
+  width: 100%;
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.Symbol__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* The img is absolutely positioned, so the container's padding can't reach
+   it — the breathing room around the pictogram lives here. The box must be
+   explicit: on absolutely positioned REPLACED elements `width/height: auto`
+   resolves to the image's intrinsic size (a big AI-generated PNG rendered
+   huge and clipped), not to the inset-stretched area. */
+.Tile .Symbol__image {
+  transform: none;
+  top: 10px;
+  left: 14px;
+  width: calc(100% - 28px);
+  height: calc(100% - 16px);
+}
+
+.Symbol .Symbol__label {
+  width: 95%;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  display: table-cell;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-transform: uppercase;
+}
+
+.Tile .Symbol .Symbol__label {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 4px 6px 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.88);
+  color: #212121;
+  border-radius: 0 0 10px 10px;
+  backdrop-filter: blur(2px);
+}
+
+@media (min-width: 600px) {
+  .Symbol .Symbol__label {
+    font-size: 1rem;
+    margin: 0 auto;
+  }
+}
+
+[dir='rtl'] .Symbol__label {
+  direction: rtl;
+}

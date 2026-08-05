@@ -1,3 +1,8 @@
+:root {
+  --kmc-primary: #0d47a1;
+  --kmc-primary-dark: #08306b;
+}
+
 *,
 *::before,
 *::after {

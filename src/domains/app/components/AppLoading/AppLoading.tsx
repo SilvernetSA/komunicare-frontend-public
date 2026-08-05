@@ -1,7 +1,7 @@
 import React from 'react';
 
-import BuildInfo from '@/domains/shared/components/UI/BuildInfo/BuildInfo';
-import { IS_DEV_ENV } from '@/domains/shared/components/UI/BuildInfo/buildInfo.constants';
+import BuildInfo from '@/domains/app/components/BuildInfo/BuildInfo';
+import { IS_DEV_ENV } from '@/domains/app/components/BuildInfo/buildInfo.constants';
 import './AppLoading.css';
 
 const AppLoading: React.FC = () => (

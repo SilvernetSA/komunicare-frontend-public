@@ -1,0 +1,61 @@
+.Navbar {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  height: 52px;
+  background: #fff;
+  color: #424242;
+  border-bottom: 1px solid #f0f0f0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.Navbar__group .Navbar__deactivateScanner {
+  color: #424242;
+}
+
+.Navbar__group {
+  flex: 1;
+  display: flex;
+}
+
+.Navbar__group--start {
+  justify-content: flex-start;
+}
+
+.Navbar__group--end {
+  order: 3;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.Navbar > .open__lock {
+  order: 4;
+  display: flex;
+  align-items: center;
+  padding-right: 4px;
+}
+
+.Navbar .UserIcon__Avatar {
+  margin: -5px 0;
+  width: 30px;
+  height: 30px;
+  color: #424242;
+  cursor: auto;
+}
+
+.Navbar .UserIcon__Avatar img {
+  width: 100%;
+  height: 100%;
+}
+
+.Navbar .LoginSignUpButton,
+.Navbar .LoginSignUpButton:active,
+.Navbar .LoginSignUpButton:visited,
+.Navbar .LoginSignUpButton:hover,
+.Navbar .LoginSignUpButton:focus {
+  color: #424242;
+}
+
+.Navbar .MuiIconButton-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}

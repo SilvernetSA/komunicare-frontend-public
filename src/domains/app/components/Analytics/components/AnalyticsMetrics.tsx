@@ -3,11 +3,11 @@ import { Theme } from '@mui/material/styles';
 import React from 'react';
 import { IntlShape } from 'react-intl';
 
-import Barchart from '@/domains/shared/components/UI/Barchart/Barchart.component';
-import DoughnutChart from '@/domains/shared/components/UI/Doughnut/Doughnut.component';
-import StatCards from '@/domains/shared/components/UI/StatCards/StatCards.component';
-import StatCards2 from '@/domains/shared/components/UI/StatCards2/StatCards2.component';
-import TableCard from '@/domains/shared/components/UI/TableCard/TableCard.component';
+import Barchart from '@/domains/app/components/Analytics/components/UI/Barchart/Barchart.component';
+import DoughnutChart from '@/domains/app/components/Analytics/components/UI/Doughnut/Doughnut.component';
+import StatCards from '@/domains/app/components/Analytics/components/UI/StatCards/StatCards.component';
+import StatCards2 from '@/domains/app/components/Analytics/components/UI/StatCards2/StatCards2.component';
+import TableCard from '@/domains/app/components/Analytics/components/UI/TableCard/TableCard.component';
 import messages from '../Analytics.messages';
 
 interface RawTotals {

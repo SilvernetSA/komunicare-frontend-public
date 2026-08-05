@@ -12,6 +12,8 @@ const initialBoardsState: BoardState = {
   isFixed: false,
   improvedPhrase: '',
   improvedPhraseSource: '',
+  isLiveMode: false,
+  isScreenKeyboardMode: false,
 };
 
 export const cloneInitialState = (): BoardState =>

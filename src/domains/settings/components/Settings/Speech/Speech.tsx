@@ -30,7 +30,7 @@ import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
 import { useSpeechStore } from '@/domains/settings/stores/voicesStore';
 import { DEFAULT_LANG } from '@/domains/app/components/App/App.constants';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import './Speech.css';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────

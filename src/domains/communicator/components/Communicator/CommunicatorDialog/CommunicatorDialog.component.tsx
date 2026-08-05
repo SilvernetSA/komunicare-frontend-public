@@ -17,8 +17,8 @@ import CommunicatorDialogButtons from './CommunicatorDialogButtons.component';
 import CommunicatorDialogTour from './CommunicatorDialogTour.component';
 import { UserData } from '@/types/app';
 import { Board } from '@/types/board';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
-import { FullScreenDialogContent } from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialogContent';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
+import { FullScreenDialogContent } from '@/domains/app/components/FullScreenDialog/FullScreenDialogContent';
 import DefaultBoardsGallery from '../CommunicatorToolbar/DefaultBoardSelector/DefaultBoardsGallery';
 
 interface Communicator {

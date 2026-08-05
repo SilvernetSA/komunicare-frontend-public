@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import messages from './Devices.messages';
 import { useAppStore } from '@/domains/app/stores/appStore';
 import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import './Devices.css';
 
 interface Device {

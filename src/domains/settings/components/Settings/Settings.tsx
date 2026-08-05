@@ -3,11 +3,12 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import LanguageIcon from '@mui/icons-material/Language';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import PersonIcon from '@mui/icons-material/Person';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { CircularProgress } from '@mui/material';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -19,9 +20,8 @@ import { useAppStore } from '@/domains/app/stores/appStore';
 import { useAuthStore } from '@/domains/user/stores/authStore';
 import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 import { UserData } from '@/types/app';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
-import IconButton from '@/domains/shared/components/UI/IconButton/IconButton';
-import UserIcon from '@/domains/shared/components/UI/UserIcon/UserIcon';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
+import UserIcon from '@/domains/app/components/UserIcon/UserIcon';
 import './Settings.css';
 
 // ─── Component ─────────────────────────────────────────────────────────────────
@@ -53,12 +53,14 @@ const Settings: React.FC = () => {
     disableTour({ isSettingsTourEnabled: true });
   };
 
+  const enableTourLabel = intl.formatMessage(messages.enableTour);
+
   const getSettingsSections = () => {
     const peopleSettings = [
       {
         icon: (
           <div className="Settings__UserIcon__Container">
-            <UserIcon link={false} accountIcon={PersonIcon} />
+            <UserIcon />
           </div>
         ),
         secondary: isLoggedIn ? user.name : null,
@@ -131,7 +133,7 @@ const Settings: React.FC = () => {
             icon: <VisibilityIcon />,
             text: messages.display,
             url: '/settings/display',
-            color: '#7B1FA2',
+            color: '#0d47a1',
           },
           {
             icon: <DevicesIcon />,
@@ -163,13 +165,16 @@ const Settings: React.FC = () => {
         !isSettingsTourEnabled &&
         !isDownloadingLang && (
           <div className="Settings_EnableTour_Button">
-            <IconButton
-              label={intl.formatMessage(messages.enableTour)}
-              onClick={enableTour}
-              size="large"
-            >
-              <LiveHelpIcon />
-            </IconButton>
+            <Tooltip placement="bottom" title={enableTourLabel}>
+              <IconButton
+                aria-label={enableTourLabel}
+                color="inherit"
+                onClick={enableTour}
+                size="large"
+              >
+                <LiveHelpIcon />
+              </IconButton>
+            </Tooltip>
           </div>
         )
       }

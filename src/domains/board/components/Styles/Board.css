@@ -1,0 +1,275 @@
+.Board {
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.Board__output {
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 100%;
+  /* Size to the action panel's own rows instead of a fixed height. The panel
+     is 48px (top row) + 2px gap + 64px (primary), or 84px in large-button
+     mode. A fixed height + a :has() bump for large mode clipped a row on short
+     landscape screens (max-height cap) and on WebViews without :has() support
+     (older Android system WebViews). flex:0 0 auto lets it grow to fit. */
+  flex: 0 0 auto;
+  min-height: 116px;
+  z-index: 1;
+}
+
+.Board__output:has(.SymbolOutput__actions--lg) {
+  min-height: 136px;
+}
+
+/* While the fixed-grid edit selectors are visible, reserve room at the bottom
+   of the tile area so the floating rows selector never covers the last row's
+   selection checkmarks (consumed by FixedGrid's GridBase/Row). */
+.Board__tiles--grid-editing {
+  --fixed-grid-reserved: 84px;
+}
+
+.hidden {
+  display: none;
+}
+
+.Board__output button[class*='MuiButtonBase-'].scanner__focused {
+  outline: 4px solid rgba(255, 0, 0, 1);
+}
+
+/* Board/communicator title, centered above the tile grid. Same treatment the
+   navbar title had (medium weight, uppercase) at 1.25x the size (1.25rem). */
+.Board__title-heading {
+  margin: 8px 12px 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424242;
+}
+
+.is-dark .Board__title-heading {
+  color: #eee;
+}
+
+.Board__navbar {
+  position: relative;
+  right: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+/* ── Unified single-row toolbar (Navbar + CommunicatorToolbar + EditToolbar) ── */
+
+.Board__main-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  height: 72px;
+  background: #fff;
+  border-bottom: 1px solid #ebebeb;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+  position: relative;
+  z-index: 2;
+  color: #424242;
+}
+
+/* Navbar becomes a transparent pass-through so its groups join the flex row */
+.Board__main-toolbar .Navbar {
+  display: contents;
+}
+
+/* Navbar groups are compact — don't stretch to fill */
+.Board__main-toolbar .Navbar__group {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+}
+
+/* CommunicatorToolbar: compact, no own bg / border */
+.Board__main-toolbar .Board__communicator-toolbar {
+  flex: 0 0 auto;
+  width: auto;
+  position: static;
+  z-index: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  height: auto;
+  border-left: 1px solid #f0f0f0;
+  border-right: 1px solid #f0f0f0;
+  padding: 0 4px;
+}
+
+/* EditToolbar: fills the remaining space, title stays centred */
+.Board__main-toolbar .Board__edit-toolbar {
+  flex: 1 1 auto;
+  width: auto;
+  position: static;
+  z-index: auto;
+  background: transparent;
+  border: none;
+  height: auto;
+}
+
+/* ── Icon sizing — all SVGs in the unified bar at 30px ── */
+.Board__main-toolbar .MuiIconButton-root {
+  padding: 10px;
+}
+
+.Board__main-toolbar .MuiIconButton-root svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* ── CommunicatorToolbar & EditToolbar text Buttons → icon-only ── */
+/* font-size:0 hides text nodes; SVG size set explicitly so it ignores em */
+.Board__main-toolbar .CommunicatorToolbar .MuiButton-root,
+.Board__main-toolbar .EditToolbar .MuiButton-root {
+  font-size: 0;
+  min-width: 0;
+  padding: 10px 10px;
+  gap: 0;
+}
+
+.Board__main-toolbar .CommunicatorToolbar .MuiButton-root svg,
+.Board__main-toolbar .EditToolbar .MuiButton-root svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* Board title keeps readable font-size */
+.Board__main-toolbar .EditToolbar .EditToolbar__BoardTitle {
+  font-size: 0.88rem;
+}
+
+.Board__loading {
+  color: var(--kmc-primary);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.Board__edit-toolbar,
+.Board__communicator-toolbar {
+  position: relative;
+  right: 0;
+  width: 100%;
+  z-index: 3;
+}
+
+.is-locked .Board__edit-toolbar,
+.is-locked .Board__communicator-toolbar {
+  display: none;
+}
+
+.Board__tiles {
+  position: relative;
+  height: 100%;
+  z-index: 4;
+  flex: 1;
+  background: #fff;
+  direction: ltr; /* for grid */
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ScrollButtonsOnTheSides {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.ScrollButtonsOnTheSides::-webkit-scrollbar {
+  display: none;
+}
+
+.is-dark .Board__tiles {
+  background: #444;
+}
+
+.Board__tiles .Grid {
+  margin-top: 0px;
+}
+
+.is-locked .Board__tiles .Grid {
+  margin-top: 0;
+}
+
+.BoardSideButtonsContainer {
+  display: flex;
+  height: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  min-height: 0;
+  flex: 1 1 auto;
+  justify-content: center;
+  /* Anchor for the ScreenKeyboard overlay */
+  position: relative;
+}
+
+/* Right side column (side-navigation mode): the lock toggle takes its own
+   height at the top; the scroll buttons fill the remaining vertical space. */
+.BoardSide__scroll-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 5.5rem;
+  z-index: 1000;
+}
+
+.BoardSide__lock {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0 6px;
+}
+
+/* Match the side scroll/nav buttons: a blue circle behind a white icon, with
+   the full rounded rectangle filling on hover / dwell focus. */
+.BoardSide__lock .MuiIconButton-root {
+  position: relative;
+  width: 5rem;
+  height: 5rem;
+  padding: 0;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+}
+
+.BoardSide__lock .MuiIconButton-root::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4.4rem;
+  height: 4.4rem;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background-color: var(--kmc-primary);
+  z-index: 0;
+}
+
+.BoardSide__lock .MuiIconButton-root svg {
+  position: relative;
+  z-index: 1;
+  width: 2.8rem;
+  height: 2.8rem;
+  color: #fff;
+}
+
+.BoardSide__lock .MuiIconButton-root:hover,
+.BoardSide__lock .MuiIconButton-root.dwell-focus {
+  background-color: rgba(13, 71, 161, 0.9);
+}
+
+.BoardSide__scroll-col .SideNavigationButtonsContainer.ScrollButtons {
+  flex: 1 1 auto;
+  width: 100%;
+}

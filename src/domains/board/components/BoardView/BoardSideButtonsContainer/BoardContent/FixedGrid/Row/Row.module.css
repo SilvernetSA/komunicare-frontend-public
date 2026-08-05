@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex: 0 0 auto;
+  /* Each selected row takes an equal share of the visible grid viewport
+     (100cqh = scroll-container height; 12px = GridBase vertical padding),
+     so a rows x columns selection fills the area exactly and any extra
+     rows overflow into the scroll handled by the big scroll buttons. */
+  /* Fallback for browsers without container-query units (cqh). */
+  height: 120px;
+  height: calc(
+    (100cqh - 12px - var(--fixed-grid-reserved, 0px)) /
+      var(--fixed-grid-rows, 4)
+  );
+}

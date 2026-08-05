@@ -9,8 +9,8 @@ import messages from './Login.messages';
 import { useAuthStore } from '@/domains/user/stores/authStore';
 import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 import { useUserStore } from '@/domains/user/stores/userStore';
-import BuildInfo from '@/domains/shared/components/UI/BuildInfo/BuildInfo';
-import { IS_DEV_ENV } from '@/domains/shared/components/UI/BuildInfo/buildInfo.constants';
+import BuildInfo from '@/domains/app/components/BuildInfo/BuildInfo';
+import { IS_DEV_ENV } from '@/domains/app/components/BuildInfo/buildInfo.constants';
 import './Login.css';
 
 interface LoginProps {

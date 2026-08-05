@@ -20,7 +20,7 @@ import messages from './Navigation.messages';
 import { useAppStore } from '@/domains/app/stores/appStore';
 import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
 import { NavigationSettings } from '@/types/app';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import ResetToursItem from '@/domains/shared/components/UI/ResetToursItem/ResetToursItem';
 import './Navigation.css';
 

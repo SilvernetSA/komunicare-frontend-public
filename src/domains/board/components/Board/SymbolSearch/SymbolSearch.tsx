@@ -15,7 +15,7 @@ import { useArasaacStore } from '@/domains/board/stores/arasaacStore';
 import { useGlobalSymbolsStore } from '@/domains/board/stores/globalSymbolsStore';
 import { LABEL_POSITION_BELOW } from '@/domains/settings/components/Settings/Display/Display.constants';
 import FilterBar from '@/domains/shared/components/UI/FilterBar/FilterBar';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 import Symbol from '../Symbol/Symbol';
 import './SymbolSearch.css';
 

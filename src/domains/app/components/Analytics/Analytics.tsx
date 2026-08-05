@@ -32,7 +32,7 @@ import { UserData } from '@/types/app';
 import PremiumFeature from '@/domains/subscription/components/PremiumFeature/PremiumFeature';
 import { initializeClientId } from './container/service/GoogleAnalyticsClient';
 import { getSymbolSources } from './container/SymbolSourcesHelper';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 
 import type {
   AnalyticsTotals,

@@ -49,6 +49,9 @@ const DefaultBoardsGallery: React.FC<DefaultBoardsGalleryProps> = ({
   onDeleteCopy,
 }) => {
   const communicators = useCommunicatorsStore((state) => state.communicators);
+  const activeCommunicatorId = useCommunicatorsStore(
+    (state) => state.activeCommunicatorId,
+  );
 
   // Deduplicate system communicators by rootBoard.
   // Prefer the one with a DEFAULT_BOARDS image for display; track all IDs for copy lookup.
@@ -164,9 +167,15 @@ const DefaultBoardsGallery: React.FC<DefaultBoardsGalleryProps> = ({
             }
           };
 
+          const isActive = userCopy
+            ? String(userCopy.id) === String(activeCommunicatorId)
+            : [String(c.id), ...alternateIds].some(
+                (id) => id === String(activeCommunicatorId),
+              );
+
           return (
             <Grid key={String(c.id)} size={{ xs: 12, sm: 6, md: 4 }}>
-              <div style={{ position: 'relative' }}>
+              <div style={{ position: 'relative', height: '100%' }}>
                 <DefaultBoardOption
                   onClick={handleClick}
                   rootBoard={rootBoard as Board}
@@ -175,6 +184,7 @@ const DefaultBoardsGallery: React.FC<DefaultBoardsGalleryProps> = ({
                   intl={intl}
                   isOfficial={!userCopy}
                   isUserCopy={!!userCopy}
+                  isActive={isActive}
                 />
                 {userCopy && onDeleteCopy && (
                   <IconButton
@@ -209,6 +219,8 @@ const DefaultBoardsGallery: React.FC<DefaultBoardsGalleryProps> = ({
             caption: (c as any).caption,
           };
 
+          const isActive = String(c.id) === String(activeCommunicatorId);
+
           return (
             <Grid key={String(c.id)} size={{ xs: 12, sm: 6, md: 4 }}>
               <DefaultBoardOption
@@ -217,6 +229,7 @@ const DefaultBoardsGallery: React.FC<DefaultBoardsGalleryProps> = ({
                 titleText={c.name || 'My Communicator'}
                 descriptionText={(c as any).description || ''}
                 intl={intl}
+                isActive={isActive}
               />
             </Grid>
           );

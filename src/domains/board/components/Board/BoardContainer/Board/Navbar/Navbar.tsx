@@ -12,9 +12,9 @@ import { useCommunicatorsStore } from '@/domains/communicator/stores/communicato
 // import AnalyticsButton from '@/domains/shared/components/UI/AnalyticsButton/AnalyticsButton';
 import BackButton from '@/domains/shared/components/UI/BackButton/BackButton';
 import FullScreenButton from '@/domains/shared/components/UI/FullScreenButton/FullScreenButton';
-import LockToggle from '@/domains/shared/components/UI/LockToggle/LockToggle';
+import LockToggle from '@/domains/board/components/LockToggle/LockToggle';
 import SettingsButton from '@/domains/shared/components/UI/SettingsButton/SettingsButton';
-import UserIcon from '@/domains/shared/components/UI/UserIcon/UserIcon';
+import UserIcon from '@/domains/app/components/UserIcon/UserIcon';
 import { getBoardShareUrl } from '@/platform/browser';
 import { UserData } from '@/types/app';
 import { Board } from '@/types/board';

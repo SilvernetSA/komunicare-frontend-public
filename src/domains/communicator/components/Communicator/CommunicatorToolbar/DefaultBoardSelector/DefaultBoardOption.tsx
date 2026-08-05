@@ -1,3 +1,4 @@
+import HomeIcon from '@mui/icons-material/Home';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { CardContent } from '@mui/material';
 import { Card, CardMedia, Chip, Typography } from '@mui/material';
@@ -26,6 +27,7 @@ interface DefaultBoardOptionProps {
   titleText?: string;
   isOfficial?: boolean;
   isUserCopy?: boolean;
+  isActive?: boolean;
 }
 
 const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
@@ -36,6 +38,7 @@ const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
   titleText,
   isOfficial = false,
   isUserCopy = false,
+  isActive = false,
 }) => {
   const [shadow, setShadow] = useState(false);
   const title =
@@ -115,6 +118,21 @@ const DefaultBoardOption: React.FC<DefaultBoardOptionProps> = ({
         </div>
       )}
       <CardContent className={styles.cardContent}>
+        {isActive && (
+          <Chip
+            icon={<HomeIcon sx={{ fontSize: 14 }} />}
+            label="Home"
+            size="small"
+            sx={{
+              mb: 1,
+              backgroundColor: 'rgba(46, 125, 50, 0.9)',
+              color: '#fff',
+              fontWeight: 600,
+              fontSize: 11,
+              '& .MuiChip-icon': { color: '#fff' },
+            }}
+          />
+        )}
         <Typography gutterBottom variant="h6">
           {title}
         </Typography>

@@ -10,6 +10,8 @@ export interface BoardState {
   isFixed: boolean;
   improvedPhrase: string;
   improvedPhraseSource: string;
+  isLiveMode: boolean;
+  isScreenKeyboardMode: boolean;
 }
 
 export interface BoardPageParams {

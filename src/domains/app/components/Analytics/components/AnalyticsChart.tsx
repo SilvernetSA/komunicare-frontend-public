@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 
-import ModifiedAreaChart from '@/domains/shared/components/UI/ModifiedAreaChart/ModifiedAreaChart.component';
+import ModifiedAreaChart from '@/domains/app/components/Analytics/components/UI/ModifiedAreaChart/ModifiedAreaChart.component';
 
 interface Usage {
   data: number[];

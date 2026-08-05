@@ -21,7 +21,7 @@ import { TtsEngineSelector } from './component/TtsEngineSelector';
 import messages from './Language.messages';
 import { IS_ANDROID } from '@/platform';
 import { TtsEngine } from '@/types/language';
-import FullScreenDialog from '@/domains/shared/components/UI/FullScreenDialog/FullScreenDialog';
+import FullScreenDialog from '@/domains/app/components/FullScreenDialog/FullScreenDialog';
 
 import './../Settings.css';
 

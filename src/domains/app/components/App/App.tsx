@@ -5,6 +5,7 @@ import { Route, Routes, Navigate, useNavigate, useParams } from 'react-router-do
 
 import registerServiceWorker from '@/registerServiceWorker';
 import { useAppStore } from '@/domains/app/stores/appStore';
+import { useSettingsStore } from '@/domains/settings/stores/settingsStore';
 import { useLanguageStore } from '@/domains/settings/stores/languageStore';
 import { useNotificationStore } from '@/domains/notifications/stores/notificationStore';
 import Activate from '@/domains/user/components/Account/Activate/Activate';
@@ -25,6 +26,12 @@ import Settings from '@/domains/settings/components/Settings/Settings.wrapper';
 import WelcomeScreen from '@/domains/user/components/WelcomeScreen/WelcomeScreen';
 import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 import './App.css';
+
+declare global {
+  interface Window {
+    __komunicareAppMounted?: boolean;
+  }
+}
 
 const LegacyBoardRedirect: React.FC<{ isLogged: boolean }> = ({ isLogged }) => {
   const { id } = useParams<{ id: string }>();
@@ -56,22 +63,23 @@ const App: React.FC = () => {
   const prevIsLoggedRef = useRef(isLogged);
 
   useEffect(() => {
-    const handleNewContentAvailable = () => {
-      useNotificationStore
-        .getState()
-        .showNotification(
-          'New content is available; please refresh.',
-          'refresh',
-        );
+    window.__komunicareAppMounted = true;
+    return () => {
+      window.__komunicareAppMounted = false;
     };
+  }, []);
 
+  useEffect(() => {
+    // Updates apply silently (registerServiceWorker auto-calls applySwUpdate on
+    // a new SW), so no manual "please refresh" prompt. Only surface the
+    // first-install "cached for offline use" message.
     const handleContentCached = () => {
       useNotificationStore
         .getState()
         .showNotification('Content is cached for offline use.');
     };
 
-    registerServiceWorker(handleNewContentAvailable, handleContentCached);
+    registerServiceWorker(undefined, handleContentCached);
   }, []);
 
   useEffect(() => {
@@ -106,6 +114,17 @@ const App: React.FC = () => {
       navigate('/login-signup', { replace: true });
     }
   }, [isLogged, navigate]);
+
+  const authToken = String((userData as any)?.authToken || '');
+  useEffect(() => {
+    if (!isLogged || !authToken) return;
+    useSettingsStore
+      .getState()
+      .fetchSettings()
+      .catch((error: unknown) => {
+        console.error('Could not restore user settings on startup', error);
+      });
+  }, [isLogged, authToken, userId]);
 
   const uiSize = displaySettings.uiSize || DISPLAY_SIZE_STANDARD;
   const fontSize = displaySettings.fontSize || DISPLAY_SIZE_STANDARD;

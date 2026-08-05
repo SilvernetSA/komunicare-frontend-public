@@ -4,46 +4,46 @@ import { create } from 'zustand';
 import {
   mergeRemoteBoards,
   reconcileActiveBoardState,
-} from './boardsStore/boardStateHelpers';
-import { cloneInitialState } from './boardsStore/createInitialState';
-import { createRemoteBoardFactory } from './boardsStore/createRemoteBoardFactory';
-import { deleteRemoteBoardFactory } from './boardsStore/deleteRemoteBoardFactory';
+} from '@/domains/board/stores/boardsStore/boardStateHelpers';
+import { cloneInitialState } from '@/domains/board/stores/boardsStore/createInitialState';
+import { createRemoteBoardFactory } from '@/domains/board/stores/boardsStore/createRemoteBoardFactory';
+import { deleteRemoteBoardFactory } from '@/domains/board/stores/boardsStore/deleteRemoteBoardFactory';
 import {
   fetchBoardById,
   resetBoardByIdCaches,
-} from './boardsStore/fetchBoardById';
+} from '@/domains/board/stores/boardsStore/fetchBoardById';
 import {
   fetchPublicBoardsPage,
   resetPublicBoardsPageCache,
-} from './boardsStore/fetchPublicBoardsPage';
+} from '@/domains/board/stores/boardsStore/fetchPublicBoardsPage';
 import {
   fetchSystemBoards,
   initSystemBoardsCache,
-} from './boardsStore/fetchSystemBoards';
+} from '@/domains/board/stores/boardsStore/fetchSystemBoards';
 import {
   fetchUserBoards,
   resetFetchUserBoardsCache,
-} from './boardsStore/fetchUserBoards';
+} from '@/domains/board/stores/boardsStore/fetchUserBoards';
 import {
   fetchUserBoardsPage,
   resetUserBoardsPageCache,
-} from './boardsStore/fetchUserBoardsPage';
-import { getApiObjects } from './boardsStore/getApiObjects';
-import { reportBoardToApiFactory } from './boardsStore/reportBoardToApiFactory';
-import { syncBoardsWithCommunicatorFactory } from './boardsStore/syncBoardsWithCommunicatorFactory';
-import { syncBoardWithCommunicatorFactory } from './boardsStore/syncBoardWithCommunicatorFactory';
+} from '@/domains/board/stores/boardsStore/fetchUserBoardsPage';
+import { getApiObjects } from '@/domains/board/stores/boardsStore/getApiObjects';
+import { reportBoardToApiFactory } from '@/domains/board/stores/boardsStore/reportBoardToApiFactory';
+import { syncBoardsWithCommunicatorFactory } from '@/domains/board/stores/boardsStore/syncBoardsWithCommunicatorFactory';
+import { syncBoardWithCommunicatorFactory } from '@/domains/board/stores/boardsStore/syncBoardWithCommunicatorFactory';
 import {
   BoardPageParams,
   BoardPageResponse,
   BoardState,
-} from './boardsStore/types';
-import { updateApiMarkedBoards } from './boardsStore/updateApiMarkedBoards';
-import { updateRemoteBoardFactory } from './boardsStore/updateRemoteBoardFactory';
-import { upsertRemoteBoardFactory } from './boardsStore/upsertRemoteBoardFactory';
+} from '@/domains/board/stores/boardsStore/types';
+import { updateApiMarkedBoards } from '@/domains/board/stores/boardsStore/updateApiMarkedBoards';
+import { updateRemoteBoardFactory } from '@/domains/board/stores/boardsStore/updateRemoteBoardFactory';
+import { upsertRemoteBoardFactory } from '@/domains/board/stores/boardsStore/upsertRemoteBoardFactory';
 import {
   getCachedSystemBoards,
   getCachedSystemHashes,
-} from './systemCatalogCache';
+} from '@/domains/board/stores/systemCatalogCache';
 import { useCommunicatorsStore } from '@/domains/communicator/stores/communicatorsStore';
 
 import type { Board, Tile } from '@/types/board';
@@ -60,7 +60,7 @@ const resetAllBoardPageCaches = () => {
   resetUserBoardsPageCache();
 };
 
-const resetAllUserBoardCaches = () => {
+export const resetAllUserBoardCaches = () => {
   resetFetchUserBoardsCache();
   resetAllBoardPageCaches();
 };
@@ -148,6 +148,7 @@ export interface BoardsStore extends BoardState {
   historyRemoveBoard: (boardId: string) => void;
   unmarkBoard: (boardId: string) => void;
   switchBoard: (boardId: string) => void;
+  syncActiveBoardAfterSave: (boardId: string) => void;
   resetActiveBoardSelection: () => void;
   createTile: (payload: { boardId: string; tile: Tile }) => void;
   deleteTiles: (payload: { boardId: string; tileIds: string[] }) => void;
@@ -155,6 +156,8 @@ export interface BoardsStore extends BoardState {
   focusTile: (payload: { boardId: string; tileId: string }) => void;
   changeOutput: (output: Tile[]) => void;
   changeImprovedPhrase: (value: string, sourcePhrase?: string) => void;
+  changeLiveMode: () => void;
+  changeScreenKeyboardMode: () => void;
   downloadImagesStarted: () => void;
   downloadImageSuccess: (payload: unknown) => void;
   applyLogout: () => void;
@@ -329,6 +332,17 @@ export const useBoardsStore = create<BoardsStore>()((set, get) => ({
     set({ navHistory: [boardId], activeBoardId: boardId });
   },
 
+  syncActiveBoardAfterSave: (boardId) => {
+    if (!boardId) return;
+    set((state) => {
+      const history = state.navHistory.length
+        ? [...state.navHistory]
+        : [boardId];
+      history[history.length - 1] = boardId;
+      return { ...state, navHistory: history, activeBoardId: boardId };
+    });
+  },
+
   resetActiveBoardSelection: () => {
     set({ navHistory: [], activeBoardId: null });
   },
@@ -383,6 +397,18 @@ export const useBoardsStore = create<BoardsStore>()((set, get) => ({
 
   changeImprovedPhrase: (value, sourcePhrase = '') =>
     set({ improvedPhrase: value, improvedPhraseSource: sourcePhrase }),
+
+  changeLiveMode: () =>
+    set((state) => ({
+      isLiveMode: !state.isLiveMode,
+      isScreenKeyboardMode: false,
+    })),
+
+  changeScreenKeyboardMode: () =>
+    set((state) => ({
+      isScreenKeyboardMode: !state.isScreenKeyboardMode,
+      isLiveMode: false,
+    })),
 
   downloadImagesStarted: () => {
     set((state) =>
